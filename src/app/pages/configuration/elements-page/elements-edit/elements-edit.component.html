@@ -1,0 +1,32 @@
+<h1 mat-dialog-title>{{getTitle()}}</h1>
+<div mat-dialog-content>
+  <form [formGroup]="elementForm">
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Nome</mat-label>
+      <input formControlName="name" matInput>
+    </mat-form-field>
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Descrição</mat-label>
+      <textarea formControlName="description" matInput></textarea>
+    </mat-form-field>
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Link de Referência</mat-label>
+      <input formControlName="reference" matInput>
+    </mat-form-field>
+    <mat-form-field *ngIf="object.author" class="w-full mt-auto" appearance="outline">
+      <mat-label>Author</mat-label>
+      <input formControlName="author" readonly matInput>
+    </mat-form-field>
+    <mat-form-field *ngIf="object.createdAt" class="w-full mt-auto" appearance="outline">
+      <mat-label>Criado Em</mat-label>
+      <input formControlName="createdAt" readonly matInput>
+    </mat-form-field>
+  </form>
+  <div>
+    <app-elements-item-list [element]="object"></app-elements-item-list>
+  </div>
+</div>
+<div mat-dialog-actions [align]="'end'">
+  <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>Salvar</button>
+  <button mat-flat-button [mat-dialog-close]="object.name">Cancelar</button>
+</div>

@@ -1,0 +1,67 @@
+<!-- Main -->
+<div class="flex-auto py-6">
+  <!-- Header -->
+  <div class="w-full" style="text-align: center;">
+    <h2 style="margin-bottom: auto;">Notas</h2>
+  </div>
+  <div class="flex flex-col sm:flex-row md:flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b">
+    <!-- Main actions -->
+    <div class="flex items-center mt-4 sm:mt-0 md:mt-4">
+      <!-- Search -->
+      <div class="flex-auto">
+        <form [formGroup]="searchForm">
+          <mat-form-field class="w-full mt-auto" appearance="outline">
+            <input formControlName="filterValue" matInput placeholder="Digite para pesquisar">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </form>
+      </div>
+
+      <!-- New object button -->
+      <button class="ml-4 mb-4" mat-flat-button [color]="'primary'" (click)="newObject()">
+        <mat-icon>add_circle</mat-icon>
+        <span class="pl-2">Novo</span>
+      </button>
+    </div>
+  </div>
+  <div class="overflow-x-auto mx-6">
+    <table class="w-full bg-transparent" mat-table [dataSource]="objectDataSource">
+      <ng-container matColumnDef="gradeType">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+          Tipo de Nota
+        </th>
+        <td mat-cell *matCellDef="let object">
+          <span>
+            {{object.gradeType.name}}
+          </span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="standardWeight">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>
+          Peso Padrão
+        </th>
+        <td mat-cell class="max-w-200" *matCellDef="let object">
+          <span class="break-word">
+            {{object.standardWeight}}
+          </span>
+        </td>
+      </ng-container>
+      <!-- Buttons -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let object">
+          <button mat-icon-button color="primary" (click)="editObject(object)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteObject(object)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="objectTableColumns"></tr>
+      <!--Linhas-->
+      <tr class="order-row h-16" mat-row *matRowDef="let row; columns: objectTableColumns;"></tr>
+    </table>
+  </div>
+</div>

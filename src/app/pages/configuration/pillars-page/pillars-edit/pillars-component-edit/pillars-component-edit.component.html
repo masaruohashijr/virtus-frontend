@@ -1,0 +1,31 @@
+<h1 mat-dialog-title>{{getTitle()}}</h1>
+<div mat-dialog-content>
+  <form [formGroup]="elementForm">
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Componente</mat-label>
+      <mat-select formControlName="component">
+        <mat-option *ngFor="let comp of components" [value]="comp">{{comp.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Peso Padrão</mat-label>
+      <input formControlName="standardWeight" type="number" [pattern]="'^-?[0-9]+$'" matInput>
+    </mat-form-field>
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Tipo de Média</mat-label>
+      <mat-select formControlName="averageType">
+        <mat-option [value]="'ARITHMETIC'">Aritmética</mat-option>
+        <mat-option [value]="'GEOMETRIC'">Geométrica</mat-option>
+        <mat-option [value]="'HARMONICA'">Harmônica</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Arquivo Sonda</mat-label>
+      <input formControlName="probeFile" matInput>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions [align]="'end'">
+  <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>Salvar</button>
+  <button mat-flat-button [mat-dialog-close]="data.object.component">Cancelar</button>
+</div>

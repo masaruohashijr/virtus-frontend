@@ -1,0 +1,43 @@
+<h1 mat-dialog-title>{{getTitle()}}</h1>
+<div mat-dialog-content>
+  <form [formGroup]="gradeTypeForm">
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Nome</mat-label>
+      <input formControlName="name" matInput>
+    </mat-form-field>
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Descrição</mat-label>
+      <textarea formControlName="description" matInput></textarea>
+    </mat-form-field>
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Link de Referência</mat-label>
+      <input formControlName="reference" matInput>
+    </mat-form-field>
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Letra na Matriz</mat-label>
+      <input formControlName="letter" [maxlength]="1" matInput>
+    </mat-form-field>
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Cor da Letra na Matriz</mat-label>
+      <mat-select formControlName="letterColor">
+        <mat-option value="C0C0C0">Cinza</mat-option>
+        <mat-option value="ff6961">Vermelho Pastel</mat-option>
+        <mat-option value="d19033">Amarelo Fuel</mat-option>
+        <mat-option value="6495ed">Azul Cornflower</mat-option>
+        <mat-option value="f6fdc6">Amarelo Pálido</mat-option>
+        <mat-option value="d61d1c">Vermelho Extintor</mat-option>
+        <mat-option value="d62561">Cereja</mat-option>
+        <mat-option value="74f146">Verde</mat-option>
+        <mat-option value="329d53">Eucalipto</mat-option>
+        <mat-option value="ed494c">Rosa Carmine</mat-option>
+        <mat-option value="ab3900">Vermelho Rústico</mat-option>
+        <mat-option value="e028b6">Spicy Pink</mat-option>
+        <mat-option value="32640f">Lincoln Green</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions [align]="'end'">
+  <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>Salvar</button>
+  <button mat-flat-button [mat-dialog-close]="object.name">Cancelar</button>
+</div>

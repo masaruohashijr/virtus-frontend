@@ -1,0 +1,53 @@
+<mat-toolbar class="relative" [color]="'primary'">
+  <img [src]="'assets/images/logos/logo-dark.svg'" class="logo-header" [alt]="'Virtus'">
+
+  <button mat-button [matMenuTriggerFor]="coordination">Coordenação</button>
+  <button mat-button [matMenuTriggerFor]="evaluation">Avaliação</button>
+  <button mat-button [matMenuTriggerFor]="configuration">Configuração</button>
+  <button mat-button [matMenuTriggerFor]="administration">Administração</button>
+
+  <a [routerLink]="['/sobre']" mat-button>Sobre</a>
+
+  <span class="spacer"></span>
+
+  <button mat-icon-button class="icon" [matMenuTriggerFor]="account" aria-label="Example icon-button with share icon">
+    <mat-icon>account_circle</mat-icon>
+  </button>
+</mat-toolbar>
+
+<mat-menu #account="matMenu">
+  <button mat-menu-item>Alterar Senha</button>
+</mat-menu>
+
+<mat-menu #coordination="matMenu">
+  <a [routerLink]="['/designar-equipes']" mat-menu-item>Designar Equipes</a>
+  <a [routerLink]="['/distribuir-atividades']" mat-menu-item>Distribuir Atividades</a>
+</mat-menu>
+
+<mat-menu #evaluation="matMenu">
+  <button mat-menu-item>Avaliar Planos</button>
+  <button mat-menu-item>Matrizes</button>
+  <button mat-menu-item>Radares</button>
+  <button mat-menu-item>Anotações</button>
+  <button mat-menu-item>Entidades</button>
+  <button mat-menu-item>Versões</button>
+  <button mat-menu-item>Chamados</button>
+</mat-menu>
+
+<mat-menu #configuration="matMenu">
+  <a [routerLink]="['/'+ciclesRoute]" mat-menu-item>Ciclos</a>
+  <a [routerLink]="['/'+pillarsRoute]" mat-menu-item>Pilares</a>
+  <a [routerLink]="['/'+componentsRoute]" mat-menu-item>Componentes</a>
+  <a [routerLink]="['/'+typeOfNoteRoute]" mat-menu-item>Tipos de nota</a>
+  <a [routerLink]="['/'+elementsRoute]" mat-menu-item>Elementos</a>
+</mat-menu>
+
+<mat-menu #administration="matMenu">
+  <button mat-menu-item>Usuários</button>
+  <button mat-menu-item>Escritórios</button>
+  <button mat-menu-item>Perfis</button>
+  <button mat-menu-item>Funcionalidades</button>
+  <button mat-menu-item>Status</button>
+  <button mat-menu-item>Ações</button>
+  <button mat-menu-item>Workflows</button>
+</mat-menu>
