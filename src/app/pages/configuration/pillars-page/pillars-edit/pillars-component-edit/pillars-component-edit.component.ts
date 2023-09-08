@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ComponentDTO } from 'src/app/domain/dto/components.dto';
 import { PillarComponentDTO } from 'src/app/domain/dto/pillar-component.dto';
 import { PillarDTO } from 'src/app/domain/dto/pillar.dto';
+import { BaseCrudEditComponent } from 'src/app/pages/common/base-crud-page/base-crud-edit/base-crud-edit.component';
 import { ComponentsService } from 'src/app/services/configuration/components.service';
 
 @Component({
@@ -11,7 +12,7 @@ import { ComponentsService } from 'src/app/services/configuration/components.ser
   templateUrl: './pillars-component-edit.component.html',
   styleUrls: ['./pillars-component-edit.component.css']
 })
-export class PillarsComponentEditComponent implements OnInit {
+export class PillarsComponentEditComponent extends BaseCrudEditComponent<PillarComponentDTO> implements OnInit {
 
   private father: PillarDTO
   private object: PillarComponentDTO
@@ -29,6 +30,7 @@ export class PillarsComponentEditComponent implements OnInit {
     private _componenteService: ComponentsService,
     private _formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: { father: PillarDTO, object: PillarComponentDTO }) {
+    super();
     this.father = data.father;
     this.object = data.object;
     console.log(this.father)

@@ -5,6 +5,7 @@ import { ComponentElementDTO } from 'src/app/domain/dto/component-element.dto';
 import { ComponentDTO } from 'src/app/domain/dto/components.dto';
 import { ElementDTO } from 'src/app/domain/dto/element.dto';
 import { GradeTypeDTO } from 'src/app/domain/dto/type-of-note.dto';
+import { BaseCrudEditComponent } from 'src/app/pages/common/base-crud-page/base-crud-edit/base-crud-edit.component';
 import { ElementsService } from 'src/app/services/configuration/elements.service';
 import { GradeTypeService } from 'src/app/services/configuration/grade-type.service';
 
@@ -13,7 +14,7 @@ import { GradeTypeService } from 'src/app/services/configuration/grade-type.serv
   templateUrl: './components-elements-edit.component.html',
   styleUrls: ['./components-elements-edit.component.css']
 })
-export class ComponentsElementsEditComponent implements OnInit {
+export class ComponentsElementsEditComponent extends BaseCrudEditComponent<ComponentDTO> implements OnInit {
 
   father: ComponentDTO
   object: ComponentElementDTO;
@@ -32,6 +33,7 @@ export class ComponentsElementsEditComponent implements OnInit {
     private _elementsService: ElementsService,
     private _formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: { father: ComponentDTO, object: ComponentElementDTO }) {
+    super();
     this.father = data.father;
     this.object = data.object;
   }

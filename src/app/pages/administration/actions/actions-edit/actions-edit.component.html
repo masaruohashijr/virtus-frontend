@@ -1,0 +1,42 @@
+<h1 mat-dialog-title>{{getTitle()}}</h1>
+<div mat-dialog-content>
+    <form [formGroup]="elementForm">
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Nome</mat-label>
+            <input formControlName="name" matInput>
+        </mat-form-field>
+        <section class="w-full mt-auto checkbox-container">
+            <mat-label style="margin-bottom: 5px; margin-right: 5px;">Exceto</mat-label>
+            <mat-checkbox formControlName="otherThan"></mat-checkbox>
+        </section>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Status Origem</mat-label>
+            <mat-select formControlName="originStatus" [compareWith]="compare">
+                <mat-option *ngFor="let status of allStatus" [value]="status">{{
+                    status.name}}
+                    {{status.stereotype ?
+                    ' (esteriótipo: '+status.stereotype+')'
+                    : ''}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Status Destino</mat-label>
+            <mat-select formControlName="destinationStatus" [compareWith]="compare">
+                <mat-option *ngFor="let status of allStatus"
+                    [value]="status">{{
+                    status.name}}
+                    {{status.stereotype ?
+                    ' (esteriótipo: '+status.stereotype+')'
+                    : ''}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Descrição</mat-label>
+            <textarea formControlName="description" matInput></textarea>
+        </mat-form-field>
+    </form>
+</div>
+<div mat-dialog-actions [align]="'end'">
+    <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>Salvar</button>
+    <button mat-flat-button [mat-dialog-close]="object.name">Cancelar</button>
+</div>

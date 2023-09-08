@@ -43,11 +43,11 @@
 </mat-menu>
 
 <mat-menu #administration="matMenu">
-  <button mat-menu-item>Usuários</button>
-  <button mat-menu-item>Escritórios</button>
-  <button mat-menu-item>Perfis</button>
-  <button mat-menu-item>Funcionalidades</button>
-  <button mat-menu-item>Status</button>
-  <button mat-menu-item>Ações</button>
-  <button mat-menu-item>Workflows</button>
+  <button [routerLink]="['/'+usersRoute]" mat-menu-item>Usuários</button>
+  <button [routerLink]="['/'+officesRoute]" mat-menu-item>Escritórios</button>
+  <button [routerLink]="['/'+rolesRoute]" mat-menu-item>Perfis</button>
+  <button [routerLink]="['/'+featuresRoute]" mat-menu-item>Funcionalidades</button>
+  <button [routerLink]="['/'+statusRoute]" mat-menu-item>Status</button>
+  <button [routerLink]="['/'+actionsRoute]" mat-menu-item>Ações</button>
+  <button [routerLink]="['/'+workflowsRoute]" mat-menu-item>Workflows</button>
 </mat-menu>

@@ -3,7 +3,7 @@
   <form [formGroup]="elementForm">
     <mat-form-field class="w-full mt-auto" appearance="outline">
       <mat-label>Pilar</mat-label>
-      <mat-select formControlName="pillar">
+      <mat-select formControlName="pillar" [compareWith]="compare">
         <mat-option *ngFor="let pillar of pillars" [value]="pillar">{{pillar.name}}</mat-option>
       </mat-select>
     </mat-form-field>

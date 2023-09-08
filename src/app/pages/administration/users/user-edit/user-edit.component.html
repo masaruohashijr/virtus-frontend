@@ -1,0 +1,38 @@
+<h1 mat-dialog-title>{{getTitle()}}</h1>
+<div mat-dialog-content>
+    <form [formGroup]="elementForm">
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Nome</mat-label>
+            <input formControlName="name" matInput>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Nome de Usuário</mat-label>
+            <input formControlName="username" matInput>
+        </mat-form-field>
+        <mat-form-field *ngIf="object.id == null" class="w-full mt-auto" appearance="outline">
+            <mat-label>Senha</mat-label>
+            <input matInput placeholder="Password" [type]="hide ? 'password' : 'text'" formControlName="password">
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>E-mail</mat-label>
+            <input formControlName="email" matInput>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Celular</mat-label>
+            <input formControlName="mobile" matInput>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Perfil</mat-label>
+            <mat-select formControlName="role" [compareWith]="compare">
+                <mat-option *ngFor="let role of roles" [value]="role">
+                    {{role.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+    </form>
+</div>
+<div mat-dialog-actions [align]="'end'">
+    <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>Salvar</button>
+    <button mat-flat-button [mat-dialog-close]="object.name">Cancelar</button>
+</div>

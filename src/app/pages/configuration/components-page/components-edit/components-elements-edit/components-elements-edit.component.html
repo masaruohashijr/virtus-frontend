@@ -3,13 +3,13 @@
   <form [formGroup]="elementForm">
     <mat-form-field class="w-full mt-auto" appearance="outline">
       <mat-label>Elemento</mat-label>
-      <mat-select formControlName="element">
+      <mat-select formControlName="element" [compareWith]="compare">
         <mat-option *ngFor="let element of elements" [value]="element">{{element.name}}</mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field class="w-full mt-auto" appearance="outline">
       <mat-label>Tipo de Nota</mat-label>
-      <mat-select formControlName="gradeType">
+      <mat-select formControlName="gradeType" [compareWith]="compare">
         <mat-option *ngFor="let gradeType of gradeTypes" [value]="gradeType">{{gradeType.name}}</mat-option>
       </mat-select>
     </mat-form-field>

@@ -3,7 +3,7 @@
   <form [formGroup]="elementForm">
     <mat-form-field class="w-full mt-auto" appearance="outline">
       <mat-label>Componente</mat-label>
-      <mat-select formControlName="component">
+      <mat-select formControlName="component"  [compareWith]="compare">
         <mat-option *ngFor="let comp of components" [value]="comp">{{comp.name}}</mat-option>
       </mat-select>
     </mat-form-field>

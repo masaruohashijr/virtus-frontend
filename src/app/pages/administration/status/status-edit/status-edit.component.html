@@ -1,0 +1,24 @@
+<h1 mat-dialog-title>{{getTitle()}}</h1>
+<div mat-dialog-content>
+  <form [formGroup]="elementForm">
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Nome</mat-label>
+      <input formControlName="name" matInput>
+    </mat-form-field>
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Descrição</mat-label>
+      <textarea formControlName="description" matInput></textarea>
+    </mat-form-field>
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+        <mat-label>Esteriótipo</mat-label>
+        <mat-select formControlName="stereotype">
+          <mat-option [value]="'Start'">Start</mat-option>
+          <mat-option [value]="'End'">End</mat-option>
+        </mat-select>
+      </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions [align]="'end'">
+  <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>Salvar</button>
+  <button mat-flat-button [mat-dialog-close]="object.name">Cancelar</button>
+</div>

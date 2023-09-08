@@ -6,6 +6,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { CyclePillarDTO } from 'src/app/domain/dto/cycle-pillar.dto';
 import { CycleDTO } from 'src/app/domain/dto/cycle.dto';
 import { CyclesPillarsEditComponent } from '../cycles-pillars-edit/cycles-pillars-edit.component';
+import { ConfirmationDialogComponent } from 'src/app/components/dialog/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-cycles-pillars-list',
@@ -89,7 +90,7 @@ export class CyclesPillarsListComponent implements OnInit {
   }
 
   deleteObject(object: CyclePillarDTO) {
-    const dialogRef = this.deleteDialog.open(CyclesPillarsEditComponent, {
+    const dialogRef = this.deleteDialog.open(ConfirmationDialogComponent, {
       width: '270px',
     });
 

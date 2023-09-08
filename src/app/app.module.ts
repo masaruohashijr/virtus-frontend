@@ -4,10 +4,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatAutocompleteModule } from '@angular/material/autocomplete'
 import { MatDialogActions, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
@@ -18,6 +23,19 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfirmationDialogComponent } from './components/dialog/confirmation-dialog/confirmation-dialog.component';
 import { NavTopComponent } from './components/nav-top/nav-top.component';
+import { ActionsEditComponent } from './pages/administration/actions/actions-edit/actions-edit.component';
+import { ActionsComponent } from './pages/administration/actions/actions.component';
+import { FeaturesEditComponent } from './pages/administration/features/features-edit/features-edit.component';
+import { FeaturesComponent } from './pages/administration/features/features.component';
+import { OfficesComponent } from './pages/administration/offices/offices.component';
+import { RolesComponent } from './pages/administration/roles/roles.component';
+import { StatusEditComponent } from './pages/administration/status/status-edit/status-edit.component';
+import { StatusPageComponent } from './pages/administration/status/status.component';
+import { UsersComponent } from './pages/administration/users/users.component';
+import { ActivitiesEditComponent } from './pages/administration/workflows/workflows-edit/activities-edit/activities-edit.component';
+import { ActivitiesListComponent } from './pages/administration/workflows/workflows-edit/activities-list/activities-list.component';
+import { WorkflowsEditComponent } from './pages/administration/workflows/workflows-edit/workflows-edit.component';
+import { WorkflowsComponent } from './pages/administration/workflows/workflows.component';
 import { BaseCrudPageComponent } from './pages/common/base-crud-page/base-crud-page.component';
 import { ComponentsEditComponent } from './pages/configuration/components-page/components-edit/components-edit.component';
 import { ComponentsElementsEditComponent } from './pages/configuration/components-page/components-edit/components-elements-edit/components-elements-edit.component';
@@ -40,6 +58,10 @@ import { PillarsComponentListComponent } from './pages/configuration/pillars-pag
 import { PillarsEditComponent } from './pages/configuration/pillars-page/pillars-edit/pillars-edit.component';
 import { PillarsPageComponent } from './pages/configuration/pillars-page/pillars-page.component';
 import { MainLayoutPageComponent } from './pages/main-layout-page/main-layout-page.component';
+import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import { RolesEditComponent } from './pages/administration/roles/roles-edit/roles-edit.component';
+import { UserEditComponent } from './pages/administration/users/user-edit/user-edit.component';
+import { OfficesEditComponent } from './pages/administration/offices/offices-edit/offices-edit.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +89,23 @@ import { MainLayoutPageComponent } from './pages/main-layout-page/main-layout-pa
     CyclesEditComponent,
     CyclesPillarsListComponent,
     CyclesPillarsEditComponent,
-    CyclesPageComponent
+    CyclesPageComponent,
+    FeaturesComponent,
+    UsersComponent,
+    OfficesComponent,
+    RolesComponent,
+    StatusPageComponent,
+    ActionsComponent,
+    WorkflowsComponent,
+    StatusEditComponent,
+    FeaturesEditComponent,
+    ActionsEditComponent,
+    WorkflowsEditComponent,
+    ActivitiesListComponent,
+    ActivitiesEditComponent,
+    RolesEditComponent,
+    UserEditComponent,
+    OfficesEditComponent
   ],
   imports: [
     HttpClientModule,
@@ -82,11 +120,21 @@ import { MainLayoutPageComponent } from './pages/main-layout-page/main-layout-pa
     MatTableModule,
     MatPaginatorModule,
     MatFormFieldModule,
+    MatCheckboxModule,
     MatSelectModule,
     MatInputModule,
-    ReactiveFormsModule
+    MatChipsModule,
+    MatAutocompleteModule,
+    MatDatepickerModule,
+    MatDividerModule,
+    ReactiveFormsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
-  providers: [MatDialogActions],
+  providers: [
+    MatDialogActions,
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

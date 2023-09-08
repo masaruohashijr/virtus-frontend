@@ -1,0 +1,36 @@
+<h1 mat-dialog-title>{{getTitle()}}</h1>
+<div mat-dialog-content>
+    <form [formGroup]="elementForm">
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Nome</mat-label>
+            <input formControlName="name" matInput>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Descrição</mat-label>
+            <textarea formControlName="description" matInput></textarea>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Entidade no Sistema</mat-label>
+            <mat-select formControlName="entityType">
+                <mat-option [value]="'itemAAvaliar'">Item A Avaliar</mat-option>
+                <mat-option [value]="'elemento'">Elemento</mat-option>
+                <mat-option [value]="'elemento_avaliacao'">Elemento na Avaliação</mat-option>
+                <mat-option [value]="'entidade'">Entidade</mat-option>
+                <mat-option [value]="'chamado'">Chamado</mat-option>
+                <mat-option [value]="'ciclo'">Ciclo</mat-option>
+                <mat-option [value]="'componente'">Componente</mat-option>
+                <mat-option [value]="'matriz'">Matriz</mat-option>
+                <mat-option [value]="'plano'">Plano</mat-option>
+                <mat-option [value]="'usuario'">Usuário</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+    <mat-divider></mat-divider>
+    <div>
+        <app-activities-list [workflow]="object"></app-activities-list>
+    </div>
+</div>
+<div mat-dialog-actions [align]="'end'">
+    <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>Salvar</button>
+    <button mat-flat-button [mat-dialog-close]="object.name">Cancelar</button>
+</div>

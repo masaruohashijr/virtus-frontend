@@ -7,22 +7,10 @@ import { BaseDTO } from 'src/app/domain/common/base.dto';
   templateUrl: './base-crud-edit.component.html',
   styleUrls: ['./base-crud-edit.component.css']
 })
-export abstract class BaseCrudEditComponent<T extends BaseDTO> implements OnInit {
+export class BaseCrudEditComponent<T extends BaseDTO> {
 
-  constructor(public dialogRef: MatDialogRef<BaseCrudEditComponent<T>>,
-    @Inject(MAT_DIALOG_DATA) public object: T) { }
-
-  ngOnInit(): void {
-  }
-
-  getTitle() {
-    return this.getNameToTitle() ? "Editar Tipo de Nota \"" + this.getNameToTitle() + "\"" : "Cadastrar novo Tipo de Nota";
-  }
-
-  abstract getNameToTitle(): string;
-
-  getObject() {
-    return this.object;
+  compare(object1: BaseDTO, object2: BaseDTO) {
+    return object1 && object2 ? object1.id === object2.id : object1 === object2
   }
 
 }

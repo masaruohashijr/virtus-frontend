@@ -1,0 +1,35 @@
+<h1 mat-dialog-title>{{getTitle()}}</h1>
+<div mat-dialog-content>
+    <form [formGroup]="elementForm">
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Nome</mat-label>
+            <input formControlName="name" matInput>
+        </mat-form-field>
+
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Funcionalidades</mat-label>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addFeature($event)">
+                <mat-option *ngFor="let feature of features" [value]="feature">
+                    {{ feature.name }}
+                </mat-option>
+            </mat-autocomplete>
+            <mat-chip-list #chipList [compareWith]="compare">
+                <mat-chip *ngFor="let selected of elementForm.controls.features.value" [removable]="true"
+                    (removed)="removeFeature(selected)">
+                    {{ selected?.name }}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input placeholder="Adicionar uma Funcionalidade" matInput [matAutocomplete]="auto"
+                    [formControl]="featureInput">
+            </mat-chip-list>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Descrição</mat-label>
+            <textarea formControlName="description" matInput></textarea>
+        </mat-form-field>
+    </form>
+</div>
+<div mat-dialog-actions [align]="'end'">
+    <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>Salvar</button>
+    <button mat-flat-button [mat-dialog-close]="object.name">Cancelar</button>
+</div>

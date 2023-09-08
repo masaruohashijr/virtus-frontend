@@ -1,0 +1,72 @@
+<h1 mat-dialog-title>{{getTitle()}}</h1>
+<div mat-dialog-content>
+    <form [formGroup]="elementForm">
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Ação</mat-label>
+            <mat-select formControlName="action" [compareWith]="compare">
+                <mat-option *ngFor="let action of actions" [value]="action">{{action.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Funcionalidades Disponíveis</mat-label>
+            <mat-autocomplete #featureAuto="matAutocomplete" (optionSelected)="addFeature($event)">
+                <mat-option *ngFor="let feature of features" [value]="feature">
+                    {{ feature.name }}
+                </mat-option>
+            </mat-autocomplete>
+            <mat-chip-list #featureChipList [compareWith]="compare">
+                <mat-chip *ngFor="let selected of elementForm.controls.features.value" [removable]="true"
+                    (removed)="removeFeature(selected)">
+                    {{ selected?.name }}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input placeholder="Adicionar uma Funcionalidade" matInput [matAutocomplete]="featureAuto"
+                    [formControl]="featureInput">
+            </mat-chip-list>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Inicia Em</mat-label>
+            <input matInput formControlName="startAt" [matDatepicker]="startAtPicker">
+            <mat-datepicker-toggle matPrefix [for]="startAtPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startAtPicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Termina Em</mat-label>
+            <input matInput formControlName="endAt" [matDatepicker]="endAtPicker">
+            <mat-datepicker-toggle matPrefix [for]="endAtPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endAtPicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Período de Expiração (Dias)</mat-label>
+            <input formControlName="expirationTimeDays" type="number" [pattern]="'^-?[0-9]+$'" matInput>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Ação de Expiração</mat-label>
+            <mat-select formControlName="expirationAction" [compareWith]="compare">
+                <mat-option *ngFor="let action of actions" [value]="action">{{action.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Perfis Permitidos</mat-label>
+            <mat-autocomplete #roleAuto="matAutocomplete" (optionSelected)="addRole($event)">
+                <mat-option *ngFor="let role of roles" [value]="role">
+                    {{ role.name }}
+                </mat-option>
+            </mat-autocomplete>
+            <mat-chip-list #roleChipList [compareWith]="compare">
+                <mat-chip *ngFor="let selected of elementForm.controls.roles.value" [removable]="true"
+                    (removed)="removeRole(selected)">
+                    {{ selected?.name }}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input placeholder="Adicionar um Perfil" matInput [matAutocomplete]="roleAuto"
+                    [formControl]="roleInput">
+            </mat-chip-list>
+        </mat-form-field>
+    </form>
+</div>
+<div mat-dialog-actions [align]="'end'">
+    <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>Salvar</button>
+    <button mat-flat-button [mat-dialog-close]="data.object.workflow">Cancelar</button>
+</div>
