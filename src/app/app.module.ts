@@ -62,6 +62,13 @@ import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { RolesEditComponent } from './pages/administration/roles/roles-edit/roles-edit.component';
 import { UserEditComponent } from './pages/administration/users/user-edit/user-edit.component';
 import { OfficesEditComponent } from './pages/administration/offices/offices-edit/offices-edit.component';
+import { UserUpdatePassEditComponent } from './pages/administration/users/user-update-pass-edit/user-update-pass-edit.component';
+import { OfficesJurisdictionsEditComponent } from './pages/administration/offices/offices-jurisdictions-edit/offices-jurisdictions-edit.component';
+import { OfficesMembersEditComponent } from './pages/administration/offices/offices-members-edit/offices-members-edit.component';
+import { JurisdictionsEditComponent } from './pages/administration/offices/jurisdictions-edit/jurisdictions-edit.component';
+import { MembersEditComponent } from './pages/administration/offices/members-edit/members-edit.component';
+import { MembersListComponent } from './pages/administration/offices/members-list/members-list.component';
+import { JurisdictionsListComponent } from './pages/administration/offices/jurisdictions-list/jurisdictions-list.component';
 
 @NgModule({
   declarations: [
@@ -105,7 +112,14 @@ import { OfficesEditComponent } from './pages/administration/offices/offices-edi
     ActivitiesEditComponent,
     RolesEditComponent,
     UserEditComponent,
-    OfficesEditComponent
+    OfficesEditComponent,
+    UserUpdatePassEditComponent,
+    OfficesJurisdictionsEditComponent,
+    OfficesMembersEditComponent,
+    JurisdictionsEditComponent,
+    MembersEditComponent,
+    MembersListComponent,
+    JurisdictionsListComponent
   ],
   imports: [
     HttpClientModule,

@@ -9,6 +9,10 @@ import { PageResponseDTO } from 'src/app/domain/dto/response/page-response.dto';
 import { OfficesService } from 'src/app/services/administration/offices.service';
 import { OfficesEditComponent } from './offices-edit/offices-edit.component';
 import { ConfirmationDialogComponent } from 'src/app/components/dialog/confirmation-dialog/confirmation-dialog.component';
+import { JurisdictionsEditComponent } from './jurisdictions-edit/jurisdictions-edit.component';
+import { MembersEditComponent } from './members-edit/members-edit.component';
+import { OfficesMembersEditComponent } from './offices-members-edit/offices-members-edit.component';
+import { OfficesJurisdictionsEditComponent } from './offices-jurisdictions-edit/offices-jurisdictions-edit.component';
 
 
 @Component({
@@ -77,6 +81,36 @@ export class OfficesComponent implements OnInit {
       object = resp;
 
       const dialogRef = this.dialog.open(OfficesEditComponent, {
+        width: '800px',
+        data: object,
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        this.loadContent(this.filterControl?.value);
+      });
+    });
+  }
+
+  editJurisdictions(object: OfficeDTO) {
+    this._service.getById(object.id).subscribe(resp => {
+      object = resp;
+
+      const dialogRef = this.dialog.open(OfficesJurisdictionsEditComponent, {
+        width: '800px',
+        data: object,
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        this.loadContent(this.filterControl?.value);
+      });
+    });
+  }
+
+  editMembers(object: OfficeDTO) {
+    this._service.getById(object.id).subscribe(resp => {
+      object = resp;
+
+      const dialogRef = this.dialog.open(OfficesMembersEditComponent, {
         width: '800px',
         data: object,
       });

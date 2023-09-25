@@ -7,13 +7,14 @@ import { UserDTO } from 'src/app/domain/dto/user.dto';
 import { BaseCrudEditComponent } from 'src/app/pages/common/base-crud-page/base-crud-edit/base-crud-edit.component';
 import { OfficesService } from 'src/app/services/administration/offices.service';
 import { UsersService } from 'src/app/services/administration/users.service';
+import { MembersEditComponent } from '../members-edit/members-edit.component';
 
 @Component({
-  selector: 'app-offices-edit',
-  templateUrl: './offices-edit.component.html',
-  styleUrls: ['./offices-edit.component.css']
+  selector: 'app-offices-members-edit',
+  templateUrl: './offices-members-edit.component.html',
+  styleUrls: ['./offices-members-edit.component.css']
 })
-export class OfficesEditComponent extends BaseCrudEditComponent<OfficeDTO> implements OnInit {
+export class OfficesMembersEditComponent extends BaseCrudEditComponent<OfficeDTO> implements OnInit {
 
   users: UserDTO[] = [];
 
@@ -24,7 +25,7 @@ export class OfficesEditComponent extends BaseCrudEditComponent<OfficeDTO> imple
     boss: [this.object.boss]
   });
 
-  constructor(public dialogRef: MatDialogRef<OfficesEditComponent>,
+  constructor(public dialogRef: MatDialogRef<OfficesMembersEditComponent>,
     private _service: OfficesService,
     private _usersService: UsersService,
     private _formBuilder: FormBuilder,
@@ -54,28 +55,15 @@ export class OfficesEditComponent extends BaseCrudEditComponent<OfficeDTO> imple
     if (this.elementForm.value.boss != null) {
       this.object.boss = this.elementForm.value.boss;
     }
-    if (!this.object.id) {
-      this._service.create(this.object).pipe(
-        tap(resp => {
-          this.dialogRef.close(resp);
-        }),
-        catchError(error => {
-          console.error(error);
-          return throwError(error);
-        })
-      ).subscribe();
-    } else {
-      this._service.update(this.object).pipe(
-        tap(resp => {
-          this.dialogRef.close(resp);
-        }),
-        catchError(error => {
-          console.error(error);
-          return throwError(error);
-        })
-      ).subscribe();
-    }
-
+    this._service.updateMembers(this.object).pipe(
+      tap(resp => {
+        this.dialogRef.close(resp);
+      }),
+      catchError(error => {
+        console.error(error);
+        return throwError(error);
+      })
+    ).subscribe();
   }
 
 }

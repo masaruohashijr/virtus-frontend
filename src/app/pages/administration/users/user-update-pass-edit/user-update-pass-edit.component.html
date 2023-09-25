@@ -1,0 +1,23 @@
+<h1 mat-dialog-title>{{getTitle()}}</h1>
+<div mat-dialog-content>
+    <form [formGroup]="elementForm">
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Nome de Usuário</mat-label>
+            <input formControlName="username" matInput>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Senha</mat-label>
+            <input matInput placeholder="Senha" [type]="hide ? 'password' : 'text'" formControlName="password">
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Confirmar a nova senha</mat-label>
+            <input matInput placeholder="Confirmar a nova senha" [type]="hide ? 'password' : 'text'" formControlName="repeatedPassword">
+            <mat-icon matSuffix (click)="hideRep = !hideRep">{{hideRep ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </mat-form-field>
+    </form>
+</div>
+<div mat-dialog-actions [align]="'end'">
+    <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>Salvar</button>
+    <button mat-flat-button [mat-dialog-close]="object.name">Cancelar</button>
+</div>

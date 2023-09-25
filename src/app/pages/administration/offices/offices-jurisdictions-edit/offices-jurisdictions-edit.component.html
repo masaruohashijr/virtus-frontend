@@ -1,0 +1,32 @@
+<h1 mat-dialog-title>{{getTitle()}}</h1>
+<div mat-dialog-content>
+    <form [formGroup]="elementForm">
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Nome</mat-label>
+            <input formControlName="name" matInput>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Abreviatura</mat-label>
+            <input formControlName="abbreviation" matInput>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Descrição</mat-label>
+            <textarea formControlName="description" matInput></textarea>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Chefe do Escritório</mat-label>
+            <mat-select formControlName="boss" [compareWith]="compare">
+                <mat-option *ngFor="let user of users" [value]="user">
+                    {{user.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+    </form>
+</div>
+<div>
+    <app-jurisdictions-list [office]="object"></app-jurisdictions-list>
+</div>
+<div mat-dialog-actions [align]="'end'">
+    <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>Salvar</button>
+    <button mat-flat-button [mat-dialog-close]="object.name">Cancelar</button>
+</div>

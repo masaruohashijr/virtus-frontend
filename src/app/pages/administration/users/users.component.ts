@@ -9,6 +9,7 @@ import { PageResponseDTO } from 'src/app/domain/dto/response/page-response.dto';
 import { UserDTO } from 'src/app/domain/dto/user.dto';
 import { UsersService } from 'src/app/services/administration/users.service';
 import { UserEditComponent } from './user-edit/user-edit.component';
+import { UserUpdatePassEditComponent } from './user-update-pass-edit/user-update-pass-edit.component';
 
 @Component({
   selector: 'app-users',
@@ -106,5 +107,19 @@ export class UsersComponent implements OnInit {
     });
   }
 
+  updatePassordEdit(object: UserDTO) {
+    this._service.getById(object.id).subscribe(resp => {
+      object = resp;
+
+      const dialogRef = this.dialog.open(UserUpdatePassEditComponent, {
+        width: '600px',
+        data: object,
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        this.loadContent(this.filterControl?.value);
+      });
+    });
+  }
 
 }
