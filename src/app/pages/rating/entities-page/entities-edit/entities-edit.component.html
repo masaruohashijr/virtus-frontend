@@ -1,0 +1,53 @@
+<h1 mat-dialog-title>{{getTitle()}}</h1>
+<div mat-dialog-content>
+    <form [formGroup]="mainForm">
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Nome</mat-label>
+            <input formControlName="name" matInput>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Descrição</mat-label>
+            <textarea formControlName="description" matInput></textarea>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Sigla</mat-label>
+            <input formControlName="acronym" matInput>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Código</mat-label>
+            <input formControlName="code" matInput>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Situação</mat-label>
+            <input formControlName="situation" matInput>
+        </mat-form-field>
+        <section class="w-full mt-auto checkbox-container">
+            <mat-label style="margin-bottom: 5px; margin-right: 5px;">ESI</mat-label>
+            <mat-checkbox formControlName="esi"></mat-checkbox>
+        </section>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Município</mat-label>
+            <input formControlName="city" matInput>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Sigla UF</mat-label>
+            <mat-select formControlName="uf">
+                <mat-option *ngFor="let uf of ufs" [value]="uf">{{ uf }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+    <div>
+        <mat-tab-group mat-align-tabs="start">
+            <mat-tab label="Ciclos">
+                <app-cycles-entities-list [entity]="object"></app-cycles-entities-list>
+            </mat-tab>
+            <mat-tab label="Planos">
+                <app-plans-list [entity]="object"></app-plans-list>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>
+<div mat-dialog-actions [align]="'end'">
+    <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>Salvar</button>
+    <button mat-flat-button [mat-dialog-close]="object.name">Cancelar</button>
+</div>

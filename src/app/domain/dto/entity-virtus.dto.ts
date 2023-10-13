@@ -1,4 +1,6 @@
 import { BaseDTO } from "../common/base.dto";
+import { CycleEntityDTO } from "./cycle-entity.dto";
+import { PlanDTO } from "./plan.dto";
 
 export class EntityVirtusDTO extends BaseDTO {
 
@@ -10,4 +12,6 @@ export class EntityVirtusDTO extends BaseDTO {
     esi: boolean = false;
     city!: string | undefined;
     uf!: string | undefined;
+    cyclesEntity: CycleEntityDTO[] = [];
+    plans: PlanDTO[] = []
 }

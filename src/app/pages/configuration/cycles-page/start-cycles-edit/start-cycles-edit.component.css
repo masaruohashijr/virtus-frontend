@@ -1,0 +1,8 @@
+.mat-form-field-half {
+    display: inline-block;
+    width: calc(50% - 16px);
+    /* 16px de margem entre os campos */
+    margin-right: 16px;
+    vertical-align: top;
+    /* Alinha os campos verticalmente no topo */
+}

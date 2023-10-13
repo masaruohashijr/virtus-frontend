@@ -35,8 +35,12 @@ export class MembersEditComponent extends BaseCrudEditComponent<MemberDTO> imple
   }
 
   ngOnInit(): void {
-    this._entityService.getAll('', 0, 200).subscribe(resp => {
-      this.users = resp.content;
+    this._entityService.getAllNotMember(0, 200).subscribe(resp => {
+      let userMembersIds = this.father.members.map(member => member.user?.id);
+      this.users = resp.content.filter(user => !userMembersIds.includes(user.id));
+      if (this.object.user && !this.users.includes(this.object.user)) {
+        this.users.push(this.object.user);
+      }
     })
   }
 

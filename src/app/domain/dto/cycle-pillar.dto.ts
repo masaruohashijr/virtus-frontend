@@ -6,5 +6,4 @@ export class CyclePillarDTO extends BaseDTO {
   pillar: PillarDTO | undefined | null;
   averageType: any;
   standardWeight: number | undefined | null;
-  author: UserDTO | undefined | null;
 }

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ACTIONS_ROUTE, CICLES_ROUTE, COMPONENTS_ROUTE, ELEMENTS_ROUTE, FEATURES_ROUTE, OFFICES_ROUTE, PILLARS_ROUTE, ROLES_ROUTE, STATUS_ROUTE, TYPE_OF_NOTE_ROUTE, USERS_ROUTE, WORKFLOWS_ROUTE } from './common/route-constants';
+import { ACTIONS_ROUTE, CICLES_ROUTE, COMPONENTS_ROUTE, ELEMENTS_ROUTE, ENTITIES_ROUTE, FEATURES_ROUTE, OFFICES_ROUTE, PILLARS_ROUTE, ROLES_ROUTE, STATUS_ROUTE, TYPE_OF_NOTE_ROUTE, USERS_ROUTE, WORKFLOWS_ROUTE } from './common/route-constants';
 import { MainLayoutPageComponent } from './pages/main-layout-page/main-layout-page.component';
 import { ComponentsPageComponent } from './pages/configuration/components-page/components-page.component';
 import { ElementsPageComponent } from './pages/configuration/elements-page/elements-page.component';
@@ -14,12 +14,14 @@ import { FeaturesComponent } from './pages/administration/features/features.comp
 import { StatusPageComponent } from './pages/administration/status/status.component';
 import { ActionsComponent } from './pages/administration/actions/actions.component';
 import { WorkflowsComponent } from './pages/administration/workflows/workflows.component';
+import { EntitiesPageComponent } from './pages/rating/entities-page/entities-page.component';
 
 const routes: Routes = [
   {
     path: '', component: MainLayoutPageComponent,
     children: [
       { path: CICLES_ROUTE, component: CyclesPageComponent },
+      { path: ENTITIES_ROUTE, component: EntitiesPageComponent },
       { path: PILLARS_ROUTE, component: PillarsPageComponent },
       { path: COMPONENTS_ROUTE, component: ComponentsPageComponent },
       { path: TYPE_OF_NOTE_ROUTE, component: GradeTypePageComponent },

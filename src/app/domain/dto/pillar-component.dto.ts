@@ -7,5 +7,4 @@ export class PillarComponentDTO extends BaseDTO{
   standardWeight: number | undefined | null;
   averageType: any;
   probeFile: string | undefined | null;
-  author: UserDTO | undefined | null;
 }

@@ -7,6 +7,5 @@ export class ElementDTO extends BaseDTO {
   name!: string | undefined;
   description!: string | undefined;
   reference!: string | undefined;
-  author: UserDTO | undefined;
   items: ElementItemDTO[] = [];
 }

@@ -8,5 +8,4 @@ export class PillarDTO extends BaseDTO {
   reference: string | undefined | null;
   ordination: number | undefined | null;
   components: PillarComponentDTO[] = [];
-  author: UserDTO | undefined | null;
 }

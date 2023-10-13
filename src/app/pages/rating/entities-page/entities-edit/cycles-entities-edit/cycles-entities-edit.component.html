@@ -1,0 +1,35 @@
+<h1 mat-dialog-title>{{getTitle()}}</h1>
+<div mat-dialog-content>
+  <form [formGroup]="elementForm">
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Ciclo</mat-label>
+      <mat-select formControlName="cycle"  [compareWith]="compare">
+        <mat-option *ngFor="let cycle of cycles" [value]="cycle">{{cycle.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Tipo de Média</mat-label>
+      <mat-select formControlName="averageType">
+        <mat-option [value]="'ARITHMETIC'">Aritmética</mat-option>
+        <mat-option [value]="'GEOMETRIC'">Geométrica</mat-option>
+        <mat-option [value]="'HARMONICA'">Harmônica</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+        <mat-label>Inicia Em</mat-label>
+        <input matInput formControlName="startsAt" [matDatepicker]="startAtPicker">
+        <mat-datepicker-toggle matPrefix [for]="startAtPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startAtPicker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+        <mat-label>Termina Em</mat-label>
+        <input matInput formControlName="endsAt" [matDatepicker]="endsAtPicker">
+        <mat-datepicker-toggle matPrefix [for]="endsAtPicker"></mat-datepicker-toggle>
+        <mat-datepicker #endsAtPicker></mat-datepicker>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions [align]="'end'">
+  <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>Salvar</button>
+  <button mat-flat-button [mat-dialog-close]="data.object.cycle">Cancelar</button>
+</div>

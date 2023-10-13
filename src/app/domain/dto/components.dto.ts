@@ -9,7 +9,6 @@ export class ComponentDTO extends BaseDTO {
   name!: string | undefined;
   description!: string | undefined;
   reference!: string | undefined;
-  author: UserDTO | undefined;
   componentElements: ComponentElementDTO[] = [];
   componentGradeTypes: ComponentGradeType[] = [];
 }

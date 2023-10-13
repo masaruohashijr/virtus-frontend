@@ -25,13 +25,13 @@
 </mat-menu>
 
 <mat-menu #evaluation="matMenu">
-  <button mat-menu-item>Avaliar Planos</button>
-  <button mat-menu-item>Matrizes</button>
-  <button mat-menu-item>Radares</button>
-  <button mat-menu-item>Anotações</button>
-  <button mat-menu-item>Entidades</button>
-  <button mat-menu-item>Versões</button>
-  <button mat-menu-item>Chamados</button>
+  <a [routerLink]="['/'+entitiesRoute]" mat-menu-item>Avaliar Planos</a>
+  <a [routerLink]="['/'+entitiesRoute]" mat-menu-item>Matrizes</a>
+  <a [routerLink]="['/'+entitiesRoute]" mat-menu-item>Radares</a>
+  <a [routerLink]="['/'+entitiesRoute]" mat-menu-item>Anotações</a>
+  <a [routerLink]="['/'+entitiesRoute]" mat-menu-item>Entidades</a>
+  <a [routerLink]="['/'+entitiesRoute]" mat-menu-item>Versões</a>
+  <a [routerLink]="['/'+entitiesRoute]" mat-menu-item>Chamados</a>
 </mat-menu>
 
 <mat-menu #configuration="matMenu">
@@ -43,11 +43,11 @@
 </mat-menu>
 
 <mat-menu #administration="matMenu">
-  <button [routerLink]="['/'+usersRoute]" mat-menu-item>Usuários</button>
-  <button [routerLink]="['/'+officesRoute]" mat-menu-item>Escritórios</button>
-  <button [routerLink]="['/'+rolesRoute]" mat-menu-item>Perfis</button>
-  <button [routerLink]="['/'+featuresRoute]" mat-menu-item>Funcionalidades</button>
-  <button [routerLink]="['/'+statusRoute]" mat-menu-item>Status</button>
-  <button [routerLink]="['/'+actionsRoute]" mat-menu-item>Ações</button>
-  <button [routerLink]="['/'+workflowsRoute]" mat-menu-item>Workflows</button>
+  <a [routerLink]="['/'+usersRoute]" mat-menu-item>Usuários</a>
+  <a [routerLink]="['/'+officesRoute]" mat-menu-item>Escritórios</a>
+  <a [routerLink]="['/'+rolesRoute]" mat-menu-item>Perfis</a>
+  <a [routerLink]="['/'+featuresRoute]" mat-menu-item>Funcionalidades</a>
+  <a [routerLink]="['/'+statusRoute]" mat-menu-item>Status</a>
+  <a [routerLink]="['/'+actionsRoute]" mat-menu-item>Ações</a>
+  <a [routerLink]="['/'+workflowsRoute]" mat-menu-item>Workflows</a>
 </mat-menu>

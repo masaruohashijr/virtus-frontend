@@ -1,0 +1,58 @@
+<h1 mat-dialog-title>{{getTitle()}}</h1>
+<div mat-dialog-content>
+    <form [formGroup]="elementForm">
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Nome</mat-label>
+            <input formControlName="name" matInput>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Descrição</mat-label>
+            <textarea formControlName="description" matInput></textarea>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Autor</mat-label>
+            <input formControlName="author" matInput >
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Criado Em</mat-label>
+            <input matInput formControlName="createdAt" [matDatepicker]="createdAtPicker">
+            <mat-datepicker-toggle matPrefix [for]="createdAtPicker"></mat-datepicker-toggle>
+            <mat-datepicker #createdAtPicker></mat-datepicker>
+        </mat-form-field>
+        <div class="w-full mt-auto">
+            <mat-form-field class="mat-form-field-half" appearance="outline">
+                <mat-label>Inicia Em</mat-label>
+                <input matInput formControlName="startsAt" [matDatepicker]="startAtPicker">
+                <mat-datepicker-toggle matPrefix [for]="startAtPicker"></mat-datepicker-toggle>
+                <mat-datepicker #startAtPicker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field class="mat-form-field-half" appearance="outline">
+                <mat-label>Termina Em</mat-label>
+                <input matInput formControlName="endsAt" [matDatepicker]="endsAtPicker">
+                <mat-datepicker-toggle matPrefix [for]="endsAtPicker"></mat-datepicker-toggle>
+                <mat-datepicker #endsAtPicker></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Entidades</mat-label>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addEntity($event)">
+                <mat-option *ngFor="let entity of entities" [value]="entity">
+                    {{entity.code + "-" + entity.acronym+"-" + entity.name }}
+                </mat-option>
+            </mat-autocomplete>
+            <mat-chip-list #chipList [compareWith]="compare">
+                <mat-chip *ngFor="let selected of elementForm.controls.entities.value" [removable]="true"
+                    (removed)="removeEntity(selected)">
+                    {{ selected?.name }}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input placeholder="Adicionar uma Entidade ao Cliclo" matInput [matAutocomplete]="auto"
+                    [formControl]="entityInput">
+            </mat-chip-list>
+        </mat-form-field>
+    </form>
+</div>
+<div mat-dialog-actions [align]="'end'">
+    <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>Salvar</button>
+    <button mat-flat-button [mat-dialog-close]="data.object.cycle">Cancelar</button>
+</div>

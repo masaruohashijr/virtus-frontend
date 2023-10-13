@@ -58,6 +58,7 @@ import { PillarsComponentListComponent } from './pages/configuration/pillars-pag
 import { PillarsEditComponent } from './pages/configuration/pillars-page/pillars-edit/pillars-edit.component';
 import { PillarsPageComponent } from './pages/configuration/pillars-page/pillars-page.component';
 import { MainLayoutPageComponent } from './pages/main-layout-page/main-layout-page.component';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { RolesEditComponent } from './pages/administration/roles/roles-edit/roles-edit.component';
 import { UserEditComponent } from './pages/administration/users/user-edit/user-edit.component';
@@ -69,6 +70,13 @@ import { JurisdictionsEditComponent } from './pages/administration/offices/juris
 import { MembersEditComponent } from './pages/administration/offices/members-edit/members-edit.component';
 import { MembersListComponent } from './pages/administration/offices/members-list/members-list.component';
 import { JurisdictionsListComponent } from './pages/administration/offices/jurisdictions-list/jurisdictions-list.component';
+import { EntitiesPageComponent } from './pages/rating/entities-page/entities-page.component';
+import { EntitiesEditComponent } from './pages/rating/entities-page/entities-edit/entities-edit.component';
+import { CyclesEntitiesListComponent } from './pages/rating/entities-page/entities-edit/cycles-entities-list/cycles-entities-list.component';
+import { CyclesEntitiesEditComponent } from './pages/rating/entities-page/entities-edit/cycles-entities-edit/cycles-entities-edit.component';
+import { PlansListComponent } from './pages/rating/entities-page/entities-edit/plans-list/plans-list.component';
+import { PlansEditComponent } from './pages/rating/entities-page/entities-edit/plans-edit/plans-edit.component';
+import { StartCyclesEditComponent } from './pages/configuration/cycles-page/start-cycles-edit/start-cycles-edit.component';
 
 @NgModule({
   declarations: [
@@ -119,7 +127,14 @@ import { JurisdictionsListComponent } from './pages/administration/offices/juris
     JurisdictionsEditComponent,
     MembersEditComponent,
     MembersListComponent,
-    JurisdictionsListComponent
+    JurisdictionsListComponent,
+    EntitiesPageComponent,
+    EntitiesEditComponent,
+    CyclesEntitiesListComponent,
+    CyclesEntitiesEditComponent,
+    PlansListComponent,
+    PlansEditComponent,
+    StartCyclesEditComponent
   ],
   imports: [
     HttpClientModule,
@@ -144,6 +159,7 @@ import { JurisdictionsListComponent } from './pages/administration/offices/juris
     ReactiveFormsModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatTabsModule
   ],
   providers: [
     MatDialogActions,

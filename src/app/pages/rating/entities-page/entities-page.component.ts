@@ -4,30 +4,28 @@ import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { catchError, debounceTime, distinctUntilChanged, tap, throwError } from 'rxjs';
-import { CycleDTO } from 'src/app/domain/dto/cycle.dto';
+import { EntityVirtusDTO } from 'src/app/domain/dto/entity-virtus.dto';
 import { PageResponseDTO } from 'src/app/domain/dto/response/page-response.dto';
-import { CyclesService } from 'src/app/services/configuration/cycles.service';
-import { CyclesEditComponent } from './cycles-edit/cycles-edit.component';
+import { EntityVirtusService } from 'src/app/services/rating/entity-virtus.service';
+import { EntitiesEditComponent } from './entities-edit/entities-edit.component';
 import { ConfirmationDialogComponent } from 'src/app/components/dialog/confirmation-dialog/confirmation-dialog.component';
-import { StartCyclesEditComponent } from './start-cycles-edit/start-cycles-edit.component';
-import { StartCycleDTO } from 'src/app/domain/dto/start-cycle.dto';
 
 @Component({
-  selector: 'app-cycles-page',
-  templateUrl: './cycles-page.component.html',
-  styleUrls: ['./cycles-page.component.css']
+  selector: 'app-entities-page',
+  templateUrl: './entities-page.component.html',
+  styleUrls: ['./entities-page.component.css']
 })
-export class CyclesPageComponent implements OnInit {
+export class EntitiesPageComponent implements OnInit {
 
-  pageObjects: PageResponseDTO<CycleDTO> = new PageResponseDTO();
+  pageObjects: PageResponseDTO<EntityVirtusDTO> = new PageResponseDTO();
 
-  objectDataSource: MatTableDataSource<CycleDTO> = new MatTableDataSource();
-  objectTableColumns: string[] = ['id', 'name', 'author', 'createdAt', "actions"];
+  objectDataSource: MatTableDataSource<EntityVirtusDTO> = new MatTableDataSource();
+  objectTableColumns: string[] = ['code', 'acronym', 'name', 'actualCycle', "actions"];
 
   constructor(
     public dialog: MatDialog,
     public deleteDialog: MatDialog,
-    private _service: CyclesService,
+    private _service: EntityVirtusService,
     private _formBuilder: FormBuilder) { }
 
   searchForm = this._formBuilder.group({
@@ -63,9 +61,9 @@ export class CyclesPageComponent implements OnInit {
   }
 
   newObject() {
-    const dialogRef = this.dialog.open(CyclesEditComponent, {
+    const dialogRef = this.dialog.open(EntitiesEditComponent, {
       width: '800px',
-      data: new CycleDTO(),
+      data: new EntityVirtusDTO(),
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -73,11 +71,11 @@ export class CyclesPageComponent implements OnInit {
     });
   }
 
-  editObject(object: CycleDTO) {
+  editObject(object: EntityVirtusDTO) {
     this._service.getById(object.id).subscribe(resp => {
       object = resp;
 
-      const dialogRef = this.dialog.open(CyclesEditComponent, {
+      const dialogRef = this.dialog.open(EntitiesEditComponent, {
         width: '800px',
         data: object,
       });
@@ -88,23 +86,7 @@ export class CyclesPageComponent implements OnInit {
     });
   }
 
-  startCycle(object: CycleDTO) {
-    this._service.getById(object.id).subscribe(resp => {
-      object = resp;
-      let startCycle = new StartCycleDTO();
-      startCycle.cycle = object; 
-      const dialogRef = this.dialog.open(StartCyclesEditComponent, {
-        width: '800px',
-        data: {object: startCycle},
-      });
-
-      dialogRef.afterClosed().subscribe(result => {
-        this.loadContent(this.filterControl?.value);
-      });
-    });
-  }
-
-  deleteObject(object: CycleDTO) {
+  deleteObject(object: EntityVirtusDTO) {
     const dialogRef = this.deleteDialog.open(ConfirmationDialogComponent, {
       width: '270px',
     });
