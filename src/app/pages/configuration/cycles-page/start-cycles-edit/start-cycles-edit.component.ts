@@ -43,13 +43,17 @@ export class StartCyclesEditComponent extends BaseCrudEditComponent<StartCycleDT
     @Inject(MAT_DIALOG_DATA) public data: { object: StartCycleDTO }) {
     super();
     this.object = data.object;
+    this.object.entities = data.object.cycle.entities;
+    console.log(this.object);
   }
 
   ngOnInit(): void {
     this._entityService.getAll('', 0, 1000).subscribe((resp) => {
       this.allEntities = resp.content;
       this.entities = this.allEntities;
-      console.log(this.entities)
+      this.selectedEntities = this.allEntities.filter(item => this.object.entities?.some(r => r.id === item.id))
+      this.elementForm.get('entities')?.setValue(this.selectedEntities);
+      this.entities = this.allEntities.filter(item => !this.selectedEntities?.some(selected => selected.id === item.id))
     });
     this.elementForm.get('author')?.disable();
     this.elementForm.get('createdAt')?.disable();

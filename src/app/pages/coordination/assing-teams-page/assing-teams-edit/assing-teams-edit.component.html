@@ -1,0 +1,26 @@
+<h1 mat-dialog-title>{{getTitle()}}</h1>
+<div mat-dialog-content>
+  <form [formGroup]="principalForm">
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Entidade</mat-label>
+      <input formControlName="entity" matInput>
+    </mat-form-field>
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Ciclo</mat-label>
+      <textarea formControlName="cycle" matInput></textarea>
+    </mat-form-field>
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+        <mat-label>Supervisor</mat-label>
+        <mat-select formControlName="supervisor" [compareWith]="compare">
+            <mat-option *ngFor="let supervisor of allSupervisors" [value]="supervisor">{{supervisor.name}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+  </form>
+  <div>
+    <app-team-members-list [team]="object"></app-team-members-list>
+  </div>
+</div>
+<div mat-dialog-actions [align]="'end'">
+  <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>Salvar</button>
+  <button mat-flat-button [mat-dialog-close]="object.entity">Cancelar</button>
+</div>

@@ -12,6 +12,8 @@ import { PageResponseDTO } from 'src/app/domain/dto/response/page-response.dto';
 })
 export class UsersService extends BaseService<UserDTO>{
 
+  currentUser: any;
+
   constructor(private _httpClient: HttpClient) {
     super();
   }

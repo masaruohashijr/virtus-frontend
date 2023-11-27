@@ -1,3 +1,6 @@
+export const HOME = '';
+export const LOGIN = 'login';
+
 // Configuration
 export const CICLES_ROUTE = 'cicles';
 export const ENTITIES_ROUTE = 'entities';
@@ -12,3 +15,4 @@ export const FEATURES_ROUTE = 'features';
 export const STATUS_ROUTE = 'status';
 export const ACTIONS_ROUTE = 'actions';
 export const WORKFLOWS_ROUTE = 'workflows';
+export const ASSING_TEAMS_ROUTE = 'assing-teams';

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ACTIONS_ROUTE, CICLES_ROUTE, COMPONENTS_ROUTE, ELEMENTS_ROUTE, ENTITIES_ROUTE, FEATURES_ROUTE, OFFICES_ROUTE, PILLARS_ROUTE, ROLES_ROUTE, STATUS_ROUTE, TYPE_OF_NOTE_ROUTE, USERS_ROUTE, WORKFLOWS_ROUTE } from 'src/app/common/route-constants';
+import { ACTIONS_ROUTE, ASSING_TEAMS_ROUTE, CICLES_ROUTE, COMPONENTS_ROUTE, ELEMENTS_ROUTE, ENTITIES_ROUTE, FEATURES_ROUTE, OFFICES_ROUTE, PILLARS_ROUTE, ROLES_ROUTE, STATUS_ROUTE, TYPE_OF_NOTE_ROUTE, USERS_ROUTE, WORKFLOWS_ROUTE } from 'src/app/common/route-constants';
 
 @Component({
   selector: 'app-nav-top',
@@ -25,6 +25,8 @@ export class NavTopComponent implements OnInit {
   statusRoute = STATUS_ROUTE;
   actionsRoute = ACTIONS_ROUTE;
   workflowsRoute = WORKFLOWS_ROUTE;
+
+  assingTeams = ASSING_TEAMS_ROUTE;
 
 
   ngOnInit(): void {

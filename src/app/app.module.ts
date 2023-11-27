@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
@@ -77,6 +78,13 @@ import { CyclesEntitiesEditComponent } from './pages/rating/entities-page/entiti
 import { PlansListComponent } from './pages/rating/entities-page/entities-edit/plans-list/plans-list.component';
 import { PlansEditComponent } from './pages/rating/entities-page/entities-edit/plans-edit/plans-edit.component';
 import { StartCyclesEditComponent } from './pages/configuration/cycles-page/start-cycles-edit/start-cycles-edit.component';
+import { AssingTeamsPageComponent } from './pages/coordination/assing-teams-page/assing-teams-page.component';
+import { AssingTeamsEditComponent } from './pages/coordination/assing-teams-page/assing-teams-edit/assing-teams-edit.component';
+import { AuthService } from './auth/auth.service';
+import { AuthInterceptor } from './auth/auth.interceptor';
+import { LoginComponent } from './pages/login/login.component';
+import { TeamMembersListComponent } from './pages/coordination/assing-teams-page/assing-teams-edit/team-members-list/team-members-list.component';
+import { TeamMembersEditComponent } from './pages/coordination/assing-teams-page/assing-teams-edit/team-members-edit/team-members-edit.component';
 
 @NgModule({
   declarations: [
@@ -134,7 +142,12 @@ import { StartCyclesEditComponent } from './pages/configuration/cycles-page/star
     CyclesEntitiesEditComponent,
     PlansListComponent,
     PlansEditComponent,
-    StartCyclesEditComponent
+    StartCyclesEditComponent,
+    AssingTeamsPageComponent,
+    AssingTeamsEditComponent,
+    LoginComponent,
+    TeamMembersListComponent,
+    TeamMembersEditComponent
   ],
   imports: [
     HttpClientModule,
@@ -157,13 +170,21 @@ import { StartCyclesEditComponent } from './pages/configuration/cycles-page/star
     MatDatepickerModule,
     MatDividerModule,
     ReactiveFormsModule,
+    FormsModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatTabsModule
+    MatTabsModule,
+    MatCardModule
   ],
   providers: [
     MatDialogActions,
-    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
+    AuthService,
+        {
+            provide : HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi   : true
+        }
   ],
   bootstrap: [AppComponent]
 })

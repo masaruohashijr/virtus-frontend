@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ACTIONS_ROUTE, CICLES_ROUTE, COMPONENTS_ROUTE, ELEMENTS_ROUTE, ENTITIES_ROUTE, FEATURES_ROUTE, OFFICES_ROUTE, PILLARS_ROUTE, ROLES_ROUTE, STATUS_ROUTE, TYPE_OF_NOTE_ROUTE, USERS_ROUTE, WORKFLOWS_ROUTE } from './common/route-constants';
+import { ACTIONS_ROUTE, ASSING_TEAMS_ROUTE, CICLES_ROUTE, COMPONENTS_ROUTE, ELEMENTS_ROUTE, ENTITIES_ROUTE, FEATURES_ROUTE, LOGIN, OFFICES_ROUTE, PILLARS_ROUTE, ROLES_ROUTE, STATUS_ROUTE, TYPE_OF_NOTE_ROUTE, USERS_ROUTE, WORKFLOWS_ROUTE } from './common/route-constants';
 import { MainLayoutPageComponent } from './pages/main-layout-page/main-layout-page.component';
 import { ComponentsPageComponent } from './pages/configuration/components-page/components-page.component';
 import { ElementsPageComponent } from './pages/configuration/elements-page/elements-page.component';
@@ -15,10 +15,15 @@ import { StatusPageComponent } from './pages/administration/status/status.compon
 import { ActionsComponent } from './pages/administration/actions/actions.component';
 import { WorkflowsComponent } from './pages/administration/workflows/workflows.component';
 import { EntitiesPageComponent } from './pages/rating/entities-page/entities-page.component';
+import { AssingTeamsPageComponent } from './pages/coordination/assing-teams-page/assing-teams-page.component';
+import { LoginComponent } from './pages/login/login.component';
+import { AuthGuard } from './auth/auth.guard';
 
 const routes: Routes = [
+  { path: LOGIN, component: LoginComponent },
   {
     path: '', component: MainLayoutPageComponent,
+    canMatch: [AuthGuard],
     children: [
       { path: CICLES_ROUTE, component: CyclesPageComponent },
       { path: ENTITIES_ROUTE, component: EntitiesPageComponent },
@@ -32,7 +37,8 @@ const routes: Routes = [
       { path: FEATURES_ROUTE, component: FeaturesComponent },
       { path: STATUS_ROUTE, component: StatusPageComponent },
       { path: ACTIONS_ROUTE, component: ActionsComponent },
-      { path: WORKFLOWS_ROUTE, component: WorkflowsComponent }
+      { path: WORKFLOWS_ROUTE, component: WorkflowsComponent },
+      { path: ASSING_TEAMS_ROUTE, component: AssingTeamsPageComponent }
     ]
   }
 ];
