@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { catchError, tap, throwError } from 'rxjs';
 import { FeatureRoleDTO } from 'src/app/domain/dto/feature-role.dto';
 import { FeatureDTO } from 'src/app/domain/dto/feature.dto';
@@ -15,7 +15,7 @@ import { RolesService } from 'src/app/services/administration/roles.service';
   templateUrl: './roles-edit.component.html',
   styleUrls: ['./roles-edit.component.css']
 })
-export class RolesEditComponent  extends BaseCrudEditComponent<RoleDTO> implements OnInit {
+export class RolesEditComponent extends BaseCrudEditComponent<RoleDTO> implements OnInit {
 
   allFeatures: FeatureDTO[] = [];
 
@@ -35,9 +35,10 @@ export class RolesEditComponent  extends BaseCrudEditComponent<RoleDTO> implemen
     private _service: RolesService,
     private _featureService: FeaturesService,
     private _formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public object: RoleDTO ) {
+    private errorDialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public object: RoleDTO) {
     super();
-   }
+  }
 
   ngOnInit(): void {
     this._featureService.getAll('', 0, 1000).subscribe(resp => {
@@ -82,14 +83,15 @@ export class RolesEditComponent  extends BaseCrudEditComponent<RoleDTO> implemen
 
     this.object.name = this.elementForm.value.name?.toString();
     this.object.description = this.elementForm.value.description?.toString();
-    
+
     if (!this.object.id) {
       this._service.create(this.object).pipe(
         tap(resp => {
           this.dialogRef.close(resp);
         }),
         catchError(error => {
-          console.error(error);
+          this.mostrarErro(error, this.errorDialog);
+
           return throwError(error);
         })
       ).subscribe();
@@ -99,7 +101,8 @@ export class RolesEditComponent  extends BaseCrudEditComponent<RoleDTO> implemen
           this.dialogRef.close(resp);
         }),
         catchError(error => {
-          console.error(error);
+          this.mostrarErro(error, this.errorDialog);
+
           return throwError(error);
         })
       ).subscribe();

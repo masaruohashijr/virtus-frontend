@@ -1,8 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { catchError, tap, throwError } from 'rxjs';
 import { PillarDTO } from 'src/app/domain/dto/pillar.dto';
+import { BaseCrudEditComponent } from 'src/app/pages/common/base-crud-page/base-crud-edit/base-crud-edit.component';
 import { PillarsService } from 'src/app/services/configuration/pillars.service';
 
 @Component({
@@ -10,7 +11,7 @@ import { PillarsService } from 'src/app/services/configuration/pillars.service';
   templateUrl: './pillars-edit.component.html',
   styleUrls: ['./pillars-edit.component.css']
 })
-export class PillarsEditComponent implements OnInit {
+export class PillarsEditComponent extends BaseCrudEditComponent<PillarDTO> implements OnInit {
 
   pillarForm = this._formBuilder.group({
     name: [this.object.name, [Validators.required]],
@@ -21,7 +22,10 @@ export class PillarsEditComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<PillarsEditComponent>,
     private _formBuilder: FormBuilder,
     private service: PillarsService,
-    @Inject(MAT_DIALOG_DATA) public object: PillarDTO) { }
+    private errorDialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public object: PillarDTO) {
+    super();
+  }
 
   ngOnInit(): void {
   }
@@ -42,7 +46,8 @@ export class PillarsEditComponent implements OnInit {
           this.dialogRef.close(resp);
         }),
         catchError(error => {
-          console.error(error);
+          this.mostrarErro(error, this.errorDialog);
+
           return throwError(error);
         })
       ).subscribe();
@@ -52,7 +57,8 @@ export class PillarsEditComponent implements OnInit {
           this.dialogRef.close(resp);
         }),
         catchError(error => {
-          console.error(error);
+          this.mostrarErro(error, this.errorDialog);
+
           return throwError(error);
         })
       ).subscribe();

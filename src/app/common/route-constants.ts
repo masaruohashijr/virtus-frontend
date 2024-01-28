@@ -16,3 +16,4 @@ export const STATUS_ROUTE = 'status';
 export const ACTIONS_ROUTE = 'actions';
 export const WORKFLOWS_ROUTE = 'workflows';
 export const ASSING_TEAMS_ROUTE = 'assing-teams';
+export const DISTRIBUTE_ACTIVITIES_ROUTE = 'ditribute-activities';

@@ -85,6 +85,8 @@ import { AuthInterceptor } from './auth/auth.interceptor';
 import { LoginComponent } from './pages/login/login.component';
 import { TeamMembersListComponent } from './pages/coordination/assing-teams-page/assing-teams-edit/team-members-list/team-members-list.component';
 import { TeamMembersEditComponent } from './pages/coordination/assing-teams-page/assing-teams-edit/team-members-edit/team-members-edit.component';
+import { AlertDialogComponent } from './components/dialog/alert-dialog/alert-dialog.component';
+import { DistributeActivitiesComponent } from './pages/coordination/distribute-activities/distribute-activities.component';
 
 @NgModule({
   declarations: [
@@ -147,7 +149,9 @@ import { TeamMembersEditComponent } from './pages/coordination/assing-teams-page
     AssingTeamsEditComponent,
     LoginComponent,
     TeamMembersListComponent,
-    TeamMembersEditComponent
+    TeamMembersEditComponent,
+    AlertDialogComponent,
+    DistributeActivitiesComponent
   ],
   imports: [
     HttpClientModule,

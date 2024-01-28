@@ -73,13 +73,18 @@ export class AssingTeamsPageComponent implements OnInit {
   }
 
   assingTeam(object: TeamDTO) {
-    const dialogRef = this.dialog.open(AssingTeamsEditComponent, {
-      width: '800px',
-      data: object,
-    });
+    this._service.getSupervisorByTeam(object.entity.id, object.cycle.id).subscribe((resp) => {
+      object.supervisor = resp;
+      console.log(object)
 
-    dialogRef.afterClosed().subscribe(result => {
-      this.loadContent(this.filterControl?.value);
+      const dialogRef = this.dialog.open(AssingTeamsEditComponent, {
+        width: '800px',
+        data: object,
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        this.loadContent(this.filterControl?.value);
+      });
     });
   }
 

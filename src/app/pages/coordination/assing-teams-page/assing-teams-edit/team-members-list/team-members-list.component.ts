@@ -7,6 +7,7 @@ import { TeamMemberDTO } from 'src/app/domain/dto/team-member.dto';
 import { TeamDTO } from 'src/app/domain/dto/team.dto';
 import { TeamMembersEditComponent } from '../team-members-edit/team-members-edit.component';
 import { ConfirmationDialogComponent } from 'src/app/components/dialog/confirmation-dialog/confirmation-dialog.component';
+import { TeamsService } from 'src/app/services/coordination/teams.service';
 
 @Component({
   selector: 'app-team-members-list',
@@ -18,11 +19,12 @@ export class TeamMembersListComponent implements OnInit {
   @Input() team!: TeamDTO;
 
   objectDataSource: MatTableDataSource<TeamMemberDTO> = new MatTableDataSource();
-  objectTableColumns: string[] = ['name', 'role', 'startsAt', 'endsAt', "actions"];
+  objectTableColumns: string[] = ['name', 'role', "actions"];
 
   constructor(
     public dialog: MatDialog,
     public deleteDialog: MatDialog,
+    private service: TeamsService,
     private _formBuilder: FormBuilder) { }
 
   searchForm = this._formBuilder.group({
@@ -42,6 +44,11 @@ export class TeamMembersListComponent implements OnInit {
     }
   }
 
+  cleanList(){
+    this.team.teamMembers = [];
+    this.objectDataSource.data = this.team.teamMembers;
+  }
+
   loadContent(filter: string | null) {
     if (this.team?.teamMembers) {
       if (filter) {
@@ -49,6 +56,11 @@ export class TeamMembersListComponent implements OnInit {
       } else {
         this.objectDataSource.data = this.team?.teamMembers;
       }
+    } else {
+      this.service.getTeamMembersByTeam(this.team.entity.id, this.team.cycle.id).subscribe((resp)=>{
+        this.team.teamMembers = resp;
+        this.objectDataSource.data = resp;
+      });
     }
   }
 
@@ -62,6 +74,10 @@ export class TeamMembersListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      if (!this.team.teamMembers) {
+        this.team.teamMembers = [];
+      }
+
       if (result) {
         this.team.teamMembers.push(result)
         this.objectDataSource.data = this.team.teamMembers;
@@ -95,7 +111,7 @@ export class TeamMembersListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.team.teamMembers = this.team.teamMembers?.filter(item => item.userId !== object.userId);
+        this.team.teamMembers = this.team.teamMembers?.filter(item => item.id !== object.id);
         this.objectDataSource.data = this.team.teamMembers;
       }
     });

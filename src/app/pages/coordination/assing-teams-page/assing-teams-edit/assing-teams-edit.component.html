@@ -11,13 +11,13 @@
     </mat-form-field>
     <mat-form-field class="w-full mt-auto" appearance="outline">
         <mat-label>Supervisor</mat-label>
-        <mat-select formControlName="supervisor" [compareWith]="compare">
-            <mat-option *ngFor="let supervisor of allSupervisors" [value]="supervisor">{{supervisor.name}}</mat-option>
+        <mat-select formControlName="supervisor" (selectionChange)="supervisorAlterado($event)" [compareWith]="compareSupevisor">
+            <mat-option *ngFor="let sv of allSupervisors" [value]="sv">{{sv.name}}</mat-option>
         </mat-select>
     </mat-form-field>
   </form>
   <div>
-    <app-team-members-list [team]="object"></app-team-members-list>
+    <app-team-members-list [team]="object" #teamMemberList></app-team-members-list>
   </div>
 </div>
 <div mat-dialog-actions [align]="'end'">

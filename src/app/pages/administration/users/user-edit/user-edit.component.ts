@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { catchError, tap, throwError } from 'rxjs';
 import { RoleDTO } from 'src/app/domain/dto/role.dto';
 import { UserDTO } from 'src/app/domain/dto/user.dto';
@@ -32,6 +32,7 @@ export class UserEditComponent extends BaseCrudEditComponent<UserDTO> implements
     private _service: UsersService,
     private _rolesService: RolesService,
     private _formBuilder: FormBuilder,
+    private errorDialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public object: UserDTO) {
     super();
   }
@@ -66,7 +67,8 @@ export class UserEditComponent extends BaseCrudEditComponent<UserDTO> implements
           this.dialogRef.close(resp);
         }),
         catchError(error => {
-          console.error(error);
+          this.mostrarErro(error, this.errorDialog);
+
           return throwError(error);
         })
       ).subscribe();
@@ -76,6 +78,7 @@ export class UserEditComponent extends BaseCrudEditComponent<UserDTO> implements
           this.dialogRef.close(resp);
         }),
         catchError(error => {
+          this.mostrarErro(error, this.errorDialog);
           console.error(error);
           return throwError(error);
         })
