@@ -87,6 +87,7 @@ import { TeamMembersListComponent } from './pages/coordination/assing-teams-page
 import { TeamMembersEditComponent } from './pages/coordination/assing-teams-page/assing-teams-edit/team-members-edit/team-members-edit.component';
 import { AlertDialogComponent } from './components/dialog/alert-dialog/alert-dialog.component';
 import { DistributeActivitiesComponent } from './pages/coordination/distribute-activities/distribute-activities.component';
+import { DistributeActivitiesEditComponent } from './pages/coordination/distribute-activities/distribute-activities-edit/distribute-activities-edit.component';
 
 @NgModule({
   declarations: [
@@ -151,7 +152,8 @@ import { DistributeActivitiesComponent } from './pages/coordination/distribute-a
     TeamMembersListComponent,
     TeamMembersEditComponent,
     AlertDialogComponent,
-    DistributeActivitiesComponent
+    DistributeActivitiesComponent,
+    DistributeActivitiesEditComponent
   ],
   imports: [
     HttpClientModule,
