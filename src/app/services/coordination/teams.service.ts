@@ -5,6 +5,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { SupervisorDTO } from 'src/app/domain/dto/supervisor.dto';
 import { URL_API } from 'src/app/common/service-constants';
 import { TeamMemberDTO } from 'src/app/domain/dto/team-member.dto';
+import { MemberDTO } from 'src/app/domain/dto/member.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -47,8 +48,12 @@ export class TeamsService extends BaseService<TeamDTO>{
 
   validateTeamMember(cycleId: any, userTeamMemberId: any) {
     let queryParams = new HttpParams();
-    queryParams = queryParams.append("cycleId", Number.parseInt(""+cycleId));
-    queryParams = queryParams.append("userTeamMemberId", Number.parseInt(""+userTeamMemberId));
+    queryParams = queryParams.append("cycleId", Number.parseInt("" + cycleId));
+    queryParams = queryParams.append("userTeamMemberId", Number.parseInt("" + userTeamMemberId));
     return this.getHttpClient().get<TeamMemberDTO[]>(URL_API + this.rootEndpoint() + "/validate/team-member", { params: queryParams });
+  }
+
+  getAllMembersByBoss() {
+    return this.getHttpClient().get<MemberDTO[]>(URL_API + this.rootEndpoint() + "/all-members-by-current-user");
   }
 }

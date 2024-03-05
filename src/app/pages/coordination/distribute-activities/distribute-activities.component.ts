@@ -4,10 +4,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { JurisdictionDTO } from 'src/app/domain/dto/jurisdiction.dto';
 import { PageResponseDTO } from 'src/app/domain/dto/response/page-response.dto';
 import { TeamDTO } from 'src/app/domain/dto/team.dto';
 import { CyclesService } from 'src/app/services/configuration/cycles.service';
+import { DistributeActivitiesService } from 'src/app/services/coordination/distribute-activities.service';
 import { TeamsService } from 'src/app/services/coordination/teams.service';
+import { DistributeActivitiesEditComponent } from './distribute-activities-edit/distribute-activities-edit.component';
 
 @Component({
   selector: 'app-distribute-activities',
@@ -16,9 +19,9 @@ import { TeamsService } from 'src/app/services/coordination/teams.service';
 })
 export class DistributeActivitiesComponent implements OnInit {
 
-  pageObjects: PageResponseDTO<TeamDTO> = new PageResponseDTO();
+  pageObjects: PageResponseDTO<JurisdictionDTO> = new PageResponseDTO();
 
-  objectDataSource: MatTableDataSource<TeamDTO> = new MatTableDataSource();
+  objectDataSource: MatTableDataSource<JurisdictionDTO> = new MatTableDataSource();
   objectTableColumns: string[] = ['code', 'name', 'cycle', 'jurisdiction', "actions"];
 
   cyclesByEntity = new Map();
@@ -26,7 +29,7 @@ export class DistributeActivitiesComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     public deleteDialog: MatDialog,
-    private _service: TeamsService,
+    private _service: DistributeActivitiesService,
     private _cycleService: CyclesService,
     private _formBuilder: FormBuilder) { }
 
@@ -66,19 +69,28 @@ export class DistributeActivitiesComponent implements OnInit {
   }
 
   newObject() {
-    
-  }
-
-  distributeActivities(object:any){
 
   }
 
-  setCyclesByEntity(team: TeamDTO) {
-    this._cycleService.getAllByEntityId(team?.entity?.id, 0, 200).subscribe((resp) => {
-      this.cyclesByEntity.set(team?.entity?.id, resp.content);
-      if (resp.content) {
-        team.cycle = resp.content[0]
-      }
+  distributeActivities(object: any) {
+    const dialogRef = this.dialog.open(DistributeActivitiesEditComponent, {
+      width: '800px',
+      data: object,
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.loadContent(this.filterControl?.value);
+    });
+  }
+
+  setCyclesByEntity(jurisdiction: JurisdictionDTO) {
+    if (jurisdiction?.entity?.id) {
+      this._cycleService.getAllByEntityId(jurisdiction.entity.id, 0, 200).subscribe((resp) => {
+        this.cyclesByEntity.set(jurisdiction?.entity?.id, resp.content);
+        if (resp.content) {
+          jurisdiction.cycle = resp.content[0]
+        }
+      });
+    }
   }
 }

@@ -1,8 +1,9 @@
 import { BaseDTO } from "../common/base.dto";
+import { MemberDTO } from "./member.dto";
 import { UserDTO } from "./user.dto";
 
 export class TeamMemberDTO extends BaseDTO {
-    member!: UserDTO | undefined | null;
+    member!: MemberDTO | undefined | null;
     name!: string;
     role!: string;
     subordinationId!: number;

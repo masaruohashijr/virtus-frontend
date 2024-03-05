@@ -111,7 +111,7 @@ export class TeamMembersListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.team.teamMembers = this.team.teamMembers?.filter(item => item.id !== object.id);
+        this.team.teamMembers = this.team.teamMembers?.filter(item => item?.member?.user?.id !== object?.member?.user?.id);
         this.objectDataSource.data = this.team.teamMembers;
       }
     });

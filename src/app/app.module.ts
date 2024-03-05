@@ -88,6 +88,7 @@ import { TeamMembersEditComponent } from './pages/coordination/assing-teams-page
 import { AlertDialogComponent } from './components/dialog/alert-dialog/alert-dialog.component';
 import { DistributeActivitiesComponent } from './pages/coordination/distribute-activities/distribute-activities.component';
 import { DistributeActivitiesEditComponent } from './pages/coordination/distribute-activities/distribute-activities-edit/distribute-activities-edit.component';
+import { MatTreeModule } from '@angular/material/tree';
 
 @NgModule({
   declarations: [
@@ -180,17 +181,18 @@ import { DistributeActivitiesEditComponent } from './pages/coordination/distribu
     MatDatepickerModule,
     MatNativeDateModule,
     MatTabsModule,
-    MatCardModule
+    MatCardModule,
+    MatTreeModule
   ],
   providers: [
     MatDialogActions,
     { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
     AuthService,
-        {
-            provide : HTTP_INTERCEPTORS,
-            useClass: AuthInterceptor,
-            multi   : true
-        }
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

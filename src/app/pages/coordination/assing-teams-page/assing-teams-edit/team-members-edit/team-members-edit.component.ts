@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { throwError } from 'rxjs';
+import { MemberDTO } from 'src/app/domain/dto/member.dto';
 import { TeamMemberDTO } from 'src/app/domain/dto/team-member.dto';
 import { TeamDTO } from 'src/app/domain/dto/team.dto';
 import { UserDTO } from 'src/app/domain/dto/user.dto';
@@ -19,7 +20,7 @@ export class TeamMembersEditComponent extends BaseCrudEditComponent<TeamMemberDT
   private father: TeamDTO
   object: TeamMemberDTO
 
-  allMembers: UserDTO[] = []
+  allMembers: MemberDTO[] = []
 
   principalForm = this._formBuilder.group({
     member: [this.data.object.member, [Validators.required]]
@@ -37,8 +38,8 @@ export class TeamMembersEditComponent extends BaseCrudEditComponent<TeamMemberDT
   }
 
   ngOnInit(): void {
-    this.userService.getAll('', 0, 200).subscribe(resp => {
-      this.allMembers = resp.content.filter(m =>
+    this.teamService.getAllMembersByBoss().subscribe(resp => {
+      this.allMembers = resp.filter(m =>
         m.id !== this.father.supervisor?.userId
         && this.father.teamMembers.filter(memb => memb.member?.id == m.id).length == 0);
       if (this.object.member) {
@@ -65,7 +66,7 @@ export class TeamMembersEditComponent extends BaseCrudEditComponent<TeamMemberDT
   }
 
   getTitle() {
-    return this.object.member?.name ? "Editar Integrante \"" + this.object.member?.name + "\"" : "Cadastrar novo Integrante";
+    return this.object.member?.user?.name ? "Editar Integrante \"" + this.object.member?.user?.name + "\"" : "Cadastrar novo Integrante";
   }
 
 }
