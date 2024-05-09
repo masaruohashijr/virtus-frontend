@@ -1,21 +1,23 @@
-<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-    <!-- This is the tree node template for leaf nodes -->
-    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-        <!-- use a disabled button to provide padding for tree leaf -->
-        <button mat-icon-button disabled></button>
-        {{node.name}}
-    </mat-tree-node>
-    <!-- This is the tree node template for expandable nodes -->
-    <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
-        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
-            <mat-icon class="mat-icon-rtl-mirror">
-                {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-            </mat-icon>
-        </button>
-        {{node.name}}
-    </mat-tree-node>
-</mat-tree>
+<h1 mat-dialog-title>{{getTitle()}}</h1>
+<div mat-dialog-content>
+    <ng-container *ngTemplateOutlet="treeNode; context:{ $implicit: treeData }"></ng-container>
+
+    <ng-template #treeNode let-nodes>
+        <div class="tree">
+            <div class="tree-node" *ngFor="let node of nodes">
+                <div class="tree-node-content">
+                    <span>{{ node.objectType }}: {{ node.name }}</span>
+                </div>
+                <div *ngIf="node.children.length > 0">
+                    <ng-container *ngTemplateOutlet="treeNode; context:{ $implicit: node.children }"></ng-container>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+
+</div>
 <div mat-dialog-actions [align]="'end'">
     <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>Salvar</button>
     <button mat-flat-button [mat-dialog-close]="">Cancelar</button>
-  </div>
+</div>

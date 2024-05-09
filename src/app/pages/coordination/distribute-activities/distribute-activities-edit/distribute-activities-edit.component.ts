@@ -2,44 +2,15 @@ import { FlatTreeControl } from '@angular/cdk/tree';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { JurisdictionDTO } from 'src/app/domain/dto/jurisdiction.dto';
+import { DistributeActivitiesDTO } from 'src/app/domain/dto/distribute-activities-dto';
+import { DistributeActivitiesTreeDTO } from 'src/app/domain/dto/distrobute-activities-tree-dto';
+import { DistributeActivitiesService } from 'src/app/services/coordination/distribute-activities.service';
 
-/**
- * Food data with nested structure.
- * Each node has a name and an optional list of children.
- */
-interface FoodNode {
-  name: string;
-  children?: FoodNode[];
-}
-
-const TREE_DATA: FoodNode[] = [
-  {
-    name: 'Fruit',
-    children: [{ name: 'Apple' }, { name: 'Banana' }, { name: 'Fruit loops' }],
-  },
-  {
-    name: 'Vegetables',
-    children: [
-      {
-        name: 'Green',
-        children: [{ name: 'Broccoli' }, { name: 'Brussels sprouts' }],
-      },
-      {
-        name: 'Orange',
-        children: [{ name: 'Pumpkins' }, { name: 'Carrots' }],
-      },
-    ],
-  },
-];
-
-
-
-/** Flat node with expandable and level information */
-interface ExampleFlatNode {
-  expandable: boolean;
-  name: string;
-  level: number;
+interface TreeNode {
+  name: string | undefined | null;
+  objectType: string;
+  object: any;
+  children: TreeNode[];
 }
 
 @Component({
@@ -49,41 +20,92 @@ interface ExampleFlatNode {
 })
 export class DistributeActivitiesEditComponent implements OnInit {
 
-  private _transformer = (node: FoodNode, level: number) => {
-    return {
-      expandable: !!node.children && node.children.length > 0,
-      name: node.name,
-      level: level,
-    };
-  };
+  distributeActivitiesTree: DistributeActivitiesTreeDTO[] = [];
+  treeData: TreeNode[] = [];
 
-  treeControl = new FlatTreeControl<ExampleFlatNode>(
-    node => node.level,
-    node => node.expandable,
-  );
 
-  treeFlattener = new MatTreeFlattener(
-    this._transformer,
-    node => node.level,
-    node => node.expandable,
-    node => node.children,
-  );
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public distributeActivities: DistributeActivitiesDTO,
+    private service: DistributeActivitiesService) {
 
-  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-  constructor(@Inject(MAT_DIALOG_DATA) public jurisdiction: JurisdictionDTO) {
-    this.dataSource.data = TREE_DATA;
-
-    this.treeControl.expandAll();
   }
 
-  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
-
   ngOnInit(): void {
+    this.service.getDistributeActivitiesTreeByEntityId(this.distributeActivities.entityId)
+      .pipe()
+      .subscribe(resp => {
+        this.distributeActivitiesTree = resp;
+        this.treeData = this.buildTree(resp);
+        console.log(this.treeData);
+      });
+  }
+
+  buildTree(data: DistributeActivitiesTreeDTO[]): TreeNode[] {
+    const tree: TreeNode[] = [];
+
+    data.forEach(item => {
+      const entityNode: TreeNode = {
+        name: item.entity.name,
+        objectType: 'Entidade',
+        object: item.entity,
+        children: []
+      };
+
+      item.cycles.forEach(cycle => {
+        const cycleNode: TreeNode = {
+          name: cycle.name,
+          objectType: 'Ciclo',
+          object: cycle,
+          children: []
+        };
+
+        cycle.cyclePillars.forEach(pillar => {
+          const pillarNode: TreeNode = {
+            name: pillar?.pillar?.name,
+            objectType: 'Pilar',
+            object: pillar?.pillar,
+            children: []
+          };
+
+          pillar.pillar?.components.forEach(component => {
+            const componentNode: TreeNode = {
+              name: component.component?.name,
+              objectType: 'Componente',
+              object: component.component,
+              children: [] // Nenhum filho para componentes
+            };
+            pillarNode.children.push(componentNode);
+          });
+
+          cycleNode.children.push(pillarNode);
+        });
+
+        entityNode.children.push(cycleNode);
+      });
+
+      tree.push(entityNode);
+    });
+
+    return tree;
   }
 
   save() {
 
   }
 
+  getTitle() {
+    return "Distribuir atividades"
+  }
+
+  hasCycles(_: number, node: any): boolean {
+    return !!node.cycles && node.cycles.length > 0;
+  }
+
+  hasPillars(_: number, node: any): boolean {
+    return !!node.cyclePillars && node.cyclePillars.length > 0;
+  }
+
+  hasComponents(_: number, node: any): boolean {
+    return !!node.components && node.components.length > 0;
+  }
 }

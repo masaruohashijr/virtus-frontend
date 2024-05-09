@@ -1,0 +1,32 @@
+.tree {
+    width: 100%;
+  }
+  
+  .tree-node {
+    padding: 8px;
+    padding-left: 20px;
+    border-top: 1px solid #ccc;
+  }
+  
+  .tree-node-content {
+    display: flex;
+    align-items: center;
+  }
+  
+  .tree-node-indicator {
+    margin-right: 5px;
+    cursor: pointer;
+  }
+  
+  .tree-node-indicator.expanded::before {
+    content: '▼';
+  }
+  
+  .tree-node-indicator::before {
+    content: '►';
+  }
+  
+  .collapsed {
+    display: none;
+  }
+  

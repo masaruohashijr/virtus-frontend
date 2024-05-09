@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 import { BaseService } from '../common/base.service';
 import { JurisdictionDTO } from 'src/app/domain/dto/jurisdiction.dto';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { DistributeActivitiesDTO } from 'src/app/domain/dto/distribute-activities-dto';
+import { Observable } from 'rxjs';
+import { PageResponseDTO } from 'src/app/domain/dto/response/page-response.dto';
+import { URL_API } from 'src/app/common/service-constants';
+import { DistributeActivitiesTreeDTO } from 'src/app/domain/dto/distrobute-activities-tree-dto';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DistributeActivitiesService extends BaseService<JurisdictionDTO>{
+export class DistributeActivitiesService extends BaseService<DistributeActivitiesDTO> {
 
   constructor(private _httpClient: HttpClient) {
     super();
@@ -18,5 +23,22 @@ export class DistributeActivitiesService extends BaseService<JurisdictionDTO>{
 
   override getHttpClient(): HttpClient {
     return this._httpClient;
+  }
+
+  getAllDistributeActivities(filter: any, page: number, size: number): Observable<PageResponseDTO<DistributeActivitiesDTO>> {
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("filter", filter);
+    queryParams = queryParams.append("page", page);
+    queryParams = queryParams.append("size", size);
+    return this.getHttpClient()
+      .get<PageResponseDTO<DistributeActivitiesDTO>>(URL_API + this.rootEndpoint(), { params: queryParams });
+  }
+
+  getDistributeActivitiesTreeByEntityId(entityId: number) {
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("entityId", entityId);
+    return this._httpClient.get<DistributeActivitiesTreeDTO[]>(
+      URL_API + this.rootEndpoint() + "/by-entity-id",
+      { params: queryParams });
   }
 }

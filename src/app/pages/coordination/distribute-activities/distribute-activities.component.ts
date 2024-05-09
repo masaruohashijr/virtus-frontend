@@ -11,6 +11,7 @@ import { CyclesService } from 'src/app/services/configuration/cycles.service';
 import { DistributeActivitiesService } from 'src/app/services/coordination/distribute-activities.service';
 import { TeamsService } from 'src/app/services/coordination/teams.service';
 import { DistributeActivitiesEditComponent } from './distribute-activities-edit/distribute-activities-edit.component';
+import { DistributeActivitiesDTO } from 'src/app/domain/dto/distribute-activities-dto';
 
 @Component({
   selector: 'app-distribute-activities',
@@ -19,9 +20,9 @@ import { DistributeActivitiesEditComponent } from './distribute-activities-edit/
 })
 export class DistributeActivitiesComponent implements OnInit {
 
-  pageObjects: PageResponseDTO<JurisdictionDTO> = new PageResponseDTO();
+  pageObjects: PageResponseDTO<DistributeActivitiesDTO> = new PageResponseDTO();
 
-  objectDataSource: MatTableDataSource<JurisdictionDTO> = new MatTableDataSource();
+  objectDataSource: MatTableDataSource<DistributeActivitiesDTO> = new MatTableDataSource();
   objectTableColumns: string[] = ['code', 'name', 'cycle', 'jurisdiction', "actions"];
 
   cyclesByEntity = new Map();
@@ -52,11 +53,11 @@ export class DistributeActivitiesComponent implements OnInit {
   }
 
   loadContent(filter: any) {
-    this._service.getAll(filter, this.pageObjects.page, this.pageObjects.size).subscribe(response => {
+    this._service.getAllDistributeActivities(filter, this.pageObjects.page, this.pageObjects.size).subscribe(response => {
       this.pageObjects = response;
       this.objectDataSource.data = this.pageObjects.content;
-      this.objectDataSource.data.forEach(team => {
-        this.setCyclesByEntity(team);
+      this.objectDataSource.data.forEach(dist => {
+        this.setCyclesByEntity(dist);
       });
     })
   }
@@ -83,12 +84,12 @@ export class DistributeActivitiesComponent implements OnInit {
     });
   }
 
-  setCyclesByEntity(jurisdiction: JurisdictionDTO) {
-    if (jurisdiction?.entity?.id) {
-      this._cycleService.getAllByEntityId(jurisdiction.entity.id, 0, 200).subscribe((resp) => {
-        this.cyclesByEntity.set(jurisdiction?.entity?.id, resp.content);
+  setCyclesByEntity(distributeActivities: DistributeActivitiesDTO) {
+    if (distributeActivities.entityId) {
+      this._cycleService.getAllByEntityId(distributeActivities.entityId, 0, 200).subscribe((resp) => {
+        this.cyclesByEntity.set(distributeActivities.entityId, resp.content);
         if (resp.content) {
-          jurisdiction.cycle = resp.content[0]
+          distributeActivities.cycle = resp.content[0]
         }
       });
     }
