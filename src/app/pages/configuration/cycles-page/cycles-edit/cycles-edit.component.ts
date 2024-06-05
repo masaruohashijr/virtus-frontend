@@ -1,17 +1,18 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { PillarsEditComponent } from '../../pillars-page/pillars-edit/pillars-edit.component';
 import { CyclesService } from 'src/app/services/configuration/cycles.service';
 import { CycleDTO } from 'src/app/domain/dto/cycle.dto';
 import { catchError, tap, throwError } from 'rxjs';
+import { BaseCrudEditComponent } from 'src/app/pages/common/base-crud-page/base-crud-edit/base-crud-edit.component';
 
 @Component({
   selector: 'app-cycles-edit',
   templateUrl: './cycles-edit.component.html',
   styleUrls: ['./cycles-edit.component.css']
 })
-export class CyclesEditComponent implements OnInit {
+export class CyclesEditComponent extends BaseCrudEditComponent<CycleDTO> implements OnInit {
 
   pillarForm = this._formBuilder.group({
     name: [this.object.name, [Validators.required]],
@@ -22,7 +23,10 @@ export class CyclesEditComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<PillarsEditComponent>,
     private _formBuilder: FormBuilder,
     private service: CyclesService,
-    @Inject(MAT_DIALOG_DATA) public object: CycleDTO) { }
+    private errorDialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public object: CycleDTO) {
+      super();
+     }
 
   ngOnInit(): void {
   }
@@ -43,7 +47,8 @@ export class CyclesEditComponent implements OnInit {
           this.dialogRef.close(resp);
         }),
         catchError(error => {
-          console.error(error);
+          this.mostrarErro(error, this.errorDialog);
+
           return throwError(error);
         })
       ).subscribe();
