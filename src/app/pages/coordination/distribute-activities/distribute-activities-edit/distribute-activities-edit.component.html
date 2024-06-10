@@ -1,21 +1,44 @@
 <h1 mat-dialog-title>{{getTitle()}}</h1>
 <div mat-dialog-content>
-    <ng-container *ngTemplateOutlet="treeNode; context:{ $implicit: treeData }"></ng-container>
-
-    <ng-template #treeNode let-nodes>
-        <div class="tree">
-            <div class="tree-node" *ngFor="let node of nodes">
-                <div class="tree-node-content">
-                    <span>{{ node.objectType }}: {{ node.name }}</span>
-                </div>
-                <div *ngIf="node.children.length > 0">
-                    <ng-container *ngTemplateOutlet="treeNode; context:{ $implicit: node.children }"></ng-container>
-                </div>
-            </div>
-        </div>
-    </ng-template>
-
-
+    <p-treeTable [value]="treeData" [scrollable]="true" [tableStyle]="{'min-width':'50rem'}">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Nível</th>
+                <th>Sumário</th>
+                <th>Planos</th>
+                <th>Equipe</th>
+                <th>Cronograma</th>
+                <th>Ações</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+            <tr [ttRow]="rowNode">
+                <td>
+                    <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                    {{rowData.objectType}}
+                </td>
+                <td>{{rowData.name}}</td>
+                <td>
+                    <span *ngIf="rowData.objectType != 'Componente'"></span>
+                    <button *ngIf="rowData.objectType == 'Componente'" mat-raised-button color="primary"
+                        cdkFocusInitial>Planos</button>
+                </td>
+                <td>
+                    <span *ngIf="rowData.objectType == 'Entidade'">Supervisor</span>
+                    <span *ngIf="rowData.objectType == 'Ciclo'">{{rowData.object.supervisor.name}}</span>
+                    <span *ngIf="rowData.objectType == 'Pilar'">Auditores</span>
+                    <span *ngIf="rowData.objectType == 'Componente'">{{rowData.object.name}}</span>
+                </td>
+                <td>
+                    <span *ngIf="rowData.objectType != 'Componente'"></span>
+                    <span *ngIf="rowData.objectType == 'Componente'">
+                        Inicia em - Termina em
+                    </span>
+                </td>
+                <td><button mat-raised-button cdkFocusInitial>Histórico</button></td>
+            </tr>
+        </ng-template>
+    </p-treeTable>
 </div>
 <div mat-dialog-actions [align]="'end'">
     <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>Salvar</button>

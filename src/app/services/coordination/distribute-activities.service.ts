@@ -34,11 +34,12 @@ export class DistributeActivitiesService extends BaseService<DistributeActivitie
       .get<PageResponseDTO<DistributeActivitiesDTO>>(URL_API + this.rootEndpoint(), { params: queryParams });
   }
 
-  getDistributeActivitiesTreeByEntityId(entityId: number) {
+  getDistributeActivitiesTreeByEntityAndCycleId(entityId: number, cycleId : number) {
     let queryParams = new HttpParams();
     queryParams = queryParams.append("entityId", entityId);
-    return this._httpClient.get<DistributeActivitiesTreeDTO[]>(
-      URL_API + this.rootEndpoint() + "/by-entity-id",
+    queryParams = queryParams.append("cycleId", cycleId);
+    return this._httpClient.get<DistributeActivitiesTreeDTO>(
+      URL_API + this.rootEndpoint() + "/by-entity-and-cycle-id",
       { params: queryParams });
   }
 }

@@ -4,14 +4,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { JurisdictionDTO } from 'src/app/domain/dto/jurisdiction.dto';
+import { DistributeActivitiesDTO } from 'src/app/domain/dto/distribute-activities-dto';
 import { PageResponseDTO } from 'src/app/domain/dto/response/page-response.dto';
-import { TeamDTO } from 'src/app/domain/dto/team.dto';
 import { CyclesService } from 'src/app/services/configuration/cycles.service';
 import { DistributeActivitiesService } from 'src/app/services/coordination/distribute-activities.service';
-import { TeamsService } from 'src/app/services/coordination/teams.service';
 import { DistributeActivitiesEditComponent } from './distribute-activities-edit/distribute-activities-edit.component';
-import { DistributeActivitiesDTO } from 'src/app/domain/dto/distribute-activities-dto';
 
 @Component({
   selector: 'app-distribute-activities',
@@ -75,7 +72,7 @@ export class DistributeActivitiesComponent implements OnInit {
 
   distributeActivities(object: any) {
     const dialogRef = this.dialog.open(DistributeActivitiesEditComponent, {
-      width: '800px',
+      width: '100%',
       data: object,
     });
 

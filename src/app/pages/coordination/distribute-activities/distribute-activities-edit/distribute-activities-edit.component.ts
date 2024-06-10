@@ -1,17 +1,9 @@
-import { FlatTreeControl } from '@angular/cdk/tree';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+import { TreeNode } from 'primeng/api';
 import { DistributeActivitiesDTO } from 'src/app/domain/dto/distribute-activities-dto';
 import { DistributeActivitiesTreeDTO } from 'src/app/domain/dto/distrobute-activities-tree-dto';
 import { DistributeActivitiesService } from 'src/app/services/coordination/distribute-activities.service';
-
-interface TreeNode {
-  name: string | undefined | null;
-  objectType: string;
-  object: any;
-  children: TreeNode[];
-}
 
 @Component({
   selector: 'app-distribute-activities-edit',
@@ -20,9 +12,8 @@ interface TreeNode {
 })
 export class DistributeActivitiesEditComponent implements OnInit {
 
-  distributeActivitiesTree: DistributeActivitiesTreeDTO[] = [];
-  treeData: TreeNode[] = [];
-
+  distributeActivitiesTree!: DistributeActivitiesTreeDTO;
+  treeData!: TreeNode[];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public distributeActivities: DistributeActivitiesDTO,
@@ -31,61 +22,73 @@ export class DistributeActivitiesEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.service.getDistributeActivitiesTreeByEntityId(this.distributeActivities.entityId)
+    this.service.getDistributeActivitiesTreeByEntityAndCycleId(this.distributeActivities.entityId, this.distributeActivities.cycle?.id)
       .pipe()
       .subscribe(resp => {
         this.distributeActivitiesTree = resp;
         this.treeData = this.buildTree(resp);
-        console.log(this.treeData);
+        console.log('Building tree with data:', JSON.stringify(this.treeData, null, 2));
       });
   }
 
-  buildTree(data: DistributeActivitiesTreeDTO[]): TreeNode[] {
+  buildTree(data: DistributeActivitiesTreeDTO): TreeNode[] {
+    if (!data || !data.cycle || !data.entity) {
+      return [];
+    }
+  
     const tree: TreeNode[] = [];
-
-    data.forEach(item => {
-      const entityNode: TreeNode = {
-        name: item.entity.name,
+  
+    const entityNode: TreeNode = {
+      data: {
+        name: data.entity?.name || 'Unknown Entity',
         objectType: 'Entidade',
-        object: item.entity,
+        object: data.entity
+      },
+      expanded: true,
+      children: []
+    };
+  
+    const cycleNode: TreeNode = {
+      data: {
+        name: data.cycle?.cycle?.name || 'Unknown Cycle',
+        objectType: 'Ciclo',
+        object: data.cycle
+      },
+      expanded: true,
+      children: []
+    };
+  
+    data.cycle.cycle?.cyclePillars.forEach(pillar => {
+      const pillarNode: TreeNode = {
+        data: {
+          name: pillar?.pillar?.name || 'Unknown Pillar',
+          objectType: 'Pilar',
+          object: pillar?.pillar
+        },
+        expanded: true,
         children: []
       };
-
-      item.cycles.forEach(cycle => {
-        const cycleNode: TreeNode = {
-          name: cycle.name,
-          objectType: 'Ciclo',
-          object: cycle,
-          children: []
+  
+      pillar.pillar?.components.forEach(component => {
+        const componentNode: TreeNode = {
+          data: {
+            name: component.component?.name || 'Unknown Component',
+            objectType: 'Componente',
+            object: component.component
+          },
+          expanded: true,
+          children: [] // Nenhum filho para componentes
         };
-
-        cycle.cyclePillars.forEach(pillar => {
-          const pillarNode: TreeNode = {
-            name: pillar?.pillar?.name,
-            objectType: 'Pilar',
-            object: pillar?.pillar,
-            children: []
-          };
-
-          pillar.pillar?.components.forEach(component => {
-            const componentNode: TreeNode = {
-              name: component.component?.name,
-              objectType: 'Componente',
-              object: component.component,
-              children: [] // Nenhum filho para componentes
-            };
-            pillarNode.children.push(componentNode);
-          });
-
-          cycleNode.children.push(pillarNode);
-        });
-
-        entityNode.children.push(cycleNode);
+        pillarNode.children?.push(componentNode);
       });
-
-      tree.push(entityNode);
+  
+      cycleNode.children?.push(pillarNode);
     });
-
+  
+    entityNode.children?.push(cycleNode);
+  
+    tree.push(entityNode);
+  
     return tree;
   }
 

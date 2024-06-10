@@ -3,35 +3,51 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatAutocompleteModule } from '@angular/material/autocomplete'
+import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogActions, MatDialogModule } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTreeModule } from '@angular/material/tree';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AuthInterceptor } from './auth/auth.interceptor';
+import { AuthService } from './auth/auth.service';
+import { AlertDialogComponent } from './components/dialog/alert-dialog/alert-dialog.component';
 import { ConfirmationDialogComponent } from './components/dialog/confirmation-dialog/confirmation-dialog.component';
 import { NavTopComponent } from './components/nav-top/nav-top.component';
 import { ActionsEditComponent } from './pages/administration/actions/actions-edit/actions-edit.component';
 import { ActionsComponent } from './pages/administration/actions/actions.component';
 import { FeaturesEditComponent } from './pages/administration/features/features-edit/features-edit.component';
 import { FeaturesComponent } from './pages/administration/features/features.component';
+import { JurisdictionsEditComponent } from './pages/administration/offices/jurisdictions-edit/jurisdictions-edit.component';
+import { JurisdictionsListComponent } from './pages/administration/offices/jurisdictions-list/jurisdictions-list.component';
+import { MembersEditComponent } from './pages/administration/offices/members-edit/members-edit.component';
+import { MembersListComponent } from './pages/administration/offices/members-list/members-list.component';
+import { OfficesEditComponent } from './pages/administration/offices/offices-edit/offices-edit.component';
+import { OfficesJurisdictionsEditComponent } from './pages/administration/offices/offices-jurisdictions-edit/offices-jurisdictions-edit.component';
+import { OfficesMembersEditComponent } from './pages/administration/offices/offices-members-edit/offices-members-edit.component';
 import { OfficesComponent } from './pages/administration/offices/offices.component';
+import { RolesEditComponent } from './pages/administration/roles/roles-edit/roles-edit.component';
 import { RolesComponent } from './pages/administration/roles/roles.component';
 import { StatusEditComponent } from './pages/administration/status/status-edit/status-edit.component';
 import { StatusPageComponent } from './pages/administration/status/status.component';
+import { UserEditComponent } from './pages/administration/users/user-edit/user-edit.component';
+import { UserUpdatePassEditComponent } from './pages/administration/users/user-update-pass-edit/user-update-pass-edit.component';
 import { UsersComponent } from './pages/administration/users/users.component';
 import { ActivitiesEditComponent } from './pages/administration/workflows/workflows-edit/activities-edit/activities-edit.component';
 import { ActivitiesListComponent } from './pages/administration/workflows/workflows-edit/activities-list/activities-list.component';
@@ -48,6 +64,7 @@ import { CyclesEditComponent } from './pages/configuration/cycles-page/cycles-ed
 import { CyclesPillarsEditComponent } from './pages/configuration/cycles-page/cycles-edit/cycles-pillars-edit/cycles-pillars-edit.component';
 import { CyclesPillarsListComponent } from './pages/configuration/cycles-page/cycles-edit/cycles-pillars-list/cycles-pillars-list.component';
 import { CyclesPageComponent } from './pages/configuration/cycles-page/cycles-page.component';
+import { StartCyclesEditComponent } from './pages/configuration/cycles-page/start-cycles-edit/start-cycles-edit.component';
 import { ElementsEditComponent } from './pages/configuration/elements-page/elements-edit/elements-edit.component';
 import { ElementsItemEditComponent } from './pages/configuration/elements-page/elements-edit/elements-item-edit/elements-item-edit.component';
 import { ElementsItemListComponent } from './pages/configuration/elements-page/elements-edit/elements-item-list/elements-item-list.component';
@@ -58,37 +75,24 @@ import { PillarsComponentEditComponent } from './pages/configuration/pillars-pag
 import { PillarsComponentListComponent } from './pages/configuration/pillars-page/pillars-edit/pillars-component-list/pillars-component-list.component';
 import { PillarsEditComponent } from './pages/configuration/pillars-page/pillars-edit/pillars-edit.component';
 import { PillarsPageComponent } from './pages/configuration/pillars-page/pillars-page.component';
-import { MainLayoutPageComponent } from './pages/main-layout-page/main-layout-page.component';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
-import { RolesEditComponent } from './pages/administration/roles/roles-edit/roles-edit.component';
-import { UserEditComponent } from './pages/administration/users/user-edit/user-edit.component';
-import { OfficesEditComponent } from './pages/administration/offices/offices-edit/offices-edit.component';
-import { UserUpdatePassEditComponent } from './pages/administration/users/user-update-pass-edit/user-update-pass-edit.component';
-import { OfficesJurisdictionsEditComponent } from './pages/administration/offices/offices-jurisdictions-edit/offices-jurisdictions-edit.component';
-import { OfficesMembersEditComponent } from './pages/administration/offices/offices-members-edit/offices-members-edit.component';
-import { JurisdictionsEditComponent } from './pages/administration/offices/jurisdictions-edit/jurisdictions-edit.component';
-import { MembersEditComponent } from './pages/administration/offices/members-edit/members-edit.component';
-import { MembersListComponent } from './pages/administration/offices/members-list/members-list.component';
-import { JurisdictionsListComponent } from './pages/administration/offices/jurisdictions-list/jurisdictions-list.component';
-import { EntitiesPageComponent } from './pages/rating/entities-page/entities-page.component';
-import { EntitiesEditComponent } from './pages/rating/entities-page/entities-edit/entities-edit.component';
-import { CyclesEntitiesListComponent } from './pages/rating/entities-page/entities-edit/cycles-entities-list/cycles-entities-list.component';
-import { CyclesEntitiesEditComponent } from './pages/rating/entities-page/entities-edit/cycles-entities-edit/cycles-entities-edit.component';
-import { PlansListComponent } from './pages/rating/entities-page/entities-edit/plans-list/plans-list.component';
-import { PlansEditComponent } from './pages/rating/entities-page/entities-edit/plans-edit/plans-edit.component';
-import { StartCyclesEditComponent } from './pages/configuration/cycles-page/start-cycles-edit/start-cycles-edit.component';
-import { AssingTeamsPageComponent } from './pages/coordination/assing-teams-page/assing-teams-page.component';
 import { AssingTeamsEditComponent } from './pages/coordination/assing-teams-page/assing-teams-edit/assing-teams-edit.component';
-import { AuthService } from './auth/auth.service';
-import { AuthInterceptor } from './auth/auth.interceptor';
-import { LoginComponent } from './pages/login/login.component';
-import { TeamMembersListComponent } from './pages/coordination/assing-teams-page/assing-teams-edit/team-members-list/team-members-list.component';
 import { TeamMembersEditComponent } from './pages/coordination/assing-teams-page/assing-teams-edit/team-members-edit/team-members-edit.component';
-import { AlertDialogComponent } from './components/dialog/alert-dialog/alert-dialog.component';
-import { DistributeActivitiesComponent } from './pages/coordination/distribute-activities/distribute-activities.component';
+import { TeamMembersListComponent } from './pages/coordination/assing-teams-page/assing-teams-edit/team-members-list/team-members-list.component';
+import { AssingTeamsPageComponent } from './pages/coordination/assing-teams-page/assing-teams-page.component';
 import { DistributeActivitiesEditComponent } from './pages/coordination/distribute-activities/distribute-activities-edit/distribute-activities-edit.component';
-import { MatTreeModule } from '@angular/material/tree';
+import { DistributeActivitiesComponent } from './pages/coordination/distribute-activities/distribute-activities.component';
+import { LoginComponent } from './pages/login/login.component';
+import { MainLayoutPageComponent } from './pages/main-layout-page/main-layout-page.component';
+import { CyclesEntitiesEditComponent } from './pages/rating/entities-page/entities-edit/cycles-entities-edit/cycles-entities-edit.component';
+import { CyclesEntitiesListComponent } from './pages/rating/entities-page/entities-edit/cycles-entities-list/cycles-entities-list.component';
+import { EntitiesEditComponent } from './pages/rating/entities-page/entities-edit/entities-edit.component';
+import { PlansEditComponent } from './pages/rating/entities-page/entities-edit/plans-edit/plans-edit.component';
+import { PlansListComponent } from './pages/rating/entities-page/entities-edit/plans-list/plans-list.component';
+import { EntitiesPageComponent } from './pages/rating/entities-page/entities-page.component';
+// Importações PrimeNG
+import { SharedModule } from 'primeng/api';
+import { ButtonModule } from 'primeng/button'; // Se precisar de botões do PrimeNG
+import { TreeTableModule } from 'primeng/treetable';
 
 @NgModule({
   declarations: [
@@ -157,6 +161,9 @@ import { MatTreeModule } from '@angular/material/tree';
     DistributeActivitiesEditComponent
   ],
   imports: [
+    TreeTableModule,
+    ButtonModule,
+    SharedModule,
     HttpClientModule,
     BrowserModule,
     AppRoutingModule,
