@@ -42,7 +42,7 @@ export class AssingTeamsEditComponent extends BaseCrudEditComponent<TeamDTO> imp
     });
   }
 
-  compareSupevisor(object1: SupervisorDTO, object2: SupervisorDTO) {
+  compareSupervisor(object1: SupervisorDTO, object2: SupervisorDTO) {
     return object1 && object2 ? object1.userId === object2.userId : object1 === object2
   }
 

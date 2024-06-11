@@ -3,39 +3,70 @@
     <p-treeTable [value]="treeData" [scrollable]="true" [tableStyle]="{'min-width':'50rem'}">
         <ng-template pTemplate="header">
             <tr>
-                <th>Nível</th>
+                <th style="width: 165px;">Nível</th>
                 <th>Sumário</th>
-                <th>Planos</th>
+                <th style="width: 100px;">Planos</th>
                 <th>Equipe</th>
                 <th>Cronograma</th>
-                <th>Ações</th>
+                <th style="width: 100px;">Ações</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
             <tr [ttRow]="rowNode">
-                <td>
+                <td style="width: 165px;">
                     <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
                     {{rowData.objectType}}
                 </td>
                 <td>{{rowData.name}}</td>
-                <td>
+                <td style="width: 100px;">
                     <span *ngIf="rowData.objectType != 'Componente'"></span>
                     <button *ngIf="rowData.objectType == 'Componente'" mat-raised-button color="primary"
                         cdkFocusInitial>Planos</button>
                 </td>
                 <td>
-                    <span *ngIf="rowData.objectType == 'Entidade'">Supervisor</span>
-                    <span *ngIf="rowData.objectType == 'Ciclo'">{{rowData.object.supervisor.name}}</span>
-                    <span *ngIf="rowData.objectType == 'Pilar'">Auditores</span>
-                    <span *ngIf="rowData.objectType == 'Componente'">{{rowData.object.name}}</span>
+                    <span *ngIf="rowData.objectType == 'Entidade'"></span>
+                    <span *ngIf="rowData.objectType == 'Ciclo'">
+                        <mat-form-field class="mat-form-field" class="example-full-width" appearance="outline">
+                            <mat-label>Supervisor</mat-label>
+                            <input matInput [value]="rowData.object.supervisor.name" readonly>
+                        </mat-form-field>
+                    </span>
+                    <span *ngIf="rowData.objectType == 'Pilar'"></span>
+                    <span *ngIf="rowData.objectType == 'Componente'">
+                        <span *ngIf="rowData.objectType == 'Componente'">
+                            <mat-form-field class="mat-form-field" appearance="outline">
+                              <mat-label>Auditor</mat-label>
+                              <mat-select [(ngModel)]="rowData.object.auditor" (selectionChange)="setAuditor(rowData.object, $event.value)" [compareWith]="compareAuditors">
+                                <mat-option *ngFor="let auditor of distributeActivitiesTree?.auditors" [value]="auditor">
+                                  {{auditor.name}}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </span>
+                    </span>
                 </td>
                 <td>
                     <span *ngIf="rowData.objectType != 'Componente'"></span>
                     <span *ngIf="rowData.objectType == 'Componente'">
-                        Inicia em - Termina em
+                        <mat-form-field class="mat-form-field" appearance="outline">
+                            <mat-label>Inicia em - Termina em</mat-label>
+                            <mat-date-range-input [rangePicker]="picker">
+                                <input matStartDate [(ngModel)]="rowData.object.startsAt"
+                                    (dateChange)="onStartsChange(rowData.object, $event.value)" placeholder="Inicia em">
+                                <input matEndDate [(ngModel)]="rowData.object.endsAt"
+                                    (dateChange)="onEndsChange(rowData.object, $event.value)" placeholder="Termina em">
+                            </mat-date-range-input>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-date-range-picker #picker></mat-date-range-picker>
+                        </mat-form-field>
                     </span>
                 </td>
-                <td><button mat-raised-button cdkFocusInitial>Histórico</button></td>
+                <td style="width: 100px;">
+                    <span *ngIf="rowData.objectType != 'Componente'"></span>
+                    <span *ngIf="rowData.objectType == 'Componente'">
+                        <button mat-raised-button cdkFocusInitial>Histórico</button>
+                    </span>
+                </td>
             </tr>
         </ng-template>
     </p-treeTable>

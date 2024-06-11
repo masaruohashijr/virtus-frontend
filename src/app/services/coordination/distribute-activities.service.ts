@@ -6,12 +6,14 @@ import { DistributeActivitiesDTO } from 'src/app/domain/dto/distribute-activitie
 import { Observable } from 'rxjs';
 import { PageResponseDTO } from 'src/app/domain/dto/response/page-response.dto';
 import { URL_API } from 'src/app/common/service-constants';
-import { DistributeActivitiesTreeDTO } from 'src/app/domain/dto/distrobute-activities-tree-dto';
+import { DistributeActivitiesTreeDTO } from 'src/app/domain/dto/distribute-activities-tree-dto';
+import { ProductComponentDTO } from 'src/app/domain/dto/product-component.dto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DistributeActivitiesService extends BaseService<DistributeActivitiesDTO> {
+
 
   constructor(private _httpClient: HttpClient) {
     super();
@@ -34,12 +36,16 @@ export class DistributeActivitiesService extends BaseService<DistributeActivitie
       .get<PageResponseDTO<DistributeActivitiesDTO>>(URL_API + this.rootEndpoint(), { params: queryParams });
   }
 
-  getDistributeActivitiesTreeByEntityAndCycleId(entityId: number, cycleId : number) {
+  getDistributeActivitiesTreeByEntityAndCycleId(entityId: number, cycleId: number) {
     let queryParams = new HttpParams();
     queryParams = queryParams.append("entityId", entityId);
     queryParams = queryParams.append("cycleId", cycleId);
     return this._httpClient.get<DistributeActivitiesTreeDTO>(
       URL_API + this.rootEndpoint() + "/by-entity-and-cycle-id",
       { params: queryParams });
+  }
+
+  distributeActivities(activities: any) {
+    return this._httpClient.post(URL_API + this.rootEndpoint(), activities);
   }
 }

@@ -1,32 +1,56 @@
 .tree {
-    width: 100%;
-  }
-  
-  .tree-node {
-    padding: 8px;
-    padding-left: 20px;
-    border-top: 1px solid #ccc;
-  }
-  
-  .tree-node-content {
-    display: flex;
-    align-items: center;
-  }
-  
-  .tree-node-indicator {
-    margin-right: 5px;
-    cursor: pointer;
-  }
-  
-  .tree-node-indicator.expanded::before {
-    content: '▼';
-  }
-  
-  .tree-node-indicator::before {
-    content: '►';
-  }
-  
-  .collapsed {
-    display: none;
-  }
-  
+  width: 100%;
+}
+
+.tree-node {
+  padding: 8px;
+  padding-left: 20px;
+  border-top: 1px solid #ccc;
+}
+
+.tree-node-content {
+  display: flex;
+  align-items: center;
+}
+
+.tree-node-indicator {
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.tree-node-indicator.expanded::before {
+  content: '▼';
+}
+
+.tree-node-indicator::before {
+  content: '►';
+}
+
+.collapsed {
+  display: none;
+}
+
+.header {
+  background-color: #ccc;
+}
+
+td {
+  padding: 5px;
+  border-bottom: 1px solid rgb(233 230 230);
+}
+
+.grid-field {
+  margin-top: 5px !important;
+}
+
+th {
+  padding: 5px;
+  border-bottom: 1px solid rgb(233 230 230);
+  border-top: 1px solid rgb(233 230 230);
+  background-color: #ccc;
+}
+
+.mat-form-field{
+  width: 100%;
+  margin-top: 10px !important;
+}
