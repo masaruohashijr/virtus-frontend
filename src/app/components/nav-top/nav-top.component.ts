@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ACTIONS_ROUTE, ASSING_TEAMS_ROUTE, CICLES_ROUTE, COMPONENTS_ROUTE, DISTRIBUTE_ACTIVITIES_ROUTE, ELEMENTS_ROUTE, ENTITIES_ROUTE, FEATURES_ROUTE, OFFICES_ROUTE, PILLARS_ROUTE, ROLES_ROUTE, STATUS_ROUTE, TYPE_OF_NOTE_ROUTE, USERS_ROUTE, WORKFLOWS_ROUTE } from 'src/app/common/route-constants';
+import { CurrentUser } from 'src/app/domain/dto/current-user.dto';
+import { UsersService } from 'src/app/services/administration/users.service';
 
 @Component({
   selector: 'app-nav-top',
@@ -8,7 +10,9 @@ import { ACTIONS_ROUTE, ASSING_TEAMS_ROUTE, CICLES_ROUTE, COMPONENTS_ROUTE, DIST
 })
 export class NavTopComponent implements OnInit {
 
-  constructor() { }
+  loggedUser!: CurrentUser
+
+  constructor(private _userService:UsersService) { }
 
   entitiesRoute = ENTITIES_ROUTE;
 
@@ -30,6 +34,11 @@ export class NavTopComponent implements OnInit {
   distributeActivities = DISTRIBUTE_ACTIVITIES_ROUTE;
 
   ngOnInit(): void {
+    this.loggedUser = this._userService.getCurrentUser();
+  }
+
+  loggout(){
+    window.location.reload();
   }
 
 }

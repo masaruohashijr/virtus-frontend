@@ -6,16 +6,25 @@ import { UserUpdatePasswordDTO } from 'src/app/domain/dto/user-update-password.d
 import { URL_API } from 'src/app/common/service-constants';
 import { Observable } from 'rxjs';
 import { PageResponseDTO } from 'src/app/domain/dto/response/page-response.dto';
+import { CurrentUser } from 'src/app/domain/dto/current-user.dto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsersService extends BaseService<UserDTO>{
 
-  currentUser: any;
+  currentUser!: CurrentUser;
 
   constructor(private _httpClient: HttpClient) {
     super();
+  }
+
+  setCurrentUser(user: CurrentUser) {
+    this.currentUser = user;
+  }
+
+  getCurrentUser() {
+    return this.currentUser;
   }
 
   override rootEndpoint(): string {

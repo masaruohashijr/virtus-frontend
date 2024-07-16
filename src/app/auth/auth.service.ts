@@ -4,6 +4,7 @@ import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
 import { UsersService } from '../services/administration/users.service';
 import { URL_API } from '../common/service-constants';
 import { AuthUtils } from './auth.utils';
+import { CurrentUser } from '../domain/dto/current-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -39,7 +40,7 @@ export class AuthService {
         return this._httpClient.post('api/auth/reset-password', password);
     }
 
-    signIn(credentials: { username: string; password: string; grant_type: string }): Observable<any> {
+    signIn(credentials: { username: string; password: string; grant_type: string }): Observable<CurrentUser> {
         if (this._authenticated) {
             return throwError('Usuário já está logado');
         }
@@ -57,22 +58,13 @@ export class AuthService {
         body.set('password', credentials.password);
 
 
-        return this._httpClient.post(URL_API + '/oauth/token', body, httpOptions).pipe(
-            switchMap((response: any) => {
+        return this._httpClient.post<CurrentUser>(URL_API + '/oauth/token', body, httpOptions).pipe(
+            switchMap((response: CurrentUser) => {
                 this.accessToken = response.access_token;
                 this.refreshToken = response.refresh_token
 
                 this._authenticated = true;
-
-                this._userService.currentUser = {
-                    id: response.id,
-                    username: response.username,
-                    name: response.name,
-                    email: response.email,
-                    avatar: '',
-                    status: '',
-                    role: response.role
-                };
+                this._userService.setCurrentUser(response)
 
                 return of(response);
             })
@@ -107,15 +99,7 @@ export class AuthService {
                 }
 
                 this._authenticated = true;
-                this._userService.currentUser = {
-                    id: response.id,
-                    username: response.username,
-                    name: response.name,
-                    email: response.email,
-                    avatar: '',
-                    status: '',
-                    role: response.role
-                };
+                this._userService.setCurrentUser(response)
 
                 return of(true);
             })

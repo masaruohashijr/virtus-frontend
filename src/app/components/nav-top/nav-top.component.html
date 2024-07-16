@@ -10,13 +10,15 @@
 
   <span class="spacer"></span>
 
-  <button mat-icon-button class="icon" [matMenuTriggerFor]="account" aria-label="Example icon-button with share icon">
+  <button mat-button class="icon" [matMenuTriggerFor]="account" aria-label="Example icon-button with share icon">
+    {{loggedUser.name}} ({{loggedUser.role}})
     <mat-icon>account_circle</mat-icon>
   </button>
 </mat-toolbar>
 
 <mat-menu #account="matMenu">
   <button mat-menu-item>Alterar Senha</button>
+  <button mat-menu-item (click)="loggout()">Sair</button>
 </mat-menu>
 
 <mat-menu #coordination="matMenu">
