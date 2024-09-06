@@ -8,12 +8,13 @@ import { PageResponseDTO } from 'src/app/domain/dto/response/page-response.dto';
 import { URL_API } from 'src/app/common/service-constants';
 import { DistributeActivitiesTreeDTO } from 'src/app/domain/dto/distribute-activities-tree-dto';
 import { ProductComponentDTO } from 'src/app/domain/dto/product-component.dto';
+import { PlanDTO } from 'src/app/domain/dto/plan.dto';
+import { ProductPlanDTO } from 'src/app/domain/dto/product-plan.dto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DistributeActivitiesService extends BaseService<DistributeActivitiesDTO> {
-
 
   constructor(private _httpClient: HttpClient) {
     super();
@@ -47,5 +48,32 @@ export class DistributeActivitiesService extends BaseService<DistributeActivitie
 
   distributeActivities(activities: any) {
     return this._httpClient.post(URL_API + this.rootEndpoint(), activities);
+  }
+
+  listConfigPlans(entityId: number, cycleId: number, pillarId: number, componentId: number, pga: boolean) {
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("entityId", entityId);
+    queryParams = queryParams.append("cycleId", cycleId);
+    queryParams = queryParams.append("pillarId", pillarId);
+    queryParams = queryParams.append("componentId", componentId);
+    queryParams = queryParams.append("pga", pga);
+    return this._httpClient.get<PlanDTO[]>(
+      URL_API + this.rootEndpoint() + "/config-plans",
+      { params: queryParams });
+  }
+
+  listConfiguredPlans(entityId: number, cycleId: number, pillarId: number, componentId: number) {
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("entityId", entityId);
+    queryParams = queryParams.append("cycleId", cycleId);
+    queryParams = queryParams.append("pillarId", pillarId);
+    queryParams = queryParams.append("componentId", componentId);
+    return this._httpClient.get<ProductPlanDTO[]>(
+      URL_API + this.rootEndpoint() + "/configured-plans",
+      { params: queryParams });
+  }
+
+  updateConfigPlans(body: any) {
+    return this._httpClient.post(URL_API + this.rootEndpoint() + "/config-plans", body);
   }
 }

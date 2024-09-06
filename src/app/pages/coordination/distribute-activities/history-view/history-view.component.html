@@ -1,0 +1,25 @@
+<h1 mat-dialog-title>{{getTitle()}}</h1>
+<div mat-dialog-content>
+    <form>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>EFPC</mat-label>
+            <input formControlName="efpc" matInput>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Ciclo</mat-label>
+            <input formControlName="cycle" matInput>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Pilar</mat-label>
+            <input formControlName="pillar" matInput>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Componente</mat-label>
+            <input formControlName="component" matInput>
+        </mat-form-field>
+
+    </form>
+</div>
+<div mat-dialog-actions [align]="'end'">
+    <button mat-flat-button [mat-dialog-close]="">Fechar</button>
+</div>

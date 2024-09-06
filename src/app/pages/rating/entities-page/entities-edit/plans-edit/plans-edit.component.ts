@@ -49,7 +49,7 @@ export class PlansEditComponent extends BaseCrudEditComponent<PlanDTO> implement
   }
 
   getTitle() {
-    return this.object?.cnpb ? "Editar Ciclo \"" + this.object.cnpb + "\"" : "Cadastrar novo Ciclo";
+    return this.object?.cnpb ? "Editar Plano \"" + this.object.cnpb + "\"" : "Cadastrar novo Plano";
   }
 
 }

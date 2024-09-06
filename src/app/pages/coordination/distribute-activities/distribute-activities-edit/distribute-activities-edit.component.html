@@ -20,7 +20,7 @@
                 <td>{{rowData.name}}</td>
                 <td style="width: 100px;">
                     <span *ngIf="rowData.objectType != 'Componente'"></span>
-                    <button *ngIf="rowData.objectType == 'Componente'" mat-raised-button color="primary"
+                    <button *ngIf="rowData.objectType == 'Componente'" (click)="openPlansConfig(rowData.object)" mat-raised-button color="primary"
                         cdkFocusInitial>Planos</button>
                 </td>
                 <td>
@@ -64,7 +64,7 @@
                 <td style="width: 100px;">
                     <span *ngIf="rowData.objectType != 'Componente'"></span>
                     <span *ngIf="rowData.objectType == 'Componente'">
-                        <button mat-raised-button cdkFocusInitial>Histórico</button>
+                        <button mat-raised-button cdkFocusInitial (click)="openHistory(rowData.object)">Histórico</button>
                     </span>
                 </td>
             </tr>

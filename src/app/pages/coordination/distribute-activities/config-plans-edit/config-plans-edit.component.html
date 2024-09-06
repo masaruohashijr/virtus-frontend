@@ -1,0 +1,43 @@
+<h1 mat-dialog-title>{{getTitle()}}</h1>
+<div mat-dialog-content>
+    <form [formGroup]="configPlansForm">
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Entidate</mat-label>
+            <input formControlName="entity" matInput>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Ciclo</mat-label>
+            <input formControlName="cycle" matInput>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Pilar</mat-label>
+            <input formControlName="pillar" matInput>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Componente</mat-label>
+            <input formControlName="component" matInput>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+            <mat-label>Planos</mat-label>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addPlan($event)">
+                <mat-option *ngFor="let plan of plans" [value]="plan">
+                    {{ plan.cnpb }} - {{ plan.name }}
+                </mat-option>
+            </mat-autocomplete>
+            <mat-chip-list #chipList [compareWith]="compare">
+                <mat-chip *ngFor="let selected of configPlansForm.get('plans')?.value" [removable]="true"
+                    (removed)="removePlan(selected)">
+                    {{ selected.cnpb }} - {{ selected.name }}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input placeholder="Adicionar um Plano" matInput [matAutocomplete]="auto"
+                    [formControl]="planInput">
+            </mat-chip-list>
+        </mat-form-field>
+
+    </form>
+</div>
+<div mat-dialog-actions [align]="'end'">
+    <button mat-raised-button color="primary" (click)="updateConfigPlans()" cdkFocusInitial>Salvar</button>
+    <button mat-flat-button [mat-dialog-close]="">Cancelar</button>
+</div>

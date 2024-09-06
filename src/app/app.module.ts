@@ -93,6 +93,8 @@ import { EntitiesPageComponent } from './pages/rating/entities-page/entities-pag
 import { SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button'; // Se precisar de botões do PrimeNG
 import { TreeTableModule } from 'primeng/treetable';
+import { ConfigPlansComponent } from './pages/coordination/distribute-activities/config-plans-edit/config-plans-edit.component';
+import { HistoryViewComponent } from './pages/coordination/distribute-activities/history-view/history-view.component';
 
 @NgModule({
   declarations: [
@@ -158,7 +160,9 @@ import { TreeTableModule } from 'primeng/treetable';
     TeamMembersEditComponent,
     AlertDialogComponent,
     DistributeActivitiesComponent,
-    DistributeActivitiesEditComponent
+    DistributeActivitiesEditComponent,
+    ConfigPlansComponent,
+    HistoryViewComponent
   ],
   imports: [
     TreeTableModule,

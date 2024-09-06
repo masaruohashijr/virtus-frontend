@@ -9,6 +9,8 @@ import { DistributeActivitiesTreeDTO } from 'src/app/domain/dto/distribute-activ
 import { ProductComponentDTO } from 'src/app/domain/dto/product-component.dto';
 import { BaseCrudEditComponent } from 'src/app/pages/common/base-crud-page/base-crud-edit/base-crud-edit.component';
 import { DistributeActivitiesService } from 'src/app/services/coordination/distribute-activities.service';
+import { ConfigPlansComponent } from '../config-plans-edit/config-plans-edit.component';
+import { HistoryViewComponent } from '../history-view/history-view.component';
 
 @Component({
   selector: 'app-distribute-activities-edit',
@@ -23,6 +25,8 @@ export class DistributeActivitiesEditComponent extends BaseCrudEditComponent<Dis
   products: ProductComponentDTO[] = [];
 
   constructor(
+    public dialog: MatDialog,
+    public deleteDialog: MatDialog,
     public dialogRef: MatDialogRef<DistributeActivitiesTreeDTO>,
     @Inject(MAT_DIALOG_DATA) public distributeActivities: DistributeActivitiesDTO,
     private service: DistributeActivitiesService,
@@ -204,6 +208,28 @@ export class DistributeActivitiesEditComponent extends BaseCrudEditComponent<Dis
 
   compareAuditors(a1: AuditorDTO, a2: AuditorDTO): boolean {
     return a1 && a2 ? a1.userId === a2.userId : a1 === a2;
+  }
+
+  openPlansConfig(object: ProductComponentDTO) {
+    const dialogRef = this.dialog.open(ConfigPlansComponent, {
+      width: '600px',
+      data: object,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+    });
+  }
+
+  openHistory(object: ProductComponentDTO) {
+    const dialogRef = this.dialog.open(HistoryViewComponent, {
+      width: '600px',
+      data: object,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+    });
   }
 }
 
