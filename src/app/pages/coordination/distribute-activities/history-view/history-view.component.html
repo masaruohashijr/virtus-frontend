@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>{{getTitle()}}</h1>
 <div mat-dialog-content>
-    <form>
+    <form [formGroup]="historyForm">
         <mat-form-field class="w-full mt-auto" appearance="outline">
             <mat-label>EFPC</mat-label>
             <input formControlName="efpc" matInput>
@@ -19,6 +19,9 @@
         </mat-form-field>
 
     </form>
+    <div>
+        <app-history-list [history]="data.historic"></app-history-list>
+    </div>
 </div>
 <div mat-dialog-actions [align]="'end'">
     <button mat-flat-button [mat-dialog-close]="">Fechar</button>

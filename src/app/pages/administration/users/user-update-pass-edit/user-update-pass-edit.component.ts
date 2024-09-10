@@ -1,7 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { catchError, tap, throwError } from 'rxjs';
+import { AlertDialogComponent } from 'src/app/components/dialog/alert-dialog/alert-dialog.component';
 import { UserUpdatePasswordDTO } from 'src/app/domain/dto/user-update-password.dto';
 import { UserDTO } from 'src/app/domain/dto/user.dto';
 import { UsersService } from 'src/app/services/administration/users.service';
@@ -26,6 +27,7 @@ export class UserUpdatePassEditComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<UserUpdatePassEditComponent>,
     private _service: UsersService,
     private _formBuilder: FormBuilder,
+    private errorDialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public object: UserDTO) {
   }
 
@@ -47,15 +49,29 @@ export class UserUpdatePassEditComponent implements OnInit {
     userUpdatePass.password = this.elementForm.value.password?.toString();
     userUpdatePass.repeatedPassword = this.elementForm.value.repeatedPassword?.toString();
 
-      this._service.updatePassword(userUpdatePass).pipe(
-        tap(resp => {
-          this.dialogRef.close(resp);
-        }),
-        catchError(error => {
-          console.error(error);
-          return throwError(error);
-        })
-      ).subscribe();
+    this._service.updatePassword(userUpdatePass).pipe(
+      tap(resp => {
+        this.dialogRef.close(resp);
+      }),
+      catchError(error => {
+        this.mostrarErro(error, this.errorDialog);
+        return throwError(error);
+      })
+    ).subscribe();
+  }
+
+  mostrarErro(error: any, errorDialog: MatDialog) {
+    const errorDialogRef = errorDialog.open(AlertDialogComponent, {
+      width: '350px',
+      data: {
+        title: "Erro",
+        message: error.error?.message ? error.error?.message : "Erro interno no servidor."
+      },
+    });
+
+    errorDialogRef.afterClosed().subscribe(result => {
+
+    });
   }
 
 }

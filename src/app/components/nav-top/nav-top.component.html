@@ -17,7 +17,7 @@
 </mat-toolbar>
 
 <mat-menu #account="matMenu">
-  <button mat-menu-item>Alterar Senha</button>
+  <button mat-menu-item (click)="changePassword()">Alterar Senha</button>
   <button mat-menu-item (click)="loggout()">Sair</button>
 </mat-menu>
 

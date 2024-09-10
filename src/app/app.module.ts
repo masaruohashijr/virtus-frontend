@@ -95,6 +95,9 @@ import { ButtonModule } from 'primeng/button'; // Se precisar de botões do Prim
 import { TreeTableModule } from 'primeng/treetable';
 import { ConfigPlansComponent } from './pages/coordination/distribute-activities/config-plans-edit/config-plans-edit.component';
 import { HistoryViewComponent } from './pages/coordination/distribute-activities/history-view/history-view.component';
+import { HistoryTableComponent } from './pages/coordination/distribute-activities/history-view/history-table/history-table.component';
+import { HistoryListComponent } from './pages/coordination/distribute-activities/history-view/history-list/history-list.component';
+import { HistoryViewReasonComponent } from './pages/coordination/distribute-activities/history-view/history-view-reason/history-view-reason.component';
 
 @NgModule({
   declarations: [
@@ -162,7 +165,10 @@ import { HistoryViewComponent } from './pages/coordination/distribute-activities
     DistributeActivitiesComponent,
     DistributeActivitiesEditComponent,
     ConfigPlansComponent,
-    HistoryViewComponent
+    HistoryViewComponent,
+    HistoryTableComponent,
+    HistoryListComponent,
+    HistoryViewReasonComponent,
   ],
   imports: [
     TreeTableModule,
