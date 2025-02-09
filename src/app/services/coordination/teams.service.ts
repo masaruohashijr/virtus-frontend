@@ -46,10 +46,11 @@ export class TeamsService extends BaseService<TeamDTO>{
     return this.getHttpClient().get<TeamMemberDTO[]>(URL_API + this.rootEndpoint() + "/team-members", { params: queryParams });
   }
 
-  validateTeamMember(cycleId: any, userTeamMemberId: any) {
+  validateTeamMember(cycleId: any, userTeamMemberId: any, supervisorId: any) {
     let queryParams = new HttpParams();
     queryParams = queryParams.append("cycleId", Number.parseInt("" + cycleId));
     queryParams = queryParams.append("userTeamMemberId", Number.parseInt("" + userTeamMemberId));
+    queryParams = queryParams.append("supervisorId", Number.parseInt("" + supervisorId));
     return this.getHttpClient().get<TeamMemberDTO[]>(URL_API + this.rootEndpoint() + "/validate/team-member", { params: queryParams });
   }
 
