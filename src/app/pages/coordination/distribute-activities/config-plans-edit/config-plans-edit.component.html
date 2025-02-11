@@ -21,17 +21,16 @@
             <mat-label>Planos</mat-label>
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addPlan($event)">
                 <mat-option *ngFor="let plan of plans" [value]="plan">
-                    {{ plan.cnpb }} - {{ plan.name }}
+                    {{ plan.cnpb }} - {{ plan.modality }} - {{formatValue(plan.guaranteeResource)}}
                 </mat-option>
             </mat-autocomplete>
             <mat-chip-list #chipList [compareWith]="compare">
                 <mat-chip *ngFor="let selected of configPlansForm.get('plans')?.value" [removable]="true"
                     (removed)="removePlan(selected)">
-                    {{ selected.cnpb }} - {{ selected.name }}
+                    {{ selected.cnpb }} - {{ selected.modality }} - {{formatValue(selected.guaranteeResource)}}
                     <mat-icon matChipRemove>cancel</mat-icon>
                 </mat-chip>
-                <input placeholder="Adicionar um Plano" matInput [matAutocomplete]="auto"
-                    [formControl]="planInput">
+                <input placeholder="Adicionar um Plano" matInput [matAutocomplete]="auto" [formControl]="planInput">
             </mat-chip-list>
         </mat-form-field>
 

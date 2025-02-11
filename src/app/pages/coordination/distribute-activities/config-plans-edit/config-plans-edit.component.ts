@@ -49,7 +49,7 @@ export class ConfigPlansComponent implements OnInit {
       .subscribe(resp => {
         this.allPlans = resp;
         this.plans = resp;
-        this._service.listConfiguredPlans(this.data.entity.id, this.data.cycle.id, this.data.pillar.id, this.data.component.id)
+        this._service.listConfiguredPlans(this.data.entity.id, this.data.cycle.cycle ? this.data.cycle.cycle.id : 0, this.data.pillar.id, this.data.component.id)
           .subscribe(resp => {
             resp.forEach(obj => {
               const index = this.plans.findIndex(plan => plan.id == obj.planId);
@@ -63,7 +63,22 @@ export class ConfigPlansComponent implements OnInit {
             });
           })
       });
+  }
 
+  formatValue(value: number | undefined | null): string {
+    if (!value) {
+      return '';
+    }
+
+    if (value >= 1_000_000_000) {
+      return `${(value / 1_000_000_000).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bilhões`;
+    } else if (value >= 1_000_000) {
+      return `${(value / 1_000_000).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Milhões`;
+    } else if (value >= 1_000) {
+      return `${(value / 1_000).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Mil`;
+    } else {
+      return value.toLocaleString("pt-BR");
+    }
   }
 
   getTitle() {

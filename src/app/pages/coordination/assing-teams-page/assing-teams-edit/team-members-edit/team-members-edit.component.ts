@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { throwError } from 'rxjs';
+import { AlertDialogComponent } from 'src/app/components/dialog/alert-dialog/alert-dialog.component';
 import { MemberDTO } from 'src/app/domain/dto/member.dto';
 import { TeamMemberDTO } from 'src/app/domain/dto/team-member.dto';
 import { TeamDTO } from 'src/app/domain/dto/team.dto';
@@ -54,8 +55,18 @@ export class TeamMembersEditComponent extends BaseCrudEditComponent<TeamMemberDT
       this.principalForm.markAllAsTouched()
       return;
     }
+    if(!this.father.supervisor){
+      this.errorDialog.open(AlertDialogComponent, {
+            width: '350px',
+            data: {
+              title: "Erro",
+              message: "Você precisa informar o supervisor antes de cadastrar um Integrante."
+            },
+          });
+          return;
+    }
     this.object.member = this.principalForm.value.member;
-    this.teamService.validateTeamMember(this.father.cycle?.id, this.object.member?.id, this.father.supervisor?.id).subscribe(() => {
+    this.teamService.validateTeamMember(this.father.cycle?.id, this.object.member?.id, this.father.supervisor.id ? this.father.supervisor.id: this.father.supervisor.userId).subscribe(() => {
       this.dialogRef.close(this.object);
     }, (error) => {
       this.object.member = null;
