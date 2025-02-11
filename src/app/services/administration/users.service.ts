@@ -45,4 +45,10 @@ export class UsersService extends BaseService<UserDTO>{
     queryParams = queryParams.append("size", size);
     return this.getHttpClient().get<PageResponseDTO<UserDTO>>(URL_API + this.rootEndpoint() + '/not-member', { params: queryParams });
   }
+
+  getAllByRole(roleId: number): Observable<UserDTO[]> {
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("roleId", roleId);
+    return this.getHttpClient().get<UserDTO[]>(URL_API + this.rootEndpoint() + '/by-role', { params: queryParams });
+  }
 }

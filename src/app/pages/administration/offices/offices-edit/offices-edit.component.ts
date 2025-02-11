@@ -33,8 +33,8 @@ export class OfficesEditComponent extends BaseCrudEditComponent<OfficeDTO> imple
   }
 
   ngOnInit(): void {
-    this._usersService.getAll('', 0, 1000).subscribe(resp => {
-      this.users = resp.content;
+    this._usersService.getAllByRole(2).subscribe(resp => {
+      this.users = resp;
     })
   }
 

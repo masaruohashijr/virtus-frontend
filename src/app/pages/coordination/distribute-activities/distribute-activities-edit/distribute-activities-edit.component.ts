@@ -122,11 +122,11 @@ export class DistributeActivitiesEditComponent extends BaseCrudEditComponent<Dis
       let activities: ActivitiesByProductComponentRequestDto[] = [];
       this.products.forEach(product => {
         const activityRequest: ActivitiesByProductComponentRequestDto = {
-          productComponentId: product.id,
-          supervisorId: product.supervisor.userId,
-          auditorId: product.auditor.userId,
-          startsAt: product.startsAt,
-          endsAt: product.endsAt
+          productComponentId: product?.id,
+          supervisorId: product?.supervisor?.userId,
+          auditorId: product?.auditor?.userId,
+          startsAt: product?.startsAt,
+          endsAt: product?.endsAt
         };
         activities.push(activityRequest);
       });
