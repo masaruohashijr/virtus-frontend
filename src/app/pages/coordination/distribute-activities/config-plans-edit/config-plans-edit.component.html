@@ -33,7 +33,10 @@
                 <input placeholder="Adicionar um Plano" matInput [matAutocomplete]="auto" [formControl]="planInput">
             </mat-chip-list>
         </mat-form-field>
-
+        <mat-form-field class="w-full mt-auto" appearance="outline" *ngIf="plansChanged">
+            <mat-label>Motivação de Reconfiguração</mat-label>
+            <textarea formControlName="motivation" matInput rows="5"></textarea>
+        </mat-form-field>
     </form>
 </div>
 <div mat-dialog-actions [align]="'end'">

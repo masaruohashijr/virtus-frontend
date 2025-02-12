@@ -23,6 +23,8 @@ export class ConfigPlansComponent implements OnInit {
   planInput = new FormControl();
   selectedPlans: PlanDTO[] = [];
 
+  plansChanged = false;
+
 
   constructor(
     private errorDialog: MatDialog,
@@ -43,7 +45,8 @@ export class ConfigPlansComponent implements OnInit {
       cycle: [this.data.cycle.cycle?.name],
       pillar: [this.data.pillar.name],
       component: [this.data.component.name],
-      plans: [[]]
+      plans: [[]],
+      motivation: ['']
     });
     this._service.listConfigPlans(this.data.entity.id, this.data.cycle.id, this.data.pillar.id, this.data.component.id, false)
       .subscribe(resp => {
@@ -95,6 +98,7 @@ export class ConfigPlansComponent implements OnInit {
     this.configPlansForm.get('plans')?.setValue(this.selectedPlans);
     this.plans = this.allPlans.filter(item => !this.selectedPlans?.some(selected => selected.id === item.id))
     this.configPlansForm.get('plans')!.patchValue(this.selectedPlans);
+    this.plansChanged = true;
     //let newItem = new FeatureRoleDTO();
     //newItem.feature = event.option.value;
     //this.object.features?.push(newItem)
@@ -110,6 +114,7 @@ export class ConfigPlansComponent implements OnInit {
       this.configPlansForm.get('plans')!.patchValue(this.selectedPlans);
       //this.object.features = this.object.features?.filter(item => item.feature?.id !== chip.id);
     }
+    this.plansChanged = true;
   }
 
   updateConfigPlans() {
@@ -118,7 +123,8 @@ export class ConfigPlansComponent implements OnInit {
       cycleId: this.data.cycle.cycle?.id,
       pillarId: this.data.pillar.id,
       componentId: this.data.component.id,
-      plans: this.configPlansForm.value.plans
+      plans: this.configPlansForm.value.plans,
+      motivation: this.configPlansForm.get('motivation')?.value
     }
 
     this._service.updateConfigPlans(body).pipe(
