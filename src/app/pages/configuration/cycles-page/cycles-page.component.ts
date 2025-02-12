@@ -11,6 +11,7 @@ import { CyclesEditComponent } from './cycles-edit/cycles-edit.component';
 import { ConfirmationDialogComponent } from 'src/app/components/dialog/confirmation-dialog/confirmation-dialog.component';
 import { StartCyclesEditComponent } from './start-cycles-edit/start-cycles-edit.component';
 import { StartCycleDTO } from 'src/app/domain/dto/start-cycle.dto';
+import { UsersService } from 'src/app/services/administration/users.service';
 
 @Component({
   selector: 'app-cycles-page',
@@ -28,6 +29,7 @@ export class CyclesPageComponent implements OnInit {
     public dialog: MatDialog,
     public deleteDialog: MatDialog,
     private _service: CyclesService,
+    private _userService: UsersService,
     private _formBuilder: FormBuilder) { }
 
   searchForm = this._formBuilder.group({
@@ -46,6 +48,13 @@ export class CyclesPageComponent implements OnInit {
         this.loadContent(filterValue);
       });
     }
+  }
+
+  canStart(): any {
+    if(this._userService.getCurrentUser()){
+      return this._userService.getCurrentUser().role == 'Admin';
+    }
+    return false;
   }
 
   loadContent(filter: any) {
