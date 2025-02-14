@@ -129,6 +129,7 @@ export class ConfigPlansComponent implements OnInit {
 
     this._service.updateConfigPlans(body).pipe(
       tap(resp => {
+        this.data.plans = this.selectedPlans;
         this.dialogRef.close(resp);
       }),
       catchError(error => {

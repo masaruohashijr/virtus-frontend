@@ -16,4 +16,5 @@ export class ProductComponentDTO {
     auditor!: AuditorDTO;
     startsAt!: Date;
     endsAt!: Date;
+    plans!: any[]
 }

@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { catchError, tap, throwError } from 'rxjs';
 import { EntityVirtusDTO } from 'src/app/domain/dto/entity-virtus.dto';
@@ -16,23 +16,28 @@ export class EntitiesEditComponent implements OnInit {
     'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS',
     'SC', 'SE', 'SP', 'TO'];
 
-  mainForm = this._formBuilder.group({
-    name: [this.object.name, [Validators.required]],
-    description: [this.object.description],
-    acronym: [this.object.acronym, [Validators.required]],
-    code: [this.object.code],
-    situation: [this.object.situation],
-    esi: [this.object.esi],
-    city: [this.object.city],
-    uf: [this.object.uf]
-  });
+  object!: EntityVirtusDTO
+
+  mainForm!: FormGroup;
 
   constructor(public dialogRef: MatDialogRef<EntitiesEditComponent>,
     private _formBuilder: FormBuilder,
     private service: EntityVirtusService,
-    @Inject(MAT_DIALOG_DATA) public object: EntityVirtusDTO) { }
+    @Inject(MAT_DIALOG_DATA) public data: { object: EntityVirtusDTO, readOnly: boolean }) { }
 
   ngOnInit(): void {
+    console.log(this.data)
+    this.object = this.data.object;
+    this.mainForm = this._formBuilder.group({
+      name: [{ value: this.object.name, disabled: this.data.readOnly }, [Validators.required]],
+      description: [{ value: this.object.description, disabled: this.data.readOnly }],
+      acronym: [{ value: this.object.acronym, disabled: this.data.readOnly }, [Validators.required]],
+      code: [{ value: this.object.code, disabled: this.data.readOnly }],
+      situation: [{ value: this.object.situation, disabled: this.data.readOnly }],
+      esi: [{ value: this.object.esi, disabled: this.data.readOnly }],
+      city: [{ value: this.object.city, disabled: this.data.readOnly }],
+      uf: [{ value: this.object.uf, disabled: this.data.readOnly }]
+    });
   }
 
   save() {

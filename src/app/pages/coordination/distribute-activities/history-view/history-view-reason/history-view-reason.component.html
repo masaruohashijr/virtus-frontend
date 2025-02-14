@@ -1,1 +1,39 @@
-<p>history-view-reason works!</p>
+<h1 mat-dialog-title>{{getTitle()}}</h1>
+<mat-dialog-content>
+    <form [formGroup]="detailsForm">
+        <mat-form-field class="w-full" appearance="outline">
+            <mat-label>Alterou</mat-label>
+            <input matInput formControlName="tipoAlteracao">
+        </mat-form-field>
+
+        <mat-form-field class="w-full" appearance="outline">
+            <mat-label>De</mat-label>
+            <input matInput formControlName="configAnterior">
+        </mat-form-field>
+
+        <mat-form-field class="w-full" appearance="outline">
+            <mat-label>Para</mat-label>
+            <input matInput formControlName="config">
+        </mat-form-field>
+
+        <mat-form-field class="w-full" appearance="outline">
+            <mat-label>Autor</mat-label>
+            <input matInput formControlName="authorName">
+        </mat-form-field>
+
+        <mat-form-field class="w-full" appearance="outline">
+            <mat-label>Em</mat-label>
+            <input matInput formControlName="alteradoEm">
+        </mat-form-field>
+
+        <mat-form-field class="w-full" appearance="outline">
+            <mat-label>Motivação</mat-label>
+            <textarea matInput formControlName="motivacao"></textarea>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+
+
+<div mat-dialog-actions [align]="'end'">
+    <button mat-flat-button [mat-dialog-close]="">Fechar</button>
+</div>

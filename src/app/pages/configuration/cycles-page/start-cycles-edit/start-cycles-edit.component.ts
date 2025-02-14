@@ -57,14 +57,29 @@ export class StartCyclesEditComponent extends BaseCrudEditComponent<StartCycleDT
     });
     this.elementForm.get('author')?.disable();
     this.elementForm.get('createdAt')?.disable();
+    this.entityInput.valueChanges.subscribe(value => {
+      this.filterEntities(value);
+    });
   }
 
   addEntity(event: MatAutocompleteSelectedEvent): void {
-    this.selectedEntities = this.elementForm.get('entities')?.value as EntityVirtusDTO[];
-    this.selectedEntities.push(event.option.value);
-    this.elementForm.get('entities')?.setValue(this.selectedEntities);
-    this.entities = this.allEntities.filter(item => !this.selectedEntities?.some(selected => selected.id === item.id))
-    this.object.entities?.push(event.option.value)
+    const selectedEntity = event.option.value;
+
+    if (selectedEntity) {
+      this.selectedEntities = this.elementForm.get('entities')?.value as EntityVirtusDTO[] || [];
+      this.selectedEntities.push(selectedEntity);
+      this.elementForm.get('entities')?.setValue(this.selectedEntities);
+
+      // Atualiza a lista de entidades removendo as já selecionadas
+      this.entities = this.allEntities.filter(item =>
+        !this.selectedEntities.some(selected => selected.id === item.id)
+      );
+
+      this.object.entities?.push(selectedEntity);
+
+      // Limpa o input
+      this.clearFilter();
+    }
   }
 
   removeEntity(chip: EntityVirtusDTO): void {
@@ -74,9 +89,38 @@ export class StartCyclesEditComponent extends BaseCrudEditComponent<StartCycleDT
     if (index >= 0) {
       this.selectedEntities.splice(index, 1);
       this.elementForm.get('entities')?.setValue(this.selectedEntities);
-      this.entities = this.allEntities.filter(item => !this.selectedEntities?.some(selected => selected.id === item.id));
+
+      // Atualiza a lista de opções disponíveis
+      this.entities = this.allEntities.filter(item =>
+        !this.selectedEntities.some(selected => selected.id === item.id)
+      );
+
       this.object.entities = this.object.entities?.filter(item => item?.id !== chip.id);
+      this.clearFilter();
     }
+  }
+
+  // Método para filtrar as entidades no autocomplete
+  filterEntities(value: string): void {
+    try {
+      const filterValue = value ? value.toLowerCase() : '';
+      this.entities = this.allEntities.filter(entity =>
+        entity?.name?.toLowerCase().includes(filterValue) ||
+        entity?.acronym?.toLowerCase().includes(filterValue) ||
+        entity?.code?.toString().includes(filterValue)
+      );
+    } catch {
+      this.entities = this.allEntities.filter(item =>
+        !this.selectedEntities.some(selected => selected.id === item.id)
+      );
+    }
+  }
+
+  clearFilter(): void {
+    this.entityInput.setValue('');
+    this.entities = this.allEntities.filter(item =>
+      !this.selectedEntities.some(selected => selected.id === item.id)
+    );
   }
 
   save() {
@@ -89,8 +133,6 @@ export class StartCyclesEditComponent extends BaseCrudEditComponent<StartCycleDT
     this.object.cycle.description = this.elementForm.value.description;
     this.object.startsAt = this.elementForm.value.startsAt;
     this.object.endsAt = this.elementForm.value.endsAt;
-
-
 
     this._service.startCycle(this.object).pipe(
       tap(resp => {

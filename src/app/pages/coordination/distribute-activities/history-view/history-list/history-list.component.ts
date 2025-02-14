@@ -50,12 +50,10 @@ export class HistoryListComponent implements OnInit {
   }
 
   viewObject(object: HistoryComponentDTO) {
+    debugger
     const dialogRef = this.dialog.open(HistoryViewReasonComponent, {
       width: '700px',
-      data: {
-        father: this.history,
-        object: object
-      },
+      data: object,
     });
 
     dialogRef.afterClosed().subscribe(result => {

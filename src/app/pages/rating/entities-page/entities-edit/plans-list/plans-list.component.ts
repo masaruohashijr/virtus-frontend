@@ -17,6 +17,7 @@ import { ConfirmationDialogComponent } from 'src/app/components/dialog/confirmat
 export class PlansListComponent implements OnInit {
 
   @Input() entity!: EntityVirtusDTO;
+  @Input() readOnly: boolean = false;
 
   objectDataSource: MatTableDataSource<PlanDTO> = new MatTableDataSource();
   objectTableColumns: string[] = ['cnpb', 'modality', 'guaranteeResource', 'actions'];

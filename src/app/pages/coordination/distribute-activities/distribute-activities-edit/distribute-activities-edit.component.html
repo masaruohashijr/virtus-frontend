@@ -20,8 +20,12 @@
                 <td>{{rowData.name}}</td>
                 <td style="width: 100px;">
                     <span *ngIf="rowData.objectType != 'Componente'"></span>
-                    <button *ngIf="rowData.objectType == 'Componente'" (click)="openPlansConfig(rowData.object)" mat-raised-button color="primary"
-                        cdkFocusInitial>Planos</button>
+                    <button *ngIf="rowData.objectType == 'Componente'" (click)="openPlansConfig(rowData.object)"
+                        mat-raised-button [color]="'primary'"
+                        [ngClass]="{'success-button': rowData.object.plans && rowData.object.plans.length}"
+                        cdkFocusInitial>
+                        Planos
+                    </button>
                 </td>
                 <td>
                     <span *ngIf="rowData.objectType == 'Entidade'"></span>
@@ -35,14 +39,17 @@
                     <span *ngIf="rowData.objectType == 'Componente'">
                         <span *ngIf="rowData.objectType == 'Componente'">
                             <mat-form-field class="mat-form-field" appearance="outline">
-                              <mat-label>Auditor</mat-label>
-                              <mat-select [(ngModel)]="rowData.object.auditor" (selectionChange)="setAuditor(rowData.object, $event.value)" [compareWith]="compareAuditors">
-                                <mat-option *ngFor="let auditor of distributeActivitiesTree?.auditors" [value]="auditor">
-                                  {{auditor.name}}
-                                </mat-option>
-                              </mat-select>
+                                <mat-label>Auditor</mat-label>
+                                <mat-select [(ngModel)]="rowData.object.auditor"
+                                    (selectionChange)="setAuditor(rowData.object, $event.value)"
+                                    [compareWith]="compareAuditors">
+                                    <mat-option *ngFor="let auditor of distributeActivitiesTree?.auditors"
+                                        [value]="auditor">
+                                        {{auditor.name}}
+                                    </mat-option>
+                                </mat-select>
                             </mat-form-field>
-                          </span>
+                        </span>
                     </span>
                 </td>
                 <td>
@@ -64,7 +71,8 @@
                 <td style="width: 100px;">
                     <span *ngIf="rowData.objectType != 'Componente'"></span>
                     <span *ngIf="rowData.objectType == 'Componente'">
-                        <button mat-raised-button cdkFocusInitial (click)="openHistory(rowData.object)">Histórico</button>
+                        <button mat-raised-button cdkFocusInitial
+                            (click)="openHistory(rowData.object)">Histórico</button>
                     </span>
                 </td>
             </tr>

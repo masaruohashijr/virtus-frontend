@@ -39,15 +39,15 @@
     <div>
         <mat-tab-group mat-align-tabs="start">
             <mat-tab label="Ciclos">
-                <app-cycles-entities-list [entity]="object"></app-cycles-entities-list>
+                <app-cycles-entities-list [readOnly]="data.readOnly" [entity]="object"></app-cycles-entities-list>
             </mat-tab>
             <mat-tab label="Planos">
-                <app-plans-list [entity]="object"></app-plans-list>
+                <app-plans-list [readOnly]="data.readOnly" [entity]="object"></app-plans-list>
             </mat-tab>
         </mat-tab-group>
     </div>
 </div>
 <div mat-dialog-actions [align]="'end'">
-    <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>Salvar</button>
+    <button mat-raised-button color="primary" *ngIf="!data.readOnly" (click)="save()" cdkFocusInitial>Salvar</button>
     <button mat-flat-button [mat-dialog-close]="object.name">Cancelar</button>
 </div>

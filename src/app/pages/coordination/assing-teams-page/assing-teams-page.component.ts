@@ -3,14 +3,13 @@ import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, throwError } from 'rxjs';
+import { AlertDialogComponent } from 'src/app/components/dialog/alert-dialog/alert-dialog.component';
 import { PageResponseDTO } from 'src/app/domain/dto/response/page-response.dto';
 import { TeamDTO } from 'src/app/domain/dto/team.dto';
+import { CyclesService } from 'src/app/services/configuration/cycles.service';
 import { TeamsService } from 'src/app/services/coordination/teams.service';
 import { AssingTeamsEditComponent } from './assing-teams-edit/assing-teams-edit.component';
-import { CycleDTO } from 'src/app/domain/dto/cycle.dto';
-import { EntityVirtusDTO } from 'src/app/domain/dto/entity-virtus.dto';
-import { CyclesService } from 'src/app/services/configuration/cycles.service';
 
 @Component({
   selector: 'app-assing-teams-page',
@@ -28,6 +27,7 @@ export class AssingTeamsPageComponent implements OnInit {
 
   constructor(
     public dialog: MatDialog,
+    public errorDialog: MatDialog,
     public deleteDialog: MatDialog,
     private _service: TeamsService,
     private _cycleService: CyclesService,
@@ -73,19 +73,32 @@ export class AssingTeamsPageComponent implements OnInit {
   }
 
   assingTeam(object: TeamDTO) {
-    this._service.getSupervisorByTeam(object.entity.id, object.cycle.id).subscribe((resp) => {
-      object.supervisor = resp;
-      console.log(object)
+    this._service.getSupervisorByTeam(object.entity.id, object.cycle.id)
+      .pipe(
+        catchError(error => {
+          this.errorDialog.open(AlertDialogComponent, {
+            width: '350px',
+            data: {
+              title: "Erro",
+              message: error.error?.message ? error.error?.message : "Erro interno no servidor."
+            },
+          });
+          return throwError(error);
+        })
+      )
+      .subscribe((resp) => {
+        object.supervisor = resp;
+        console.log(object)
 
-      const dialogRef = this.dialog.open(AssingTeamsEditComponent, {
-        width: '800px',
-        data: object,
-      });
+        const dialogRef = this.dialog.open(AssingTeamsEditComponent, {
+          width: '800px',
+          data: object,
+        });
 
-      dialogRef.afterClosed().subscribe(result => {
-        this.loadContent(this.filterControl?.value);
+        dialogRef.afterClosed().subscribe(result => {
+          this.loadContent(this.filterControl?.value);
+        });
       });
-    });
   }
 
   setCyclesByEntity(team: TeamDTO) {

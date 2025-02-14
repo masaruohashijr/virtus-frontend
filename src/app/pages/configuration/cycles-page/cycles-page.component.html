@@ -21,7 +21,8 @@
       </div>
 
       <!-- New object button -->
-      <button class="ml-4 mb-4" mat-flat-button [color]="'primary'" (click)="newObject()">
+      <button *ngIf="_userService.getCurrentUser()?.role?.toLowerCase() == 'admin'" class="ml-4 mb-4" mat-flat-button
+        [color]="'primary'" (click)="newObject()">
         <mat-icon>add_circle</mat-icon>
         <span class="pl-2">Novo</span>
       </button>
@@ -87,10 +88,10 @@
           <button *ngIf="canStart()" mat-icon-button color="primary" (click)="startCycle(object)">
             <mat-icon>play_arrow</mat-icon>
           </button>
-          <button mat-icon-button color="primary" (click)="editObject(object)">
+          <button *ngIf="canStart()" mat-icon-button color="primary" (click)="editObject(object)">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button color="warn" (click)="deleteObject(object)">
+          <button *ngIf="canStart()" mat-icon-button color="warn" (click)="deleteObject(object)">
             <mat-icon>delete</mat-icon>
           </button>
         </td>

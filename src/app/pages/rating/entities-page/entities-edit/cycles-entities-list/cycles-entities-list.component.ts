@@ -16,6 +16,7 @@ import { ConfirmationDialogComponent } from 'src/app/components/dialog/confirmat
 export class CyclesEntitiesListComponent implements OnInit {
 
   @Input() entity!: EntityVirtusDTO;
+  @Input() readOnly: boolean = false;
 
   objectDataSource: MatTableDataSource<CycleEntityDTO> = new MatTableDataSource();
   objectTableColumns: string[] = ['cycle', 'averageType', 'startsAt', 'endsAt', 'actions'];

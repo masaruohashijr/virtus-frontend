@@ -9,6 +9,7 @@ import { PageResponseDTO } from 'src/app/domain/dto/response/page-response.dto';
 import { EntityVirtusService } from 'src/app/services/rating/entity-virtus.service';
 import { EntitiesEditComponent } from './entities-edit/entities-edit.component';
 import { ConfirmationDialogComponent } from 'src/app/components/dialog/confirmation-dialog/confirmation-dialog.component';
+import { UsersService } from 'src/app/services/administration/users.service';
 
 @Component({
   selector: 'app-entities-page',
@@ -26,6 +27,7 @@ export class EntitiesPageComponent implements OnInit {
     public dialog: MatDialog,
     public deleteDialog: MatDialog,
     private _service: EntityVirtusService,
+    public _userService: UsersService,
     private _formBuilder: FormBuilder) { }
 
   searchForm = this._formBuilder.group({
@@ -63,7 +65,10 @@ export class EntitiesPageComponent implements OnInit {
   newObject() {
     const dialogRef = this.dialog.open(EntitiesEditComponent, {
       width: '800px',
-      data: new EntityVirtusDTO(),
+      data: {
+        object: new EntityVirtusDTO(),
+        readOnly: false
+      },
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -77,7 +82,28 @@ export class EntitiesPageComponent implements OnInit {
 
       const dialogRef = this.dialog.open(EntitiesEditComponent, {
         width: '800px',
-        data: object,
+        data: {
+          object: object,
+          readOnly: false
+        },
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        this.loadContent(this.filterControl?.value);
+      });
+    });
+  }
+
+  viewObject(object: EntityVirtusDTO) {
+    this._service.getById(object.id).subscribe(resp => {
+      object = resp;
+
+      const dialogRef = this.dialog.open(EntitiesEditComponent, {
+        width: '800px',
+        data: {
+          object: object,
+          readOnly: true
+        },
       });
 
       dialogRef.afterClosed().subscribe(result => {

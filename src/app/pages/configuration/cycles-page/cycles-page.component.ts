@@ -29,7 +29,7 @@ export class CyclesPageComponent implements OnInit {
     public dialog: MatDialog,
     public deleteDialog: MatDialog,
     private _service: CyclesService,
-    private _userService: UsersService,
+    public _userService: UsersService,
     private _formBuilder: FormBuilder) { }
 
   searchForm = this._formBuilder.group({
@@ -52,7 +52,7 @@ export class CyclesPageComponent implements OnInit {
 
   canStart(): any {
     if(this._userService.getCurrentUser()){
-      return this._userService.getCurrentUser().role == 'Admin';
+      return this._userService.getCurrentUser().role?.toLowerCase() == 'admin';
     }
     return false;
   }

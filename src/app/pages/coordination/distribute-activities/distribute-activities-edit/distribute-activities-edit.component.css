@@ -34,6 +34,11 @@
   background-color: #ccc;
 }
 
+.success-button {
+  background-color: #4CAF50 !important; /* Verde */
+  color: white !important;
+}
+
 td {
   padding: 5px;
   border-bottom: 1px solid rgb(233 230 230);

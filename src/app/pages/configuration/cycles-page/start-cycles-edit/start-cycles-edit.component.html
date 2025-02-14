@@ -11,7 +11,7 @@
         </mat-form-field>
         <mat-form-field class="w-full mt-auto" appearance="outline">
             <mat-label>Autor</mat-label>
-            <input formControlName="author" matInput >
+            <input formControlName="author" matInput>
         </mat-form-field>
         <mat-form-field class="w-full mt-auto" appearance="outline">
             <mat-label>Criado Em</mat-label>
@@ -33,9 +33,9 @@
                 <mat-datepicker #endsAtPicker></mat-datepicker>
             </mat-form-field>
         </div>
-        <mat-form-field class="w-full mt-auto" appearance="outline">
+        <mat-form-field class="w-full mt-auto" appearance="outline" floatLabel="always">
             <mat-label>Entidades</mat-label>
-            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addEntity($event)">
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addEntity($event); clearFilter()">
                 <mat-option *ngFor="let entity of entities" [value]="entity">
                     {{entity.code + "-" + entity.acronym+"-" + entity.name }}
                 </mat-option>
