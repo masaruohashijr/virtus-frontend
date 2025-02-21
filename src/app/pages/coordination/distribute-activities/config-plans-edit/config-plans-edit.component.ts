@@ -118,6 +118,17 @@ export class ConfigPlansComponent implements OnInit {
   }
 
   updateConfigPlans() {
+    if (this.plansChanged && (!this.configPlansForm.get('motivation')?.value || this.configPlansForm.get('motivation')?.value?.lenght < 3)) {
+      this.errorDialog.open(AlertDialogComponent, {
+        width: '350px',
+        data: {
+          title: "Erro",
+          message: "Você precisa informar a Motivação de Reconfiguração."
+        },
+      });
+      return;
+    }
+
     const body = {
       entityId: this.data.entity.id,
       cycleId: this.data.cycle.cycle?.id,

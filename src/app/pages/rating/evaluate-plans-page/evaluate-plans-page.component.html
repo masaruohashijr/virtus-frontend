@@ -1,0 +1,97 @@
+<!-- Main -->
+<div class="flex-auto py-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row md:flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b">
+
+        <!-- Title -->
+        <div>
+            <div class="text-4xl font-extrabold tracking-tight leading-none">Avaliar Planos</div>
+        </div>
+
+        <!-- Main actions -->
+        <div class="flex items-center mt-4 sm:mt-0 md:mt-4">
+            <!-- Search -->
+            <div class="flex-auto">
+                <form [formGroup]="searchForm">
+                    <mat-form-field class="w-full mt-auto" appearance="outline">
+                        <input formControlName="filterValue" matInput placeholder="Digite para pesquisar">
+                        <mat-icon matSuffix>search</mat-icon>
+                    </mat-form-field>
+                </form>
+            </div>
+        </div>
+    </div>
+    <ng-container *ngIf="!showTree; else treeComponent">
+        <div class="overflow-x-auto mx-6">
+            <table class="w-full bg-transparent" mat-table [dataSource]="objectDataSource">
+                <ng-container matColumnDef="code">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        Código
+                    </th>
+                    <td mat-cell *matCellDef="let object">
+                        <span>
+                            {{object.code}}
+                        </span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        Nome
+                    </th>
+                    <td mat-cell *matCellDef="let object">
+                        <span>
+                            {{object.name}}
+                        </span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="cycle">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        Ciclos
+                    </th>
+                    <td mat-cell *matCellDef="let object">
+                        <mat-select *ngIf="object && object.entityId" [(ngModel)]="object.cycle">
+                            <mat-option *ngFor="let cycle of cyclesByEntity.get(object.entityId)" [value]="cycle">{{
+                                cycle.name}} </mat-option>
+                        </mat-select>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="jurisdiction">
+                    <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                        Jurisdição
+                    </th>
+                    <td mat-cell *matCellDef="let object">
+                        <span>
+                            {{object.acronym}}
+                        </span>
+                    </td>
+                </ng-container>
+
+
+                <!-- Buttons -->
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let object">
+                        <button mat-icon-button color="primary" (click)="openEvaluatePlans(object)">
+                            <mat-icon>assignment</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="objectTableColumns"></tr>
+                <!--Linhas-->
+                <tr class="order-row h-16" mat-row *matRowDef="let row; columns: objectTableColumns;"></tr>
+            </table>
+            <!-- Footer -->
+            <ng-container *ngIf="false">
+                <mat-paginator (page)="handlePageEvent($event)" [length]="pageObjects.totalElements"
+                    [pageSize]="pageObjects.size" [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Selecionar Página">
+                </mat-paginator>
+            </ng-container>
+        </div>
+    </ng-container>
+    <ng-template  #treeComponent>
+        <div>
+            
+        </div>
+    </ng-template>
+</div>

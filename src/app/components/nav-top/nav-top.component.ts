@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ACTIONS_ROUTE, ASSING_TEAMS_ROUTE, CICLES_ROUTE, COMPONENTS_ROUTE, DISTRIBUTE_ACTIVITIES_ROUTE, ELEMENTS_ROUTE, ENTITIES_ROUTE, FEATURES_ROUTE, OFFICES_ROUTE, PILLARS_ROUTE, ROLES_ROUTE, STATUS_ROUTE, TYPE_OF_NOTE_ROUTE, USERS_ROUTE, WORKFLOWS_ROUTE } from 'src/app/common/route-constants';
+import { ACTIONS_ROUTE, ASSING_TEAMS_ROUTE, CICLES_ROUTE, COMPONENTS_ROUTE, DISTRIBUTE_ACTIVITIES_ROUTE, ELEMENTS_ROUTE, ENTITIES_ROUTE, EVALUATE_PLANS_ROUTE, FEATURES_ROUTE, OFFICES_ROUTE, PILLARS_ROUTE, ROLES_ROUTE, STATUS_ROUTE, TYPE_OF_NOTE_ROUTE, USERS_ROUTE, WORKFLOWS_ROUTE } from 'src/app/common/route-constants';
 import { CurrentUser } from 'src/app/domain/dto/current-user.dto';
 import { UserUpdatePassEditComponent } from 'src/app/pages/administration/users/user-update-pass-edit/user-update-pass-edit.component';
 import { UsersService } from 'src/app/services/administration/users.service';
@@ -20,6 +20,7 @@ export class NavTopComponent implements OnInit {
   ) { }
 
   entitiesRoute = ENTITIES_ROUTE;
+  evaluatePlans = EVALUATE_PLANS_ROUTE;
 
   ciclesRoute = CICLES_ROUTE;
   pillarsRoute = PILLARS_ROUTE;

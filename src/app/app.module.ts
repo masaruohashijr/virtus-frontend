@@ -98,6 +98,8 @@ import { HistoryViewComponent } from './pages/coordination/distribute-activities
 import { HistoryTableComponent } from './pages/coordination/distribute-activities/history-view/history-table/history-table.component';
 import { HistoryListComponent } from './pages/coordination/distribute-activities/history-view/history-list/history-list.component';
 import { HistoryViewReasonComponent } from './pages/coordination/distribute-activities/history-view/history-view-reason/history-view-reason.component';
+import { EvaluatePlansPageComponent } from './pages/rating/evaluate-plans-page/evaluate-plans-page.component';
+import { EvaluatePlansEditComponent } from './pages/rating/evaluate-plans-page/evaluate-plans-edit/evaluate-plans-edit.component';
 
 @NgModule({
   declarations: [
@@ -169,6 +171,8 @@ import { HistoryViewReasonComponent } from './pages/coordination/distribute-acti
     HistoryTableComponent,
     HistoryListComponent,
     HistoryViewReasonComponent,
+    EvaluatePlansPageComponent,
+    EvaluatePlansEditComponent,
   ],
   imports: [
     TreeTableModule,
