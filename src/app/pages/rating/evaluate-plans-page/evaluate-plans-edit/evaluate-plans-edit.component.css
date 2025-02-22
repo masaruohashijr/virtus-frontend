@@ -1,0 +1,21 @@
+.tree-node {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  
+    span {
+      flex: 1;
+      text-align: left;
+    }
+  
+    .peso-vermelho {
+      color: red;
+      font-weight: bold;
+    }
+  
+    .peso-verde {
+      color: green;
+      font-weight: bold;
+    }
+  }
+  

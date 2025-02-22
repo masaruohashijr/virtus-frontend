@@ -1,1 +1,46 @@
-<p>evaluate-plans-edit works!</p>
+<div>
+    <mat-form-field appearance="outline">
+      <mat-label>Filtrar Nome</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Digite para filtrar...">
+    </mat-form-field>
+  </div>
+  
+  <mat-tree [dataSource]="treeDataSource" [treeControl]="treeControl">
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+      <div class="tree-node">
+        <span>{{ node.linha }}</span>
+        <span>{{ node.nivel }}</span>
+        <span>{{ node.nome }}</span>
+        <span>{{ node.supervisor }}</span>
+        <span>{{ node.auditor }}</span>
+        <span>{{ node.tipoNota }}</span>
+        <span [ngClass]="{'peso-vermelho': node.pesoInvalido, 'peso-verde': !node.pesoInvalido}">
+          {{ node.peso }}%
+        </span>
+        <span>{{ node.metodo }}</span>
+        <span>{{ node.nota }}</span>
+        <span>
+          <button mat-icon-button>
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button>
+            <mat-icon>delete</mat-icon>
+          </button>
+        </span>
+      </div>
+    </mat-tree-node>
+  
+    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+      <div class="tree-node">
+        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.nome">
+          <mat-icon>
+            {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+          </mat-icon>
+        </button>
+        <span>{{ node.linha }}</span>
+        <span>{{ node.nivel }}</span>
+        <span>{{ node.nome }}</span>
+      </div>
+    </mat-tree-node>
+  </mat-tree>
+  

@@ -18,6 +18,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { CyclesService } from 'src/app/services/configuration/cycles.service';
 import { FormBuilder } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
+import { EntityVirtusDTO } from 'src/app/domain/dto/entity-virtus.dto';
+import { EvaluatePlansService } from 'src/app/services/rating/evaluate-plans.service';
+import { CycleDTO } from 'src/app/domain/dto/cycle.dto';
 
 @Component({
   selector: 'app-evaluate-plans-page',
@@ -26,20 +29,20 @@ import { PageEvent } from '@angular/material/paginator';
 })
 export class EvaluatePlansPageComponent implements OnInit {
 
-  pageObjects: PageResponseDTO<DistributeActivitiesDTO> = new PageResponseDTO();
+  pageObjects: EntityVirtusDTO[] = [];
 
-  objectDataSource: MatTableDataSource<DistributeActivitiesDTO> = new MatTableDataSource();
-  objectTableColumns: string[] = ['code', 'name', 'cycle', 'jurisdiction', "actions"];
+  objectDataSource: MatTableDataSource<EntityVirtusDTO> = new MatTableDataSource();
+  objectTableColumns: string[] = ['code', 'name', 'cycle', "actions"];
 
   cyclesByEntity = new Map();
 
   showTree = false;
+  selectedObject: any;
 
   constructor(
     public dialog: MatDialog,
     public deleteDialog: MatDialog,
-    private _service: DistributeActivitiesService,
-    private _cycleService: CyclesService,
+    private _service: EvaluatePlansService,
     private _formBuilder: FormBuilder) { }
 
   searchForm = this._formBuilder.group({
@@ -61,19 +64,15 @@ export class EvaluatePlansPageComponent implements OnInit {
   }
 
   loadContent(filter: any) {
-    this._service.getAllDistributeActivities(filter, this.pageObjects.page, this.pageObjects.size).subscribe(response => {
+    this._service.listAll().subscribe(response => {
       this.pageObjects = response;
-      this.objectDataSource.data = this.pageObjects.content;
-      this.objectDataSource.data.forEach(dist => {
-        this.setCyclesByEntity(dist);
-      });
+      this.objectDataSource.data = this.pageObjects;
+      this.pageObjects.forEach(obj => this.setCyclesByEntity(obj));
+      ;
     })
   }
 
   handlePageEvent(e: PageEvent) {
-    this.pageObjects.totalElements = e.length;
-    this.pageObjects.size = e.pageSize;
-    this.pageObjects.page = e.pageIndex;
     this.loadContent(this.filterControl?.value);
   }
 
@@ -81,17 +80,18 @@ export class EvaluatePlansPageComponent implements OnInit {
 
   }
 
-  openEvaluatePlans(object: any) {
-
+  openEvaluatePlans(object: EntityVirtusDTO) {
+    this.selectedObject = object;
+    this.showTree = true;
   }
 
-  setCyclesByEntity(distributeActivities: DistributeActivitiesDTO) {
-    if (distributeActivities.entityId) {
-      this._cycleService.getAllByEntityId(distributeActivities.entityId, 0, 200).subscribe((resp) => {
-        this.cyclesByEntity.set(distributeActivities.entityId, resp.content);
-        if (resp.content) {
-          distributeActivities.cycle = resp.content[0]
-        }
+  setCyclesByEntity(entity: EntityVirtusDTO) {
+    if (entity.cyclesEntity) {
+      const cycles: (CycleDTO | undefined | null)[] = [];
+      entity.cyclesEntity.forEach(cycleEntity => {
+        cycles.push(cycleEntity.cycle)
+        this.cyclesByEntity.set(entity.id, cycles);
+        entity.cycleSelected = cycleEntity.cycle;
       });
     }
   }
