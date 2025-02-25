@@ -100,6 +100,7 @@ import { HistoryListComponent } from './pages/coordination/distribute-activities
 import { HistoryViewReasonComponent } from './pages/coordination/distribute-activities/history-view/history-view-reason/history-view-reason.component';
 import { EvaluatePlansPageComponent } from './pages/rating/evaluate-plans-page/evaluate-plans-page.component';
 import { EvaluatePlansEditComponent } from './pages/rating/evaluate-plans-page/evaluate-plans-edit/evaluate-plans-edit.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -203,7 +204,8 @@ import { EvaluatePlansEditComponent } from './pages/rating/evaluate-plans-page/e
     MatNativeDateModule,
     MatTabsModule,
     MatCardModule,
-    MatTreeModule
+    MatTreeModule,
+    MatTooltipModule
   ],
   providers: [
     MatDialogActions,
