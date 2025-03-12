@@ -1,37 +1,68 @@
-.tree {
-  width: 100%;
-}
-
-.tree-node {
+th,
+td {
   padding: 8px;
-  padding-left: 20px;
-  border-top: 1px solid #ccc;
+  border-bottom: 1px solid rgb(233 230 230);
+  text-align: left;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
-.tree-node-content {
-  display: flex;
-  align-items: center;
+/* Ajustando a largura relativa das colunas */
+.level-column,
+.grade-type-column,
+.weight-column{
+  flex: 1;
+  /* Colunas menores */
+  width: 100px;
 }
 
-.tree-node-indicator {
-  margin-right: 5px;
-  cursor: pointer;
+.method-column,
+.grade-column {
+  flex: 1;
+  /* Colunas menores */
+  width: 70px;
 }
 
-.tree-node-indicator.expanded::before {
-  content: '▼';
+.user-component-column {
+  flex: 2;
+  /* Tamanho médio (Supervisor e Auditor) */
+  width: 130px;
 }
 
-.tree-node-indicator::before {
-  content: '►';
+.sumary-column {
+  flex: 6;
+  /* Coluna maior (Sumário) */
+  width: 480px;
 }
 
-.collapsed {
-  display: none;
+.actions-column {
+  flex: 3;
+  /* Botões em um tamanho médio */
+  width: 200px;
+  text-align: center;
 }
 
-.header {
-  background-color: #ccc;
+/* Ajuste para telas menores */
+@media (max-width: 768px) {
+
+  th,
+  td {
+    min-width: 100px;
+  }
+
+  .sumary-column {
+    flex: 3;
+    /* Ainda será maior, mas ajustável */
+  }
+
+  .user-component-column {
+    flex: 2;
+  }
+
+  .actions-column {
+    flex: 2;
+  }
 }
 
 .success-button {
@@ -40,81 +71,13 @@
   color: white !important;
 }
 
-td {
-  padding: 5px;
-  border-bottom: 1px solid rgb(233 230 230);
-}
-
-.grid-field {
-  margin-top: 5px !important;
-}
-
 th {
-  padding: 5px;
-  border-bottom: 1px solid rgb(233 230 230);
   border-top: 1px solid rgb(233 230 230);
   background-color: #ccc;
 }
 
-.mat-form-field {
-  width: 100%;
-  margin-top: 10px !important;
-}
-
-.responsive-table {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.level-column {
-  min-width: 200px;
-  max-width: 250px;
-}
-
-.actions-column {
-  min-width: 180px;
-  text-align: center;
-}
-
 .button-container {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-  margin-right: 15px;
-}
-
-.button-container button {
-  font-size: 20px;
-  /* Ajuste do tamanho do ícone */
-  padding: 8px;
-}
-
-@media (max-width: 1024px) {
-  .level-column {
-    min-width: 150px;
-  }
-
-  .actions-column {
-    min-width: 120px;
-  }
-
-  .button-container button {
-    font-size: 18px;
-  }
-}
-
-@media (max-width: 768px) {
-  .responsive-table {
-    font-size: 14px;
-  }
-
-  .button-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .button-container button {
-    width: 100%;
-  }
+  justify-content: space-around;
+  width: 100%;
 }

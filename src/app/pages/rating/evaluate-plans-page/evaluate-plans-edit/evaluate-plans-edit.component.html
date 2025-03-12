@@ -2,13 +2,13 @@
   <ng-template pTemplate="header">
     <tr>
       <th class="level-column">Nível</th>
-      <th>Sumário</th>
-      <th>Supervisor</th>
-      <th>Auditor</th>
-      <th>Tipo de Nota</th>
-      <th>Peso (%)</th>
-      <th>Método</th>
-      <th>Nota</th>
+      <th class="sumary-column">Sumário</th>
+      <th class="user-component-column">Supervisor</th>
+      <th class="user-component-column">Auditor</th>
+      <th class="grade-type-column">Tipo de Nota</th>
+      <th class="weight-column">Peso (%)</th>
+      <th  class="method-column">Método</th>
+      <th  class="grade-column">Nota</th>
       <th class="actions-column">
         <button mat-raised-button color="primary" [matTooltip]="'Back-Up'">
           <mat-icon>backup</mat-icon>
@@ -20,17 +20,19 @@
   <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
     <tr [ttRow]="rowNode">
       <td class="level-column">
-        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
         {{ rowData.objectType }}
       </td>
-      <td>{{ rowData.name }}</td>
-      <td>{{rowData.supervisor?.name || ''}}</td>
-      <td>{{rowData.auditor?.name || ''}}</td>
-      <td>{{rowData.gradeTypeId || ''}}</td>
-      <td>{{rowData.weight || ''}}</td>
-      <td>{{rowData.letter || ''}}</td>
-      <td>{{rowData.grade}}</td>
-      <td>
+      <td class="sumary-column">
+        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+        {{ rowData.name }}
+      </td>
+      <td class="user-component-column">{{rowData.supervisor?.name || ''}}</td>
+      <td class="user-component-column">{{rowData.auditor?.name || ''}}</td>
+      <td class="grade-type-column">{{rowData.gradeTypeId || ''}}</td>
+      <td class="weight-column">{{rowData.weight || ''}}</td>
+      <td class="method-column">{{rowData.letter || ''}}</td>
+      <td class="grade-column">{{rowData.grade}}</td>
+      <td class="actions-column">
         <div class="button-container">
           <button *ngIf="rowData.objectType == 'Entidade'" mat-raised-button color="primary" [matTooltip]="'Radar'">
             <mat-icon>radar</mat-icon>
