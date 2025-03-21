@@ -10,6 +10,7 @@ import { TeamDTO } from 'src/app/domain/dto/team.dto';
 import { CyclesService } from 'src/app/services/configuration/cycles.service';
 import { TeamsService } from 'src/app/services/coordination/teams.service';
 import { AssingTeamsEditComponent } from './assing-teams-edit/assing-teams-edit.component';
+import { forkJoin, of } from 'rxjs';
 
 @Component({
   selector: 'app-assing-teams-page',
@@ -52,14 +53,45 @@ export class AssingTeamsPageComponent implements OnInit {
   }
 
   loadContent(filter: any) {
-    this._service.getAll(filter, this.pageObjects.page, this.pageObjects.size).subscribe(response => {
+    this._service.getAll('', this.pageObjects.page, this.pageObjects.size).subscribe(response => {
       this.pageObjects = response;
-      this.objectDataSource.data = this.pageObjects.content;
-      this.objectDataSource.data.forEach(team => {
-        this.setCyclesByEntity(team);
+      const teams = this.pageObjects.content;
+  
+      // Carrega todos os ciclos de forma paralela
+      const cycleRequests = teams.map(team =>
+        this._cycleService.getAllByEntityId(team.entity.id, 0, 200).pipe(
+          catchError(() => of({ content: [] })) // Evita travar se alguma chamada falhar
+        )
+      );
+  
+      forkJoin(cycleRequests).subscribe(cycleResponses => {
+        cycleResponses.forEach((resp, index) => {
+          const team = teams[index];
+          this.cyclesByEntity.set(team.entity.id, resp.content);
+          if (resp.content.length) {
+            team.cycle = resp.content[0];
+          }
+        });
+  
+        // Agora que os ciclos foram carregados, aplica o filtro
+        const keyword = filter?.toLowerCase() ?? '';
+        const filteredData = teams.filter((team: TeamDTO) => {
+          const code = team.entity?.code?.toLowerCase() ?? '';
+          const name = team.entity?.name?.toLowerCase() ?? '';
+          const office = team.office?.name?.toLowerCase() ?? '';
+          const cycle = team.cycle?.name?.toLowerCase() ?? '';
+  
+          return code.includes(keyword)
+              || name.includes(keyword)
+              || office.includes(keyword)
+              || cycle.includes(keyword);
+        });
+  
+        this.objectDataSource.data = filteredData;
       });
-    })
+    });
   }
+  
 
   handlePageEvent(e: PageEvent) {
     this.pageObjects.totalElements = e.length;

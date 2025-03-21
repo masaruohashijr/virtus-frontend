@@ -9,6 +9,8 @@ import { PageResponseDTO } from 'src/app/domain/dto/response/page-response.dto';
 import { CyclesService } from 'src/app/services/configuration/cycles.service';
 import { DistributeActivitiesService } from 'src/app/services/coordination/distribute-activities.service';
 import { DistributeActivitiesEditComponent } from './distribute-activities-edit/distribute-activities-edit.component';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-distribute-activities',
@@ -50,13 +52,44 @@ export class DistributeActivitiesComponent implements OnInit {
   }
 
   loadContent(filter: any) {
-    this._service.getAllDistributeActivities(filter, this.pageObjects.page, this.pageObjects.size).subscribe(response => {
+    this._service.getAllDistributeActivities('', this.pageObjects.page, this.pageObjects.size).subscribe(response => {
       this.pageObjects = response;
-      this.objectDataSource.data = this.pageObjects.content;
-      this.objectDataSource.data.forEach(dist => {
-        this.setCyclesByEntity(dist);
+      const objects = this.pageObjects.content;
+  
+      // Criar lista de chamadas para pegar ciclos
+      const cycleRequests = objects.map(obj =>
+        this._cycleService.getAllByEntityId(obj.entityId, 0, 200).pipe(
+          catchError(() => of({ content: [] }))
+        )
+      );
+  
+      forkJoin(cycleRequests).subscribe(cycleResponses => {
+        cycleResponses.forEach((resp, index) => {
+          const obj = objects[index];
+          this.cyclesByEntity.set(obj.entityId, resp.content);
+          if (resp.content?.length) {
+            obj.cycle = resp.content[0];
+          }
+        });
+  
+        // Agora aplicamos o filtro após os ciclos estarem carregados
+        const keyword = (filter ?? '').toLowerCase();
+  
+        const filteredData = objects.filter((item: DistributeActivitiesDTO) => {
+          const code = item.code?.toLowerCase() ?? '';
+          const name = item.name?.toLowerCase() ?? '';
+          const jurisdiction = item.acronym?.toLowerCase() ?? '';
+          const cycleName = item.cycle?.name?.toLowerCase() ?? '';
+  
+          return code.includes(keyword)
+            || name.includes(keyword)
+            || jurisdiction.includes(keyword)
+            || cycleName.includes(keyword);
+        });
+  
+        this.objectDataSource.data = filteredData;
       });
-    })
+    });
   }
 
   handlePageEvent(e: PageEvent) {
