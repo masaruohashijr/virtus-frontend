@@ -6,6 +6,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { ComponentGradeType } from 'src/app/domain/dto/component-grade-type.dto';
 import { ComponentDTO } from 'src/app/domain/dto/components.dto';
 import { ComponentsGradeEditComponent } from '../components-grade-edit/components-grade-edit.component';
+import { ConfirmationDialogComponent } from 'src/app/components/dialog/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-components-grade-list',
@@ -88,7 +89,7 @@ export class ComponentsGradeListComponent implements OnInit {
   }
 
   deleteObject(object: ComponentGradeType) {
-    const dialogRef = this.deleteDialog.open(ComponentsGradeEditComponent, {
+    const dialogRef = this.deleteDialog.open(ConfirmationDialogComponent, {
       width: '270px',
     });
 
