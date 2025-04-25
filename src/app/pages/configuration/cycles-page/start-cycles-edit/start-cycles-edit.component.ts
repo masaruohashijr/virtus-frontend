@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { catchError } from 'rxjs/internal/operators/catchError';
 import { tap } from 'rxjs/internal/operators/tap';
 import { CycleDTO } from 'src/app/domain/dto/cycle.dto';
@@ -40,6 +40,7 @@ export class StartCyclesEditComponent extends BaseCrudEditComponent<StartCycleDT
     private _service: CyclesService,
     private _entityService: EntityVirtusService,
     private _formBuilder: FormBuilder,
+    private errorDialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: { object: StartCycleDTO }) {
     super();
     this.object = data.object;
@@ -139,6 +140,7 @@ export class StartCyclesEditComponent extends BaseCrudEditComponent<StartCycleDT
         this.dialogRef.close(resp);
       }),
       catchError(error => {
+        this.mostrarErro(error, this.errorDialog);
         console.error(error);
         return throwError(error);
       })
