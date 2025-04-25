@@ -64,7 +64,7 @@ export class EvaluatePlansPageComponent implements OnInit {
   }
 
   loadContent(filter: any) {
-    this._service.listAll().subscribe(response => {
+    this._service.listAll(filter).subscribe(response => {
       this.pageObjects = response;
       this.objectDataSource.data = this.pageObjects;
       this.pageObjects.forEach(obj => this.setCyclesByEntity(obj));

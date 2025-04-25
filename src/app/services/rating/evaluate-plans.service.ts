@@ -23,17 +23,20 @@ export class EvaluatePlansService extends BaseService<EntityVirtusDTO> {
     return this._httpClient;
   }
 
-  listAll() {
-    return this.getHttpClient().get<EntityVirtusDTO[]>(`${URL_API}${this.rootEndpoint()}/list`);
+  listAll(filter: string) {
+    let queryParams = new HttpParams();
+    if (filter)
+      queryParams = queryParams.append("filter", filter);
+    return this.getHttpClient().get<EntityVirtusDTO[]>(`${URL_API}${this.rootEndpoint()}/list`, { params: queryParams });
   }
 
   getEvaluatePlansTreeByEntityAndCycleId(entityId: number, cycleId: number) {
-      let queryParams = new HttpParams();
-      queryParams = queryParams.append("entityId", entityId);
-      queryParams = queryParams.append("cycleId", cycleId);
-      return this._httpClient.get<EvaluatePlansTreeNode[]>(
-        URL_API + this.rootEndpoint() + "/by-entity-and-cycle-id",
-        { params: queryParams });
-    }
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("entityId", entityId);
+    queryParams = queryParams.append("cycleId", cycleId);
+    return this._httpClient.get<EvaluatePlansTreeNode[]>(
+      URL_API + this.rootEndpoint() + "/by-entity-and-cycle-id",
+      { params: queryParams });
+  }
 
 }
