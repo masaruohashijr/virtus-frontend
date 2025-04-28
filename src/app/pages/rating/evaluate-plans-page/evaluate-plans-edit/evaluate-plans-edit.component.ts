@@ -15,9 +15,8 @@ import { EvaluatePlansService } from 'src/app/services/rating/evaluate-plans.ser
 })
 export class EvaluatePlansEditComponent implements OnInit {
 
-  @Input() object!: EntityVirtusDTO;
-
-  treeData!: TreeNode[];
+  @Input() object!: EntityVirtusDTO;  
+  treeData: TreeNode[] = [];
 
   allUsers: UserDTO[] = [];
 
@@ -32,6 +31,7 @@ export class EvaluatePlansEditComponent implements OnInit {
         this._service.getEvaluatePlansTreeByEntityAndCycleId(this.object.id, this.object.cycleSelected.id)
           .subscribe(data => {
             this.treeData = this.transformToTreeTableFormat(data);
+            this.collapseAllNodes();
           });
       }
     });
@@ -77,5 +77,18 @@ export class EvaluatePlansEditComponent implements OnInit {
       }
     });
   }
-
+  collapseAllNodes() {
+    this.collapseRecursive(this.treeData);
+  }
+  
+  private collapseRecursive(nodes: TreeNode[] | undefined) {
+    if (!nodes) return;
+    for (const node of nodes) {
+      node.expanded = false;
+      if (node.children && node.children.length > 0) {
+        this.collapseRecursive(node.children);
+      }
+    }
+  }
+  
 }

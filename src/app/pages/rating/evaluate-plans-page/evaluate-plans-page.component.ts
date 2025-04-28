@@ -1,26 +1,13 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { TreeNode } from 'primeng/api';
-import { DistributeActivitiesDTO } from 'src/app/domain/dto/distribute-activities-dto';
-import { DistributeActivitiesTreeDTO } from 'src/app/domain/dto/distribute-activities-tree-dto';
-import { ProductComponentDTO } from 'src/app/domain/dto/product-component.dto';
-import { DistributeActivitiesService } from 'src/app/services/coordination/distribute-activities.service';
-import { HistoryService } from 'src/app/services/coordination/history.service';
-import { ActivitiesByProductComponentRequestDto } from '../../coordination/distribute-activities/distribute-activities-edit/distribute-activities-edit.component';
-import { catchError, debounceTime, distinctUntilChanged, tap, throwError } from 'rxjs';
-import { AlertDialogComponent } from 'src/app/components/dialog/alert-dialog/alert-dialog.component';
-import { AuditorDTO } from 'src/app/domain/dto/auditor.dto';
-import { ConfigPlansComponent } from '../../coordination/distribute-activities/config-plans-edit/config-plans-edit.component';
-import { HistoryViewComponent } from '../../coordination/distribute-activities/history-view/history-view.component';
-import { History } from 'src/app/domain/dto/history.dto';
-import { PageResponseDTO } from 'src/app/domain/dto/response/page-response.dto';
-import { MatTableDataSource } from '@angular/material/table';
-import { CyclesService } from 'src/app/services/configuration/cycles.service';
+import { EvaluatePlansEditComponent } from './evaluate-plans-edit/evaluate-plans-edit.component';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { CycleDTO } from 'src/app/domain/dto/cycle.dto';
 import { EntityVirtusDTO } from 'src/app/domain/dto/entity-virtus.dto';
 import { EvaluatePlansService } from 'src/app/services/rating/evaluate-plans.service';
-import { CycleDTO } from 'src/app/domain/dto/cycle.dto';
 
 @Component({
   selector: 'app-evaluate-plans-page',
@@ -28,6 +15,7 @@ import { CycleDTO } from 'src/app/domain/dto/cycle.dto';
   styleUrls: ['./evaluate-plans-page.component.css']
 })
 export class EvaluatePlansPageComponent implements OnInit {
+  @ViewChild('evaluatePlansEdit') evaluatePlansEditComponent?: EvaluatePlansEditComponent;
 
   pageObjects: EntityVirtusDTO[] = [];
 
@@ -83,6 +71,11 @@ export class EvaluatePlansPageComponent implements OnInit {
   openEvaluatePlans(object: EntityVirtusDTO) {
     this.selectedObject = object;
     this.showTree = true;
+
+    // ESPERAR O Angular renderizar o componente e depois colapsar
+    setTimeout(() => {
+      this.evaluatePlansEditComponent?.collapseAllNodes();
+    }, 0);
   }
 
   setCyclesByEntity(entity: EntityVirtusDTO) {
@@ -95,4 +88,5 @@ export class EvaluatePlansPageComponent implements OnInit {
       });
     }
   }
+  
 }
