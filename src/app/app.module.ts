@@ -101,7 +101,9 @@ import { HistoryListComponent } from './pages/coordination/distribute-activities
 import { HistoryViewReasonComponent } from './pages/coordination/distribute-activities/history-view/history-view-reason/history-view-reason.component';
 import { EvaluatePlansPageComponent } from './pages/rating/evaluate-plans-page/evaluate-plans-page.component';
 import { EvaluatePlansEditComponent } from './pages/rating/evaluate-plans-page/evaluate-plans-edit/evaluate-plans-edit.component';
+import { MotivarNotaComponent } from './pages/rating/evaluate-plans-page/motivar-nota/motivar-nota.component'; 
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { CommonModule } from '@angular/common';
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -185,6 +187,7 @@ export const MY_DATE_FORMATS = {
     HistoryViewReasonComponent,
     EvaluatePlansPageComponent,
     EvaluatePlansEditComponent,
+    MotivarNotaComponent
   ],
   imports: [
     TreeTableModule,

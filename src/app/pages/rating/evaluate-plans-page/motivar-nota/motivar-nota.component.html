@@ -1,0 +1,57 @@
+<div class="modal-overlay" *ngIf="visible">
+  <div class="modal-content">
+    <!-- Cabeçalho -->
+    <div class="modal-header">
+      <h2>Motivar nota</h2>
+      <button class="close-button" (click)="fechar()">&times;</button>
+    </div>
+
+    <!-- Corpo -->
+    <div class="modal-body">
+      <div class="left-column">
+        <label>EFPC</label>
+        <input [value]="data.entidade" readonly />
+        <label>Ciclo</label>
+        <input [value]="data.ciclo" readonly />
+        <label>Pilar</label>
+        <input [value]="data.pilar" readonly />
+        <label>Plano</label>
+        <input [value]="data.plano" readonly />
+        <label>Componente</label>
+        <input [value]="data.componente" readonly />
+        <label>Tipo de Nota</label>
+        <input [value]="data.tipoNota" readonly />
+        <label>Elemento</label>
+        <input [value]="data.elemento" readonly />
+
+        <div class="nota-row">
+          <div>
+            <label>Nota Anterior</label>
+            <input [value]="data.notaAnterior" readonly />
+          </div>
+          <div>
+            <label>Nova Nota</label>
+            <input [value]="data.novaNota" readonly />
+          </div>
+        </div>
+      </div>
+
+      <div class="right-column">
+        <label>Motivação da Nota</label>
+        <textarea
+          rows="15"
+          maxlength="400"
+          [(ngModel)]="data.texto"
+          name="motivoNota"
+          (keyup)="atualizarContador()"
+        ></textarea>
+        <div class="contador">{{ contador }}/400</div>
+      </div>
+    </div>
+
+    <!-- Rodapé -->
+    <div class="modal-footer">
+      <button (click)="salvar()">Salvar</button>
+    </div>
+  </div>
+</div>

@@ -2,7 +2,15 @@
   <ng-template pTemplate="header">
     <tr>
       <th class="level-column">Nível</th>
-      <th class="sumary-column">Sumário</th>
+      <th class="sumary-column">
+        Sumário
+        <button mat-icon-button 
+                class="expand-all-button"
+                matTooltip="Expandir tudo"
+                (click)="expandirTodos()">
+          <mat-icon>unfold_more</mat-icon>
+        </button>
+      </th>
       <th class="user-component-column">Supervisor</th>
       <th class="user-component-column">Auditor</th>
       <th class="grade-type-column">Tipo de Nota</th>
@@ -31,7 +39,20 @@
       <td class="grade-type-column">{{rowData.gradeTypeId || ''}}</td>
       <td class="weight-column">{{rowData.weight || ''}}</td>
       <td class="method-column">{{rowData.letter || ''}}</td>
-      <td class="grade-column">{{rowData.grade}}</td>
+      <td class="grade-column">
+        <ng-container *ngIf="rowData.objectType === 'Elemento'; else noGrade">
+          <select [(ngModel)]="rowData.grade"
+                  class="grade-select"
+                  (change)="onNotaChange($event, rowNode)">
+            <option [value]="0">N/A</option>
+            <option [value]="1">1</option>
+            <option [value]="2">2</option>
+            <option [value]="3">3</option>
+            <option [value]="4">4</option>
+          </select>
+        </ng-container>
+        <ng-template #noGrade>-</ng-template>
+      </td>  
       <td class="actions-column">
         <div class="button-container">
           <button *ngIf="rowData.objectType == 'Entidade'" mat-raised-button color="primary" [matTooltip]="'Radar'">
@@ -53,3 +74,11 @@
     </tr>
   </ng-template>
 </p-treeTable>
+
+<app-motivar-nota
+  [visible]="modalMotivarNotaVisivel"
+  [data]="motivarNotaData"
+  (onClose)="modalMotivarNotaVisivel = false"
+  (onSave)="salvarMotivacaoNota($event)">
+</app-motivar-nota>
+
