@@ -58,28 +58,10 @@
 }
 
 /* Campos de input e textarea padronizados */
-input,
-textarea {
-  padding: 8px;
-  border: 1px solid #ccc;
-  margin-bottom: 5px;
-  border-radius: 4px;
-  font-size: 0.95em;
-}
-
-textarea {
-  resize: vertical;
-  min-height: 200px;
-}
-
 /* Linha de notas (anterior / nova) lado a lado */
 .nota-row {
   display: flex;
   gap: 10px;
-}
-
-.nota-row input {
-  flex: 1;
 }
 
 /* Contador de caracteres */

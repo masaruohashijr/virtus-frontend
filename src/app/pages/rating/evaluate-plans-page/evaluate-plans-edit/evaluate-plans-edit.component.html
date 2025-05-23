@@ -4,10 +4,12 @@
       <th class="level-column">Nível</th>
       <th class="sumary-column">
         Sumário
-        <button mat-icon-button 
-                class="expand-all-button"
-                matTooltip="Expandir tudo"
-                (click)="expandirTodos()">
+        <button
+          mat-icon-button
+          class="expand-all-button"
+          matTooltip="Expandir tudo"
+          (click)="expandirTodos()"
+        >
           <mat-icon>unfold_more</mat-icon>
         </button>
       </th>
@@ -15,8 +17,8 @@
       <th class="user-component-column">Auditor</th>
       <th class="grade-type-column">Tipo de Nota</th>
       <th class="weight-column">Peso (%)</th>
-      <th  class="method-column">Método</th>
-      <th  class="grade-column">Nota</th>
+      <th class="method-column">Método</th>
+      <th class="grade-column">Nota</th>
       <th class="actions-column">
         <button mat-raised-button color="primary" [matTooltip]="'Back-Up'">
           <mat-icon>backup</mat-icon>
@@ -34,16 +36,22 @@
         <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
         {{ rowData.name }}
       </td>
-      <td class="user-component-column">{{rowData.supervisor?.name || ''}}</td>
-      <td class="user-component-column">{{rowData.auditor?.name || ''}}</td>
-      <td class="grade-type-column">{{rowData.gradeTypeId || ''}}</td>
-      <td class="weight-column">{{rowData.weight || ''}}</td>
-      <td class="method-column">{{rowData.letter || ''}}</td>
+      <td class="user-component-column">
+        {{ rowData.supervisor?.name || "" }}
+      </td>
+      <td class="user-component-column">{{ rowData.auditor?.name || "" }}</td>
+      <td class="grade-type-column">{{ rowData.gradeTypeId || "" }}</td>
+      <td class="weight-column">{{ rowData.weight || "" }}</td>
+      <td class="method-column">{{ rowData.letter || "" }}</td>
       <td class="grade-column">
         <ng-container *ngIf="rowData.objectType === 'Elemento'; else noGrade">
-          <select [(ngModel)]="rowData.grade"
-                  class="grade-select"
-                  (change)="onNotaChange($event, rowNode)">
+          
+          <select
+            [ngModel]="rowData.grade"
+            (ngModelChange)="motivarNota(rowNode.node, rowData.grade, $event)"            
+            class="grade-select"
+            [disabled]="!rowData.periodoPermitido"
+          >
             <option [value]="0">N/A</option>
             <option [value]="1">1</option>
             <option [value]="2">2</option>
@@ -52,21 +60,40 @@
           </select>
         </ng-container>
         <ng-template #noGrade>-</ng-template>
-      </td>  
+      </td>
       <td class="actions-column">
         <div class="button-container">
-          <button *ngIf="rowData.objectType == 'Entidade'" mat-raised-button color="primary" [matTooltip]="'Radar'">
+          <button
+            *ngIf="rowData.objectType == 'Entidade'"
+            mat-raised-button
+            color="primary"
+            [matTooltip]="'Radar'"
+          >
             <mat-icon>radar</mat-icon>
           </button>
-          <button *ngIf="rowData.objectType != 'Entidade'" mat-raised-button color="primary" [matTooltip]="'Análise'">
+          <button
+            *ngIf="rowData.objectType != 'Entidade'"
+            mat-raised-button
+            color="primary"
+            [matTooltip]="'Análise'"
+          >
             <mat-icon>search</mat-icon>
           </button>
-          <button *ngIf="rowData.objectType != 'Entidade'" mat-raised-button class="success-button"
-            [matTooltip]="'Descrição'">
+          <button
+            *ngIf="rowData.objectType != 'Entidade'"
+            mat-raised-button
+            class="success-button"
+            [matTooltip]="'Descrição'"
+          >
             <mat-icon>description</mat-icon>
           </button>
-          <button *ngIf="rowData.objectType != 'Entidade' && rowData.objectType != 'Ciclo'" mat-raised-button
-            [matTooltip]="'Histórico'">
+          <button
+            *ngIf="
+              rowData.objectType != 'Entidade' && rowData.objectType != 'Ciclo'
+            "
+            mat-raised-button
+            [matTooltip]="'Histórico'"
+          >
             <mat-icon>history</mat-icon>
           </button>
         </div>
@@ -74,11 +101,3 @@
     </tr>
   </ng-template>
 </p-treeTable>
-
-<app-motivar-nota
-  [visible]="modalMotivarNotaVisivel"
-  [data]="motivarNotaData"
-  (onClose)="modalMotivarNotaVisivel = false"
-  (onSave)="salvarMotivacaoNota($event)">
-</app-motivar-nota>
-

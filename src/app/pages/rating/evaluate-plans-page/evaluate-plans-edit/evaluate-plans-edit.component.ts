@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
 import { TreeNode } from "primeng/api";
+import { HttpClient } from "@angular/common/http";
+
 import { AuditorDTO } from "src/app/domain/dto/auditor.dto";
 import { EntityVirtusDTO } from "src/app/domain/dto/entity-virtus.dto";
 import { EvaluatePlansTreeNode } from "src/app/domain/dto/eveluate-plans-tree-node";
@@ -7,7 +10,12 @@ import { ProductComponentDTO } from "src/app/domain/dto/product-component.dto";
 import { UserDTO } from "src/app/domain/dto/user.dto";
 import { UsersService } from "src/app/services/administration/users.service";
 import { EvaluatePlansService } from "src/app/services/rating/evaluate-plans.service";
-import { MotivarNotaData } from "./../motivar-nota/motivar-nota.component";
+import { ProductItemDTO } from "./../../../../domain/dto/product-item.dto";
+import {
+  MotivarNotaComponent,
+  MotivarNotaData,
+} from "./../motivar-nota/motivar-nota.component";
+import { CurrentUser } from "src/app/domain/dto/current-user.dto";
 
 @Component({
   selector: "app-evaluate-plans-edit",
@@ -19,6 +27,7 @@ export class EvaluatePlansEditComponent implements OnInit {
   treeData: TreeNode[] = [];
   allUsers: UserDTO[] = [];
   modalMotivarNotaVisivel: boolean = false;
+
   motivarNotaData: MotivarNotaData = {
     entidade: "",
     ciclo: "",
@@ -31,30 +40,43 @@ export class EvaluatePlansEditComponent implements OnInit {
     novaNota: null,
     texto: "",
   };
+  notaPendente: { rowNode: TreeNode; novaNota: number } | null = null;
+  currentUser: CurrentUser | undefined;
+  curUserRole: any;
 
   constructor(
     private _service: EvaluatePlansService,
-    private _usersService: UsersService
+    private _usersService: UsersService,
+    private dialog: MatDialog,
+    private http: HttpClient
   ) {}
-
+  dadosCarregando: boolean = true;
   ngOnInit(): void {
-    this.treeData.forEach((node) => {
-      if (node.data.objectType === "Elemento") {
-        node.data.gradeOriginal = node.data.grade;
-      }
+    this.carregarDados().then(() => {
+      this.dadosCarregando = false;
     });
-    this._usersService.getAll("", 0, 1000).subscribe((resp) => {
-      this.allUsers = resp.content;
-      if (this.object.cycleSelected) {
-        this._service
-          .getEvaluatePlansTreeByEntityAndCycleId(
-            this.object.id,
-            this.object.cycleSelected.id
-          )
-          .subscribe((data) => {
-            this.treeData = this.transformToTreeTableFormat(data);
-            this.collapseAllNodes();
-          });
+  }
+
+  openMotivacaoNota(rowData: any, novaNota: number): void {
+    const dialogRef = this.dialog.open(MotivarNotaComponent, {
+      width: "600px",
+      data: {
+        entidade: rowData.entidade || "",
+        ciclo: rowData.ciclo || "",
+        plano: rowData.plano || "",
+        tipoNota: rowData.tipoNota || "",
+        elemento: rowData.elemento || "",
+        notaAnterior: rowData.notaAnterior || null,
+        novaNota: novaNota || null,
+        currentUser: this._usersService.getCurrentUser(),
+        curUserRole: this._usersService.getCurrentUser().role,        
+        texto: "",
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((resultado) => {
+      if (resultado) {
+        this.salvarMotivacaoNota(resultado);
       }
     });
   }
@@ -93,6 +115,8 @@ export class EvaluatePlansEditComponent implements OnInit {
             weight: node.weight,
             letter: node.letter,
             grade: node.grade,
+            gradeOriginal: node.grade,
+            periodoPermitido: node.periodoPermitido,
           },
           children: node.children
             ? this.transformToTreeTableFormat(node.children)
@@ -121,44 +145,96 @@ export class EvaluatePlansEditComponent implements OnInit {
     }
   }
 
-  onNotaChange(event: Event, rowNode: TreeNode): void {
-    const select = event.target as HTMLSelectElement;
-    const novaNota = Number(select.value);
-    if (!rowNode.data.gradeOriginal) {
-      rowNode.data.gradeOriginal = rowNode.data.grade;
-    }
-    const notaAnterior = rowNode.data.gradeOriginal;
+  onNotaChange(novaNota: number, object: ProductItemDTO) {
+    if (this.dadosCarregando) return; // Ignora alterações automáticas na carga
+    const dialogRef = this.dialog.open(MotivarNotaComponent, {
+      width: "600px",
+      data: object,
+    });
 
-    select.style.textAlign = "center";
-    select.style.border = "1px solid red";
-
-    if (novaNota !== notaAnterior) {
-      this.motivarNota(rowNode, notaAnterior, novaNota);
+    dialogRef.afterClosed().subscribe((result) => {});
+  }
+  async carregarDados(): Promise<void> {
+    try {
+      this.treeData.forEach((node) => {
+        if (node.data.objectType === "Elemento") {
+          node.data.gradeOriginal = node.data.grade;
+        }
+      });
+      this._usersService.getAll("", 0, 1000).subscribe((resp) => {
+        this.allUsers = resp.content;
+        if (this.object.cycleSelected) {
+          this._service
+            .getEvaluatePlansTreeByEntityAndCycleId(
+              this.object.id,
+              this.object.cycleSelected.id
+            )
+            .subscribe((data) => {
+              this.treeData = this.transformToTreeTableFormat(data);
+            });
+        }
+      });
+    } catch (erro) {
+      console.error("Erro ao carregar dados:", erro);
     }
   }
 
-  motivarNota(rowNode: TreeNode, notaAnterior: number, novaNota: number): void {
+  motivarNota(
+    rowNode: TreeNode | undefined,
+    notaAnterior: number,
+    novaNota: number
+  ): void {
+    if (!rowNode?.data) {
+      console.log("rowNode:", rowNode);
+      if (rowNode) {
+        console.log("rowNode.node:", (rowNode as any).node);
+      }
+      return;
+    }
     const entidade = this.subirAtePorNode(rowNode, "Entidade");
     const ciclo = this.subirAtePorNode(rowNode, "Ciclo");
     const pilar = this.subirAtePorNode(rowNode, "Pilar");
+    const tipoNota = this.subirAtePorNode(rowNode, "Tipo Nota");
     const plano = this.subirAtePorNode(rowNode, "Plano");
     const componente = this.subirAtePorNode(rowNode, "Componente");
-    const tipoNota = this.subirAtePorNode(rowNode, "TipoNota");
+    const elemento = rowNode;    
+    
+    const dialogRef = this.dialog.open(MotivarNotaComponent, {
+      width: "1000px",
+      data: {
+        entidade: entidade?.data || "",
+        ciclo: ciclo?.data || "",
+        pilar: pilar?.data || "",
+        plano: plano?.data || "",
+        componente: componente?.data || "",
+        tipoNota: tipoNota?.data || "",
+        elemento: elemento?.data || "",
+        notaAnterior: notaAnterior,
+        novaNota: novaNota,
+        texto: "",
+      },
+    });
+    // Borda vermelha no campo de nota (select) após abrir o diálogo
+    // Aguarda o DOM estar renderizado
+    setTimeout(() => {
+      const selects = document.querySelectorAll("select.grade-select");
 
-    this.motivarNotaData = {
-      entidade: entidade?.data.name || "",
-      ciclo: ciclo?.data.name || "",
-      pilar: pilar?.data.name || "",
-      plano: plano?.data.name || "",
-      componente: componente?.data.name || "",
-      tipoNota: tipoNota?.data.name || "",
-      elemento: rowNode.data.name || "",
-      notaAnterior,
-      novaNota,
-      texto: "",
-    };
+      selects.forEach((select) => {
+        // Adiciona ouvinte de evento para mudança no select
+        select.addEventListener("change", (event: Event) => {
+          // Aplica borda vermelha apenas no select alterado
+          (event.target as HTMLElement).style.border = "2px solid red";
+        });
+      });
+    }, 300);
 
-    this.modalMotivarNotaVisivel = true;
+    dialogRef.afterClosed().subscribe((resultado) => {
+      if (resultado) {
+        const user = this._usersService.getCurrentUser();
+        alert("Usuário corrente: " + user.id + " - " + user.name);
+        this.salvarMotivacaoNota(resultado);
+      }
+    });
   }
 
   subirAtePorNode(node: TreeNode, tipo: string): TreeNode | null {
@@ -179,20 +255,13 @@ export class EvaluatePlansEditComponent implements OnInit {
     target.style.border = "1px solid red";
   }
 
-  salvarMotivacaoNota(dados: any) {
-    console.log("Salvando nota com motivação:", dados);
-    // Aqui você pode chamar um serviço, ou aplicar a lógica de atualização
-  }
-
-  private getAncestorName(rowData: any, tipo: string): string | null {
-    let current = rowData;
-    while (current && current.parent) {
-      current = current.parent.data;
-      if (current.objectType === tipo) {
-        return current.name;
-      }
-    }
-    return null;
+  salvarMotivacaoNota(dadosMotivacao: any) {
+    console.log("Motivação recebida:", dadosMotivacao);
+    this.http.post("/api/grade-changes", dadosMotivacao).subscribe({
+      next: (res: any) => console.log("Nota salva com sucesso", res),
+      error: (err: any) => console.error("Erro ao salvar nota:", err),
+    });
+    this.modalMotivarNotaVisivel = false;
   }
 
   expandirTodos(): void {
