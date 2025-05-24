@@ -45,12 +45,17 @@
       <td class="method-column">{{ rowData.letter || "" }}</td>
       <td class="grade-column">
         <ng-container *ngIf="rowData.objectType === 'Elemento'; else noGrade">
-          
           <select
             [ngModel]="rowData.grade"
-            (ngModelChange)="motivarNota(rowNode.node, rowData.grade, $event)"            
+            (ngModelChange)="motivarNota(rowNode.node, rowData.grade, $event)"
             class="grade-select"
-            [disabled]="!rowData.periodoPermitido"
+            [disabled]="
+              (rowData.auditor?.id !== currentUser?.id &&
+                rowData.supervisor?.id !== currentUser?.id &&
+                curUserRole !== 'Chefe') ||
+              rowData.weight === 0 ||
+              !rowData.periodoPermitido
+            "
           >
             <option [value]="0">N/A</option>
             <option [value]="1">1</option>

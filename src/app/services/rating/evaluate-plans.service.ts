@@ -53,7 +53,7 @@ export class EvaluatePlansService extends BaseService<EntityVirtusDTO> {
     motivacao: string;
   }) {
     return this._httpClient.put(
-      `${URL_API}${this.rootEndpoint()}/salvarNotaElemento`,
+      `${URL_API}${this.rootEndpoint()}/updateElementGrade`,
       payload
     );
   }

@@ -16,6 +16,8 @@ import {
   MotivarNotaData,
 } from "./../motivar-nota/motivar-nota.component";
 import { CurrentUser } from "src/app/domain/dto/current-user.dto";
+// Add the following import, adjust the path if necessary
+import { ValoresAtuaisDTO } from "src/app/domain/dto/valores-atuais.dto";
 
 @Component({
   selector: "app-evaluate-plans-edit",
@@ -43,6 +45,8 @@ export class EvaluatePlansEditComponent implements OnInit {
   notaPendente: { rowNode: TreeNode; novaNota: number } | null = null;
   currentUser: CurrentUser | undefined;
   curUserRole: any;
+  cicloNota: any;
+  elementoPeso: any;
 
   constructor(
     private _service: EvaluatePlansService,
@@ -69,7 +73,7 @@ export class EvaluatePlansEditComponent implements OnInit {
         notaAnterior: rowData.notaAnterior || null,
         novaNota: novaNota || null,
         currentUser: this._usersService.getCurrentUser(),
-        curUserRole: this._usersService.getCurrentUser().role,        
+        curUserRole: this._usersService.getCurrentUser().role,
         texto: "",
       },
     });
@@ -197,8 +201,8 @@ export class EvaluatePlansEditComponent implements OnInit {
     const tipoNota = this.subirAtePorNode(rowNode, "Tipo Nota");
     const plano = this.subirAtePorNode(rowNode, "Plano");
     const componente = this.subirAtePorNode(rowNode, "Componente");
-    const elemento = rowNode;    
-    
+    const elemento = rowNode;
+
     const dialogRef = this.dialog.open(MotivarNotaComponent, {
       width: "1000px",
       data: {
@@ -257,9 +261,16 @@ export class EvaluatePlansEditComponent implements OnInit {
 
   salvarMotivacaoNota(dadosMotivacao: any) {
     console.log("Motivação recebida:", dadosMotivacao);
-    this.http.post("/api/grade-changes", dadosMotivacao).subscribe({
-      next: (res: any) => console.log("Nota salva com sucesso", res),
-      error: (err: any) => console.error("Erro ao salvar nota:", err),
+    this.http.put<ValoresAtuaisDTO>("/api/updateElementGrade", dadosMotivacao).subscribe({
+      next: (valores) => {
+        console.log("Valores retornados:", valores);
+        // Exemplo: usar na interface
+        this.cicloNota = valores.cicloNota;
+        this.elementoPeso = valores.elementoPeso;
+      },
+      error: (err) => {
+        console.error("Erro ao salvar nota:", err);
+      },
     });
     this.modalMotivarNotaVisivel = false;
   }
