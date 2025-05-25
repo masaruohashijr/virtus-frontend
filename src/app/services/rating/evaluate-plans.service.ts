@@ -54,7 +54,21 @@ export class EvaluatePlansService extends BaseService<EntityVirtusDTO> {
     motivacao: string;
   }) {
     return this._httpClient.put(
-      URL_API + this.rootEndpoint()+"/updateElementGrade",
+      URL_API + this.rootEndpoint() + "/updateElementGrade",
+      payload
+    );
+  }
+
+  salvarPesoPilar(payload: {
+    entidadeId: any;
+    cicloId: any;
+    pilarId: any;
+    novoPeso: any;
+    pesoAnterior: any;
+    motivacao: any;
+  }) {
+    return this._httpClient.put(
+      URL_API + this.rootEndpoint() + "/updatePillarWeight",
       payload
     );
   }

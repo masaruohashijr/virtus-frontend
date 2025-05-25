@@ -104,6 +104,7 @@ import { EvaluatePlansEditComponent } from './pages/rating/evaluate-plans-page/e
 import { EvaluatePlansPageComponent } from './pages/rating/evaluate-plans-page/evaluate-plans-page.component';
 import { MensagemDialogComponent } from './pages/rating/evaluate-plans-page/mensagem/mensagem-dialog.component';
 import { MotivarNotaComponent } from './pages/rating/evaluate-plans-page/motivar-nota/motivar-nota.component';
+import { MotivarPesoPilarComponent } from './pages/rating/evaluate-plans-page/motivar-peso-pilar/motivar-peso-pilar.component';
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -188,7 +189,8 @@ export const MY_DATE_FORMATS = {
     EvaluatePlansPageComponent,
     EvaluatePlansEditComponent,
     MotivarNotaComponent,
-    MensagemDialogComponent
+    MensagemDialogComponent,
+    MotivarPesoPilarComponent
   ],
   imports: [
     TreeTableModule,

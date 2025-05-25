@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 @Component({
   selector: 'app-mensagem-dialog',
   template: `
-    <h2>Sucesso</h2>
+    <h2>{{ data.title || 'Mensagem' }}</h2>
     <div class="dialog-content">
       {{ data.message }}
     </div>
@@ -16,6 +16,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 export class MensagemDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<MensagemDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { message: string }
+    @Inject(MAT_DIALOG_DATA) public data: { title?: string; message: string }
   ) {}
 }

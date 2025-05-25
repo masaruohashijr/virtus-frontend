@@ -38,13 +38,26 @@
       >
         <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
         {{ rowData.name }}
-      </td>      
+      </td>
       <td class="user-component-column">
         {{ rowData.supervisor?.name || "" }}
       </td>
       <td class="user-component-column">{{ rowData.auditor?.name || "" }}</td>
       <td class="grade-type-column">{{ rowData.gradeTypeId || "" }}</td>
-      <td class="weight-column">{{ rowData.weight || "" }}</td>
+      <td class="weight-column">
+        <ng-container *ngIf="rowData.objectType === 'Pilar'">
+          <input
+            type="number"
+            class="pillar-weight"
+            (focus)="storePreviousWeight(rowData)"
+            (blur)="onWeightBlur($event, rowNode, rowData)"
+            (change)="highlightChange($event)"
+            [ngModel]="rowData.weight"
+            [disabled]="!canEditWeight(rowData)"
+            style="text-align: center; width: 80px"
+          />
+        </ng-container>
+      </td>
       <td class="method-column">{{ rowData.letter || "" }}</td>
       <td class="grade-column">
         <ng-container *ngIf="rowData.objectType === 'Ciclo'">
@@ -58,16 +71,13 @@
         <ng-container *ngIf="rowData.objectType === 'Elemento'">
           <select
             [ngModel]="rowData.grade"
-            (ngModelChange)="motivarNota(rowNode.node, rowData.grade, $event)"
+            (focus)="rowData.notaAnterior = rowData.grade"
+            (ngModelChange)="
+              motivarNota(rowNode.node, rowData.notaAnterior, $event)
+            "
             (change)="highlightChange($event)"
             class="grade-select"
-            [disabled]="
-              (rowData.auditor?.id !== currentUser?.id &&
-                rowData.supervisor?.id !== currentUser?.id &&
-                curUserRole !== 'Chefe') ||
-              rowData.weight === 0 ||
-              !rowData.periodoPermitido
-            "
+            [disabled]="!canEditElementGrade(rowData)"
           >
             <option [value]="0">N/A</option>
             <option [value]="1">1</option>

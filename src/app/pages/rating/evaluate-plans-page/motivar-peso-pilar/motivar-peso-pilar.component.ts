@@ -14,7 +14,7 @@ interface TreeNode {
   parent?: TreeNode;
 }
 
-export interface MotivarNotaData {
+export interface MotivarPesoPilarData {
   entidade: string;
   ciclo: string;
   pilar: string;
@@ -28,17 +28,17 @@ export interface MotivarNotaData {
 }
 
 @Component({
-  selector: "app-motivar-nota",
-  templateUrl: "./motivar-nota.component.html",
-  styleUrls: ["./motivar-nota.component.css"],
+  selector: "app-motivar-peso-pilar",
+  templateUrl: "./motivar-peso-pilar.component.html",
+  styleUrls: ["./motivar-peso-pilar.component.css"],
 })
-export class MotivarNotaComponent {
+export class MotivarPesoPilarComponent {
   @Input() visible: boolean = false;
   @Output() onClose = new EventEmitter<void>();
-  @Output() onSave = new EventEmitter<MotivarNotaData>();
+  @Output() onSave = new EventEmitter<MotivarPesoPilarData>();
 
   contador = 0;
-  motivarNotaForm!: FormGroup;
+  motivarPesoPilarForm!: FormGroup;
   entidade: any;
   ciclo: any;
   pilar: any;
@@ -47,26 +47,25 @@ export class MotivarNotaComponent {
   elemento: any;
   texto: any;
   plano: any;
-  novaNota: any;
-  notaAnterior: any;
+  novoPeso: any;
+  pesoAnterior: any;
   rowNode: TreeNode | undefined;
   constructor(
     private formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: MotivarNotaComponent,
+    @Inject(MAT_DIALOG_DATA) public data: MotivarPesoPilarComponent,
     private evaluatePlansService: EvaluatePlansService,
     private dialog: MatDialog,
-    private dialogRef: MatDialogRef<MotivarNotaComponent>
+    private dialogRef: MatDialogRef<MotivarPesoPilarComponent>
   ) {
-    this.motivarNotaForm = this.formBuilder.group({
+    this.motivarPesoPilarForm = this.formBuilder.group({
       entity: [this.data.entidade.name],
       cycle: [this.data.ciclo.name],
       pillar: [this.data.pilar.name],
-      plan: [this.data.plano.name],
-      component: [this.data.componente.name],
-      gradeType: [this.data.tipoNota.name],
-      element: [this.data.elemento.name],
-      novaNota: [this.data.novaNota],
-      notaAnterior: [this.data.notaAnterior],
+      novoPeso: [
+        this.data.novoPeso,
+        [Validators.required, Validators.min(0.01), Validators.max(100)],
+      ],
+      pesoAnterior: [this.data.pesoAnterior],
       motivation: [
         "",
         [
@@ -88,29 +87,27 @@ export class MotivarNotaComponent {
   }
 
   salvar() {
-    if (this.motivarNotaForm.invalid) return;
+    if (this.motivarPesoPilarForm.invalid) return;
 
-    const motivacao = this.motivarNotaForm.get("motivation")?.value;
+    const motivacao = this.motivarPesoPilarForm.get("motivation")?.value;
 
     this.evaluatePlansService
-      .salvarNotaElemento({
+      .salvarPesoPilar({
         entidadeId: this.data.entidade.id,
         cicloId: this.data.ciclo.id,
         pilarId: this.data.pilar.id,
-        planoId: this.data.plano.id,
-        componenteId: this.data.componente.id,
-        tipoNotaId: this.data.tipoNota.id,
-        elementoId: this.data.elemento.id,
-        nota: this.data.novaNota!,
-        notaAnterior: this.data.notaAnterior!,
-        motivacao: this.motivarNotaForm.get("motivation")?.value,
+        novoPeso: this.data.novoPeso!,
+        pesoAnterior: this.data.pesoAnterior!,
+        motivacao: this.motivarPesoPilarForm.get("motivation")?.value,
       })
       .subscribe({
         next: (res: any) => {
-          const mensagem = `A nota foi atualizada com sucesso de ${this.data.notaAnterior} para ${this.data.novaNota}.`;
+          const mensagem = `O peso foi atualizado com sucesso de ${this.data.pesoAnterior} para ${this.data.novoPeso}.`;
           // Atualiza o valor da nota no nó do ciclo
           const cicloNota = parseFloat(res.cicloNota || "0");
-          const cicloNode = this.data.rowNode ? this.subirAtePorNode(this.data.rowNode, "Ciclo") : null;
+          const cicloNode = this.data.rowNode
+            ? this.subirAtePorNode(this.data.rowNode, "Ciclo")
+            : null;
           if (cicloNode && cicloNota) {
             cicloNode.data.grade = cicloNota;
           }

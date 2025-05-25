@@ -1,9 +1,11 @@
+import { HttpClient } from "@angular/common/http";
 import { Component, Input, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { TreeNode } from "primeng/api";
-import { HttpClient } from "@angular/common/http";
+import { MotivarPesoPilarComponent } from "./../motivar-peso-pilar/motivar-peso-pilar.component";
 
 import { AuditorDTO } from "src/app/domain/dto/auditor.dto";
+import { CurrentUser } from "src/app/domain/dto/current-user.dto";
 import { EntityVirtusDTO } from "src/app/domain/dto/entity-virtus.dto";
 import { EvaluatePlansTreeNode } from "src/app/domain/dto/eveluate-plans-tree-node";
 import { ProductComponentDTO } from "src/app/domain/dto/product-component.dto";
@@ -15,9 +17,7 @@ import {
   MotivarNotaComponent,
   MotivarNotaData,
 } from "./../motivar-nota/motivar-nota.component";
-import { CurrentUser } from "src/app/domain/dto/current-user.dto";
-// Add the following import, adjust the path if necessary
-import { ValoresAtuaisDTO } from "src/app/domain/dto/valores-atuais.dto";
+import { MensagemDialogComponent } from "./../mensagem/mensagem-dialog.component";
 
 @Component({
   selector: "app-evaluate-plans-edit",
@@ -43,8 +43,6 @@ export class EvaluatePlansEditComponent implements OnInit {
     texto: "",
   };
   notaPendente: { rowNode: TreeNode; novaNota: number } | null = null;
-  currentUser: CurrentUser | undefined;
-  curUserRole: any;
   cicloNota: any;
   elementoPeso: any;
 
@@ -55,6 +53,8 @@ export class EvaluatePlansEditComponent implements OnInit {
     private http: HttpClient
   ) {}
   dadosCarregando: boolean = true;
+  currentUser: CurrentUser = this._usersService.getCurrentUser();
+  curUserRole: string = this.currentUser?.role || "";
   ngOnInit(): void {
     this.carregarDados().then(() => {
       this.dadosCarregando = false;
@@ -72,8 +72,8 @@ export class EvaluatePlansEditComponent implements OnInit {
         elemento: rowData.elemento || "",
         notaAnterior: rowData.notaAnterior || null,
         novaNota: novaNota || null,
-        currentUser: this._usersService.getCurrentUser(),
-        curUserRole: this._usersService.getCurrentUser().role,
+        currentUser: this.currentUser,
+        curUserRole: this.currentUser?.role,
         texto: "",
       },
     });
@@ -200,6 +200,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     const dialogRef = this.dialog.open(MotivarNotaComponent, {
       width: "1000px",
       data: {
+        rowNode: rowNode,
         entidade: entidade?.data || "",
         ciclo: ciclo?.data || "",
         pilar: pilar?.data || "",
@@ -209,6 +210,28 @@ export class EvaluatePlansEditComponent implements OnInit {
         elemento: elemento?.data || "",
         notaAnterior: notaAnterior,
         novaNota: novaNota,
+        texto: "",
+      },
+    });
+  }
+  justifyPillarWeight(
+    rowNode: TreeNode,
+    pesoAnterior: number,
+    event: Event
+  ): void {
+    const novoPeso = (event.target as HTMLInputElement).value;
+    const entidade = this.subirAtePorNode(rowNode, "Entidade");
+    const ciclo = this.subirAtePorNode(rowNode, "Ciclo");
+    const pilar = rowNode.node;
+    const dialogRef = this.dialog.open(MotivarPesoPilarComponent, {
+      width: "1000px",
+      data: {
+        rowNode: rowNode,
+        entidade: entidade?.data || "",
+        ciclo: ciclo?.data || "",
+        pilar: pilar?.data || "",
+        pesoAnterior: pesoAnterior,
+        novoPeso: novoPeso,
         texto: "",
       },
     });
@@ -241,5 +264,53 @@ export class EvaluatePlansEditComponent implements OnInit {
         this.expandirRecursivo(node.children);
       }
     }
+  }
+
+  storePreviousWeight(rowData: any) {
+    rowData.pesoAnterior = rowData.weight;
+  }
+
+  canEditWeight(rowData: any): boolean {
+    const isSupervisor = rowData.supervisor?.id === this.currentUser?.id;
+    const isChefe = this.curUserRole === "Chefe";
+    const isAllowedPeriod = rowData.periodoPermitido;
+
+    return (isSupervisor || isChefe) && isAllowedPeriod;
+  }
+
+  onWeightBlur(event: Event, rowNode: TreeNode, rowData: any): void {
+    const input = event.target as HTMLInputElement;
+    const novoPeso = Number(input.value);
+    const pesoAnterior = rowData.pesoAnterior;
+
+    // Validação antes de abrir o dialog
+    if (isNaN(novoPeso) || novoPeso <= 0 || novoPeso > 100) {
+      const mensagem = "O peso deve ser um número entre 1 e 100.";
+      this.dialog
+        .open(MensagemDialogComponent, {
+          width: "400px",
+          data: { title: "Atenção", message: mensagem },
+        })
+        .afterClosed()
+        .subscribe(() => {});
+      input.value = pesoAnterior;
+      return;
+    }
+
+    if (pesoAnterior !== novoPeso) {
+      this.justifyPillarWeight(rowNode, pesoAnterior, event);
+    }
+  }
+
+  canEditElementGrade(rowData: any): boolean {
+    const isAuditorOrSupervisor =
+      rowData.auditor?.id === this.currentUser.id ||
+      rowData.supervisor?.id === this.currentUser.id;
+
+    const isChief = this.curUserRole === "Chefe";
+    const hasWeight = rowData.weight !== 0;
+    const isWithinPeriod = rowData.periodoPermitido;
+
+    return (isAuditorOrSupervisor || isChief) && hasWeight && isWithinPeriod;
   }
 }
