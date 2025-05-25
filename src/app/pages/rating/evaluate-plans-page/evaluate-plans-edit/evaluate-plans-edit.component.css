@@ -87,3 +87,11 @@ th {
   padding: 2px;
   vertical-align: middle;
 }
+
+.item-indent {
+  display: block;
+  white-space: normal;
+  text-align: justify;
+  text-indent: 0px;
+  padding-left: 100px;
+}

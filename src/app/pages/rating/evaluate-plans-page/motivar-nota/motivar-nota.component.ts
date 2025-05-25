@@ -1,7 +1,12 @@
 import { Component, EventEmitter, Inject, Input, Output } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import {
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+  MatDialog,
+} from "@angular/material/dialog";
 import { EvaluatePlansService } from "src/app/services/rating/evaluate-plans.service";
+import { MensagemDialogComponent } from "../mensagem/mensagem-dialog.component";
 
 export interface MotivarNotaData {
   entidade: string;
@@ -40,9 +45,10 @@ export class MotivarNotaComponent {
   notaAnterior: any;
   constructor(
     private formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<MotivarNotaComponent>,
     @Inject(MAT_DIALOG_DATA) public data: MotivarNotaComponent,
-    private evaluatePlansService: EvaluatePlansService
+    private evaluatePlansService: EvaluatePlansService,
+    private dialog: MatDialog,
+    private dialogRef: MatDialogRef<MotivarNotaComponent>
   ) {
     this.motivarNotaForm = this.formBuilder.group({
       entity: [this.data.entidade.name],
@@ -54,7 +60,14 @@ export class MotivarNotaComponent {
       element: [this.data.elemento.name],
       novaNota: [this.data.novaNota],
       notaAnterior: [this.data.notaAnterior],
-      motivation: ["", [Validators.required, Validators.minLength(4), Validators.maxLength(400)]],
+      motivation: [
+        "",
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(400),
+        ],
+      ],
     });
   }
 
@@ -70,8 +83,8 @@ export class MotivarNotaComponent {
   salvar() {
     if (this.motivarNotaForm.invalid) return;
 
-    const motivacao = this.motivarNotaForm.get("motivation")?.value;    
-    
+    const motivacao = this.motivarNotaForm.get("motivation")?.value;
+
     this.evaluatePlansService
       .salvarNotaElemento({
         entidadeId: this.data.entidade.id,
@@ -82,10 +95,24 @@ export class MotivarNotaComponent {
         tipoNotaId: this.data.tipoNota.id,
         elementoId: this.data.elemento.id,
         nota: this.data.novaNota!,
+        notaAnterior: this.data.notaAnterior!,
         motivacao: this.motivarNotaForm.get("motivation")?.value,
       })
       .subscribe({
-        next: () => this.dialogRef.close({ sucesso: true }),
+        next: (res: any) => {
+          const mensagem = `A nota foi atualizada com sucesso de ${this.data.notaAnterior} para ${this.data.novaNota}.`;
+
+          this.dialog
+            .open(MensagemDialogComponent, {
+              width: "400px",
+              data: { message: mensagem },
+            })
+            .afterClosed()
+            .subscribe(() => {
+              // Fecha o modal de motivação após confirmação
+              this.dialogRef.close();
+            });
+        },
         error: (err) => console.error("Erro ao salvar nota:", err),
       });
   }

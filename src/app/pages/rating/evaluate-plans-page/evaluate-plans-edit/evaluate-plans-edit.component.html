@@ -32,10 +32,13 @@
       <td class="level-column">
         {{ rowData.objectType }}
       </td>
-      <td class="sumary-column">
+      <td
+        class="sumary-column"
+        [ngClass]="{ 'item-indent': rowData.objectType === 'Item' }"
+      >
         <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
         {{ rowData.name }}
-      </td>
+      </td>      
       <td class="user-component-column">
         {{ rowData.supervisor?.name || "" }}
       </td>
@@ -44,10 +47,19 @@
       <td class="weight-column">{{ rowData.weight || "" }}</td>
       <td class="method-column">{{ rowData.letter || "" }}</td>
       <td class="grade-column">
-        <ng-container *ngIf="rowData.objectType === 'Elemento'; else noGrade">
+        <ng-container *ngIf="rowData.objectType === 'Ciclo'">
+          <input
+            type="number"
+            class="cycle-grade"
+            [ngModel]="rowData.grade || 0"
+            style="text-align: center; width: 80px"
+          />
+        </ng-container>
+        <ng-container *ngIf="rowData.objectType === 'Elemento'">
           <select
             [ngModel]="rowData.grade"
             (ngModelChange)="motivarNota(rowNode.node, rowData.grade, $event)"
+            (change)="highlightChange($event)"
             class="grade-select"
             [disabled]="
               (rowData.auditor?.id !== currentUser?.id &&
@@ -64,7 +76,6 @@
             <option [value]="4">4</option>
           </select>
         </ng-container>
-        <ng-template #noGrade>-</ng-template>
       </td>
       <td class="actions-column">
         <div class="button-container">

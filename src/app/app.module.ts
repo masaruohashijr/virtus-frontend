@@ -3,12 +3,13 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatMomentDateModule, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
-import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS, MatNativeDateModule } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogActions, MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
@@ -16,7 +17,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatMomentDateModule, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
@@ -91,19 +91,19 @@ import { PlansEditComponent } from './pages/rating/entities-page/entities-edit/p
 import { PlansListComponent } from './pages/rating/entities-page/entities-edit/plans-list/plans-list.component';
 import { EntitiesPageComponent } from './pages/rating/entities-page/entities-page.component';
 // Importações PrimeNG
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button'; // Se precisar de botões do PrimeNG
 import { TreeTableModule } from 'primeng/treetable';
 import { ConfigPlansComponent } from './pages/coordination/distribute-activities/config-plans-edit/config-plans-edit.component';
-import { HistoryViewComponent } from './pages/coordination/distribute-activities/history-view/history-view.component';
-import { HistoryTableComponent } from './pages/coordination/distribute-activities/history-view/history-table/history-table.component';
 import { HistoryListComponent } from './pages/coordination/distribute-activities/history-view/history-list/history-list.component';
+import { HistoryTableComponent } from './pages/coordination/distribute-activities/history-view/history-table/history-table.component';
 import { HistoryViewReasonComponent } from './pages/coordination/distribute-activities/history-view/history-view-reason/history-view-reason.component';
-import { EvaluatePlansPageComponent } from './pages/rating/evaluate-plans-page/evaluate-plans-page.component';
+import { HistoryViewComponent } from './pages/coordination/distribute-activities/history-view/history-view.component';
 import { EvaluatePlansEditComponent } from './pages/rating/evaluate-plans-page/evaluate-plans-edit/evaluate-plans-edit.component';
-import { MotivarNotaComponent } from './pages/rating/evaluate-plans-page/motivar-nota/motivar-nota.component'; 
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { CommonModule } from '@angular/common';
+import { EvaluatePlansPageComponent } from './pages/rating/evaluate-plans-page/evaluate-plans-page.component';
+import { MensagemDialogComponent } from './pages/rating/evaluate-plans-page/mensagem/mensagem-dialog.component';
+import { MotivarNotaComponent } from './pages/rating/evaluate-plans-page/motivar-nota/motivar-nota.component';
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -187,7 +187,8 @@ export const MY_DATE_FORMATS = {
     HistoryViewReasonComponent,
     EvaluatePlansPageComponent,
     EvaluatePlansEditComponent,
-    MotivarNotaComponent
+    MotivarNotaComponent,
+    MensagemDialogComponent
   ],
   imports: [
     TreeTableModule,

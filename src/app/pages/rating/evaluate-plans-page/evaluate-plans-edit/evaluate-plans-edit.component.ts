@@ -77,12 +77,6 @@ export class EvaluatePlansEditComponent implements OnInit {
         texto: "",
       },
     });
-
-    dialogRef.afterClosed().subscribe((resultado) => {
-      if (resultado) {
-        this.salvarMotivacaoNota(resultado);
-      }
-    });
   }
 
   setAuditor(item: ProductComponentDTO, auditor: AuditorDTO) {
@@ -218,27 +212,6 @@ export class EvaluatePlansEditComponent implements OnInit {
         texto: "",
       },
     });
-    // Borda vermelha no campo de nota (select) após abrir o diálogo
-    // Aguarda o DOM estar renderizado
-    setTimeout(() => {
-      const selects = document.querySelectorAll("select.grade-select");
-
-      selects.forEach((select) => {
-        // Adiciona ouvinte de evento para mudança no select
-        select.addEventListener("change", (event: Event) => {
-          // Aplica borda vermelha apenas no select alterado
-          (event.target as HTMLElement).style.border = "2px solid red";
-        });
-      });
-    }, 300);
-
-    dialogRef.afterClosed().subscribe((resultado) => {
-      if (resultado) {
-        const user = this._usersService.getCurrentUser();
-        alert("Usuário corrente: " + user.id + " - " + user.name);
-        this.salvarMotivacaoNota(resultado);
-      }
-    });
   }
 
   subirAtePorNode(node: TreeNode, tipo: string): TreeNode | null {
@@ -252,27 +225,9 @@ export class EvaluatePlansEditComponent implements OnInit {
     return null;
   }
 
-  sinalizarAlteracao(event: Event) {
+  highlightChange(event: Event): void {
     const target = event.target as HTMLSelectElement;
-    target.style.textAlign = "center";
-    target.style.width = target.style.width || "100%";
-    target.style.border = "1px solid red";
-  }
-
-  salvarMotivacaoNota(dadosMotivacao: any) {
-    console.log("Motivação recebida:", dadosMotivacao);
-    this.http.put<ValoresAtuaisDTO>("/api/updateElementGrade", dadosMotivacao).subscribe({
-      next: (valores) => {
-        console.log("Valores retornados:", valores);
-        // Exemplo: usar na interface
-        this.cicloNota = valores.cicloNota;
-        this.elementoPeso = valores.elementoPeso;
-      },
-      error: (err) => {
-        console.error("Erro ao salvar nota:", err);
-      },
-    });
-    this.modalMotivarNotaVisivel = false;
+    target.style.border = "2px solid red";
   }
 
   expandirTodos(): void {

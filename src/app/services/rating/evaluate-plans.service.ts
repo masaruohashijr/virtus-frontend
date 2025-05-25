@@ -50,10 +50,11 @@ export class EvaluatePlansService extends BaseService<EntityVirtusDTO> {
     tipoNotaId: number;
     elementoId: number;
     nota: number;
+    notaAnterior: number;
     motivacao: string;
   }) {
     return this._httpClient.put(
-      `${URL_API}${this.rootEndpoint()}/updateElementGrade`,
+      URL_API + this.rootEndpoint()+"/updateElementGrade",
       payload
     );
   }
