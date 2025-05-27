@@ -47,27 +47,108 @@
       <td class="weight-column">
         <ng-container *ngIf="rowData.objectType === 'Pilar'">
           <input
-            type="number"
+            type="decimal"
             class="pillar-weight"
             (focus)="storePreviousWeight(rowData)"
             (blur)="onWeightBlur($event, rowNode, rowData)"
             (change)="highlightChange($event)"
             [ngModel]="rowData.weight"
             [disabled]="!canEditWeight(rowData)"
-            style="text-align: center; width: 80px"
+            style="text-align: center; width: 50px"
           />
         </ng-container>
+        <ng-container *ngIf="rowData.objectType === 'Componente'">
+          <input
+            type="decimal"
+            class="component-weight"
+            [ngModel]="rowData.weight"
+            [disabled]="true"
+            style="text-align: center; width: 50px"
+          />
+        </ng-container>
+        <ng-container *ngIf="rowData.objectType === 'Plano'">
+          <input
+            type="decimal"
+            class="plan-weight"
+            [ngModel]="rowData.weight"
+            [disabled]="true"
+            style="text-align: center; width: 50px"
+          />
+        </ng-container>
+        <ng-container *ngIf="rowData.objectType === 'Tipo Nota'">
+          <input
+            type="decimal"
+            class="grade-type-weight"
+            [ngModel]="rowData.weight"
+            [disabled]="true"
+            style="text-align: center; width: 50px"
+          />
+        </ng-container>
+        <ng-container *ngIf="rowData.objectType === 'Elemento'">
+          <select
+            [ngModel]="rowData.weight"
+            (focus)="rowData.pesoAnterior = rowData.weight"
+            (ngModelChange)="
+              motivarPeso(rowNode.node, rowData.pesoAnterior, $event)
+            "
+            (change)="highlightChange($event)"
+            class="grade-column"
+            [disabled]="!canEditElementWeight(rowData)"
+          >
+            <option [value]="0">0</option>
+            <option [value]="1">1</option>
+            <option [value]="2">2</option>
+            <option [value]="4">4</option>
+            <option [value]="8">8</option>
+          </select>
+        </ng-container>        
       </td>
       <td class="method-column">{{ rowData.letter || "" }}</td>
       <td class="grade-column">
         <ng-container *ngIf="rowData.objectType === 'Ciclo'">
           <input
-            type="number"
+            type="decimal"
             class="cycle-grade"
             [ngModel]="rowData.grade || 0"
-            style="text-align: center; width: 80px"
+            style="text-align: center; width: 50px"
           />
         </ng-container>
+        <ng-container *ngIf="rowData.objectType === 'Pilar'">
+          <input
+            type="decimal"
+            class="pillar-grade"
+            [disabled]="true"
+            [ngModel]="rowData.grade || 0"
+            style="text-align: center; width: 50px"
+          />
+        </ng-container>
+        <ng-container *ngIf="rowData.objectType === 'Componente'">
+          <input
+            type="decimal"
+            class="component-grade"
+            [disabled]="true"
+            [ngModel]="rowData.grade || 0"
+            style="text-align: center; width: 50px"
+          />
+        </ng-container>
+        <ng-container *ngIf="rowData.objectType === 'Plano'">
+          <input
+            type="decimal"
+            class="plan-grade"
+            [disabled]="true"
+            [ngModel]="rowData.grade || 0"
+            style="text-align: center; width: 50px"
+          />
+        </ng-container>                
+        <ng-container *ngIf="rowData.objectType === 'Tipo Nota'">
+          <input
+            type="decimal"
+            class="grade-type-grade"
+            [disabled]="true"
+            [ngModel]="rowData.grade || 0"
+            style="text-align: center; width: 50px"
+          />
+        </ng-container>                
         <ng-container *ngIf="rowData.objectType === 'Elemento'">
           <select
             [ngModel]="rowData.grade"
@@ -76,7 +157,7 @@
               motivarNota(rowNode.node, rowData.notaAnterior, $event)
             "
             (change)="highlightChange($event)"
-            class="grade-select"
+            class="grade-column"
             [disabled]="!canEditElementGrade(rowData)"
           >
             <option [value]="0">N/A</option>

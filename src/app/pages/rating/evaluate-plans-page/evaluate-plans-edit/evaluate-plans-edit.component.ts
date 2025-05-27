@@ -17,6 +17,10 @@ import {
   MotivarNotaComponent,
   MotivarNotaData,
 } from "./../motivar-nota/motivar-nota.component";
+import {
+  MotivarPesoComponent,
+  MotivarPesoData,
+} from "./../motivar-peso/motivar-peso.component";
 import { MensagemDialogComponent } from "./../mensagem/mensagem-dialog.component";
 
 @Component({
@@ -62,7 +66,7 @@ export class EvaluatePlansEditComponent implements OnInit {
   }
 
   openMotivacaoNota(rowData: any, novaNota: number): void {
-    const dialogRef = this.dialog.open(MotivarNotaComponent, {
+    const dialogRef = this.dialog.open(MotivarPesoComponent, {
       width: "600px",
       data: {
         entidade: rowData.entidade || "",
@@ -145,7 +149,7 @@ export class EvaluatePlansEditComponent implements OnInit {
 
   onNotaChange(novaNota: number, object: ProductItemDTO) {
     if (this.dadosCarregando) return; // Ignora alterações automáticas na carga
-    const dialogRef = this.dialog.open(MotivarNotaComponent, {
+    const dialogRef = this.dialog.open(MotivarPesoComponent, {
       width: "600px",
       data: object,
     });
@@ -214,6 +218,7 @@ export class EvaluatePlansEditComponent implements OnInit {
       },
     });
   }
+
   justifyPillarWeight(
     rowNode: TreeNode,
     pesoAnterior: number,
@@ -281,24 +286,55 @@ export class EvaluatePlansEditComponent implements OnInit {
   onWeightBlur(event: Event, rowNode: TreeNode, rowData: any): void {
     const input = event.target as HTMLInputElement;
     const novoPeso = Number(input.value);
-    const pesoAnterior = rowData.pesoAnterior;
+    const pesoAnterior = Number(rowData.pesoAnterior);
 
-    // Validação antes de abrir o dialog
+    // Validação do valor inserido
     if (isNaN(novoPeso) || novoPeso <= 0 || novoPeso > 100) {
       const mensagem = "O peso deve ser um número entre 1 e 100.";
+
       this.dialog
         .open(MensagemDialogComponent, {
           width: "400px",
           data: { title: "Atenção", message: mensagem },
         })
         .afterClosed()
-        .subscribe(() => {});
-      input.value = pesoAnterior;
+        .subscribe(() => {
+          input.focus();
+        });
+
+      input.value = String(pesoAnterior);
       return;
     }
 
+    // Temporariamente aplica o novo peso para cálculo da soma
+    rowData.peso = novoPeso;
+
+    const somaTotal = this.somarPesos(this.treeData);
+    if (somaTotal > 100) {
+      const mensagem = "A soma dos pesos dos pilares não pode ser superior a 100%.";
+      this.dialog
+        .open(MensagemDialogComponent, {
+          width: "400px",
+          data: { title: "Atenção", message: mensagem },
+        })
+        .afterClosed()
+        .subscribe(() => {
+          input.value = String(pesoAnterior);
+          rowData.peso = pesoAnterior; // Reverte o peso para o anterior
+          return;
+        });
+    }
+    if (somaTotal < 100) {
+      const mensagem = "A soma dos pesos dos pilares não deve ser inferior a 100%.";
+      this.dialog
+        .open(MensagemDialogComponent, {
+          width: "400px",
+          data: { title: "Atenção", message: mensagem },
+        });
+    }
     if (pesoAnterior !== novoPeso) {
       this.justifyPillarWeight(rowNode, pesoAnterior, event);
+      rowData.pesoAnterior = novoPeso;
     }
   }
 
@@ -312,5 +348,101 @@ export class EvaluatePlansEditComponent implements OnInit {
     const isWithinPeriod = rowData.periodoPermitido;
 
     return (isAuditorOrSupervisor || isChief) && hasWeight && isWithinPeriod;
+  }
+
+  canEditElementWeight(rowData: any) {
+    const isSupervisor = rowData.supervisor?.id === this.currentUser.id;
+
+    const isChief = this.curUserRole === "Chefe";
+    const hasWeight = rowData.weight !== 0;
+    const isWithinPeriod = rowData.periodoPermitido;
+
+    return (isSupervisor || isChief) && hasWeight && isWithinPeriod;
+  }
+
+  motivarPeso(
+    rowNode: TreeNode | undefined,
+    pesoAnterior: number,
+    novoPeso: number
+  ): void {
+    if (!rowNode?.data) {
+      console.log("rowNode:", rowNode);
+      if (rowNode) {
+        console.log("rowNode.node:", (rowNode as any).node);
+      }
+      return;
+    }
+    const entidade = this.subirAtePorNode(rowNode, "Entidade");
+    const ciclo = this.subirAtePorNode(rowNode, "Ciclo");
+    const pilar = this.subirAtePorNode(rowNode, "Pilar");
+    const tipoNota = this.subirAtePorNode(rowNode, "Tipo Nota");
+    const plano = this.subirAtePorNode(rowNode, "Plano");
+    const componente = this.subirAtePorNode(rowNode, "Componente");
+    const elemento = rowNode;
+
+    const dialogRef = this.dialog.open(MotivarPesoComponent, {
+      width: "1000px",
+      data: {
+        rowNode: rowNode,
+        entidade: entidade?.data || "",
+        ciclo: ciclo?.data || "",
+        pilar: pilar?.data || "",
+        plano: plano?.data || "",
+        componente: componente?.data || "",
+        tipoNota: tipoNota?.data || "",
+        elemento: elemento?.data || "",
+        pesoAnterior: pesoAnterior,
+        novoPeso: novoPeso,
+        texto: "",
+      },
+    });
+  }
+
+  checkSomaPesos(treeNodes: TreeNode[]): void {
+    const somaTotal = this.somarPesos(treeNodes);
+    if (somaTotal < 100) {
+      this.dialog.open(MensagemDialogComponent, {
+        width: "400px",
+        data: {
+          title: "Atenção",
+          message: "A soma dos pesos dos pilares é inferior a 100%.",
+        },
+      });
+    } else if (somaTotal > 100) {
+      this.dialog.open(MensagemDialogComponent, {
+        width: "400px",
+        data: {
+          title: "Atenção",
+          message: "A soma dos pesos dos pilares é superior a 100%.",
+        },
+      });
+    } else {
+      this.dialog.open(MensagemDialogComponent, {
+        width: "400px",
+        data: {
+          title: "Sucesso",
+          message: "A soma dos pesos dos pilares está igual a 100%.",
+        },
+      });
+    }
+  }
+
+  private somarPesos(treeNodes: TreeNode[]): number {
+    let soma = 0;
+
+    for (const node of treeNodes) {
+      const data = node.data;
+
+      if (data?.objectType === "Pilar") {
+        const peso = Number(data.peso) || 0;
+        soma += peso;
+      }
+
+      if (node.children && node.children.length > 0) {
+        soma += this.somarPesos(node.children); // Continua buscando pilares nos filhos
+      }
+    }
+
+    return soma;
   }
 }

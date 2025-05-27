@@ -14,7 +14,7 @@ interface TreeNode {
   parent?: TreeNode;
 }
 
-export interface MotivarPesoPilarData {
+export interface MotivarPesoData {
   entidade: string;
   ciclo: string;
   pilar: string;
@@ -22,23 +22,23 @@ export interface MotivarPesoPilarData {
   componente: string;
   tipoNota: string;
   elemento: string;
-  notaAnterior: number | null;
-  novaNota: number | null;
+  pesoAnterior: number | null;
+  novoPeso: number | null;
   texto: string;
 }
 
 @Component({
-  selector: "app-motivar-peso-pilar",
-  templateUrl: "./motivar-peso-pilar.component.html",
-  styleUrls: ["./motivar-peso-pilar.component.css"],
+  selector: "app-motivar-peso",
+  templateUrl: "./motivar-peso.component.html",
+  styleUrls: ["./motivar-peso.component.css"],
 })
-export class MotivarPesoPilarComponent {
+export class MotivarPesoComponent {
   @Input() visible: boolean = false;
   @Output() onClose = new EventEmitter<void>();
-  @Output() onSave = new EventEmitter<MotivarPesoPilarData>();
+  @Output() onSave = new EventEmitter<MotivarPesoData>();
 
   contador = 0;
-  motivarPesoPilarForm!: FormGroup;
+  motivarPesoForm!: FormGroup;
   entidade: any;
   ciclo: any;
   pilar: any;
@@ -50,22 +50,22 @@ export class MotivarPesoPilarComponent {
   novoPeso: any;
   pesoAnterior: any;
   rowNode: TreeNode | undefined;
-  weight: any;
   constructor(
     private formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: MotivarPesoPilarComponent,
+    @Inject(MAT_DIALOG_DATA) public data: MotivarPesoComponent,
     private evaluatePlansService: EvaluatePlansService,
     private dialog: MatDialog,
-    private dialogRef: MatDialogRef<MotivarPesoPilarComponent>
+    private dialogRef: MatDialogRef<MotivarPesoComponent>
   ) {
-    this.motivarPesoPilarForm = this.formBuilder.group({
+    this.motivarPesoForm = this.formBuilder.group({
       entity: [this.data.entidade.name],
       cycle: [this.data.ciclo.name],
       pillar: [this.data.pilar.name],
-      novoPeso: [
-        this.data.novoPeso,
-        [Validators.required, Validators.min(0.01), Validators.max(100)],
-      ],
+      plan: [this.data.plano.name],
+      component: [this.data.componente.name],
+      gradeType: [this.data.tipoNota.name],
+      element: [this.data.elemento.name],
+      novoPeso: [this.data.novoPeso],
       pesoAnterior: [this.data.pesoAnterior],
       motivation: [
         "",
@@ -88,28 +88,29 @@ export class MotivarPesoPilarComponent {
   }
 
   salvar() {
-    if (this.motivarPesoPilarForm.invalid) return;
+    if (this.motivarPesoForm.invalid) return;
 
-    const motivacao = this.motivarPesoPilarForm.get("motivation")?.value;
+    const motivacao = this.motivarPesoForm.get("motivation")?.value;
 
     this.evaluatePlansService
-      .salvarPesoPilar({
+      .salvarPesoElemento({
         entidadeId: this.data.entidade.id,
         cicloId: this.data.ciclo.id,
         pilarId: this.data.pilar.id,
+        planoId: this.data.plano.id,
+        componenteId: this.data.componente.id,
+        tipoNotaId: this.data.tipoNota.id,
+        elementoId: this.data.elemento.id,
         novoPeso: this.data.novoPeso!,
         pesoAnterior: this.data.pesoAnterior!,
-        motivacao: this.motivarPesoPilarForm.get("motivation")?.value,
+        motivacao: this.motivarPesoForm.get("motivation")?.value,
       })
       .subscribe({
         next: (res: any) => {
-          const mensagem = `O peso foi atualizado com sucesso de ${this.data.pesoAnterior} para ${this.data.novoPeso}.`;
-        this.data.pesoAnterior = this.data.novoPeso;
-        this.data.pilar.weight = this.data.novoPeso;
-        const cicloNota = parseFloat(res.cicloNota || "0");
-          const cicloNode = this.data.rowNode
-            ? this.subirAtePorNode(this.data.rowNode, "Ciclo")
-            : null;
+          const mensagem = `A nota foi atualizada com sucesso de ${this.data.pesoAnterior} para ${this.data.novoPeso}.`;
+          // Atualiza o valor da nota no nó do ciclo          
+          const cicloNota = parseFloat(res.cicloNota || "0");
+          const cicloNode = this.data.rowNode ? this.subirAtePorNode(this.data.rowNode, "Ciclo") : null;
           if (cicloNode && cicloNota) {
             cicloNode.data.grade = cicloNota;
           }

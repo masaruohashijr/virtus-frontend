@@ -59,6 +59,24 @@ export class EvaluatePlansService extends BaseService<EntityVirtusDTO> {
     );
   }
 
+salvarPesoElemento(payload: {
+    entidadeId: number;
+    cicloId: number;
+    pilarId: number;
+    planoId: number;
+    componenteId: number;
+    tipoNotaId: number;
+    elementoId: number;
+    novoPeso: number;
+    pesoAnterior: number;
+    motivacao: string;
+  }) {
+    return this._httpClient.put(
+      URL_API + this.rootEndpoint() + "/updateElementWeight",
+      payload
+    );
+  }
+
   salvarPesoPilar(payload: {
     entidadeId: any;
     cicloId: any;
