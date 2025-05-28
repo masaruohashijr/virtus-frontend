@@ -1,5 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Component, Input, OnInit } from "@angular/core";
+import { FormBuilder } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { TreeNode } from "primeng/api";
 import { MotivarPesoPilarComponent } from "./../motivar-peso-pilar/motivar-peso-pilar.component";
@@ -31,6 +32,7 @@ import { MensagemDialogComponent } from "./../mensagem/mensagem-dialog.component
 export class EvaluatePlansEditComponent implements OnInit {
   @Input() object!: EntityVirtusDTO;
   treeData: TreeNode[] = [];
+  treeDataOriginal: TreeNode[] = [];
   allUsers: UserDTO[] = [];
   modalMotivarNotaVisivel: boolean = false;
 
@@ -54,15 +56,60 @@ export class EvaluatePlansEditComponent implements OnInit {
     private _service: EvaluatePlansService,
     private _usersService: UsersService,
     private dialog: MatDialog,
-    private http: HttpClient
+    private _formBuilder: FormBuilder
   ) {}
   dadosCarregando: boolean = true;
   currentUser: CurrentUser = this._usersService.getCurrentUser();
   curUserRole: string = this.currentUser?.role || "";
+  searchForm = this._formBuilder.group({
+    filterValue: [""],
+  });
+  filterControl = this.searchForm.get("filterValue");
   ngOnInit(): void {
     this.carregarDados().then(() => {
       this.dadosCarregando = false;
     });
+    this.filterControl?.valueChanges.subscribe((termo: string | null) => {
+      if (!termo) {
+        this.treeData = [...this.treeDataOriginal]; // Sem filtro, restaura tudo
+      } else {
+        this.treeData = this.applyFilter(
+          this.treeDataOriginal,
+          termo.toLowerCase()
+        );
+      }
+    });
+  }
+
+  private applyFilter(nodes: TreeNode[], term: string): TreeNode[] {
+    return nodes
+      .map((node) => {
+        const nome = (node.data?.name || "").toLowerCase();
+        const nivel = (node.data?.objectType || "").toLowerCase();
+        const auditor = (node.data?.auditor?.name || "").toLowerCase();
+        const supervisor = (node.data?.supervisor?.name || "").toLowerCase();
+
+        const corresponde =
+          nome.includes(term) ||
+          nivel.includes(term) ||
+          auditor.includes(term) ||
+          supervisor.includes(term);
+
+        const filhosFiltrados = node.children
+          ? this.applyFilter(node.children, term)
+          : [];
+
+        if (corresponde || filhosFiltrados.length > 0) {
+          return {
+            ...node,
+            children: filhosFiltrados ?? [],
+            expanded: true,
+          } as TreeNode;
+        }
+
+        return null;
+      })
+      .filter((n): n is TreeNode => n !== null);
   }
 
   openMotivacaoNota(rowData: any, novaNota: number): void {
@@ -147,7 +194,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     }
   }
 
-  onNotaChange(novaNota: number, object: ProductItemDTO) {
+  public onNotaChange(novaNota: number, object: ProductItemDTO) {
     if (this.dadosCarregando) return; // Ignora alterações automáticas na carga
     const dialogRef = this.dialog.open(MotivarPesoComponent, {
       width: "600px",
@@ -156,7 +203,7 @@ export class EvaluatePlansEditComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {});
   }
-  async carregarDados(): Promise<void> {
+  private async carregarDados(): Promise<void> {
     try {
       this.treeData.forEach((node) => {
         if (node.data.objectType === "Elemento") {
@@ -173,6 +220,7 @@ export class EvaluatePlansEditComponent implements OnInit {
             )
             .subscribe((data) => {
               this.treeData = this.transformToTreeTableFormat(data);
+              this.treeDataOriginal = [...this.treeData]; // <- salva a estrutura original
             });
         }
       });
@@ -181,7 +229,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     }
   }
 
-  motivarNota(
+  private justifyGrade(
     rowNode: TreeNode | undefined,
     notaAnterior: number,
     novaNota: number
@@ -191,15 +239,18 @@ export class EvaluatePlansEditComponent implements OnInit {
       if (rowNode) {
         console.log("rowNode.node:", (rowNode as any).node);
       }
-      return;
     }
-    const entidade = this.subirAtePorNode(rowNode, "Entidade");
-    const ciclo = this.subirAtePorNode(rowNode, "Ciclo");
-    const pilar = this.subirAtePorNode(rowNode, "Pilar");
-    const tipoNota = this.subirAtePorNode(rowNode, "Tipo Nota");
-    const plano = this.subirAtePorNode(rowNode, "Plano");
-    const componente = this.subirAtePorNode(rowNode, "Componente");
-    const elemento = rowNode;
+    const entidade = rowNode ? this.subirAtePorNode(rowNode, "Entidade") : null;
+    const ciclo = rowNode ? this.subirAtePorNode(rowNode, "Ciclo") : null;
+    const pilar = rowNode ? this.subirAtePorNode(rowNode, "Pilar") : null;
+    const tipoNota = rowNode
+      ? this.subirAtePorNode(rowNode, "Tipo Nota")
+      : null;
+    const plano = rowNode ? this.subirAtePorNode(rowNode, "Plano") : null;
+    const componente = rowNode
+      ? this.subirAtePorNode(rowNode, "Componente")
+      : null;
+    const elemento = rowNode?.node;
 
     const dialogRef = this.dialog.open(MotivarNotaComponent, {
       width: "1000px",
@@ -219,7 +270,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     });
   }
 
-  justifyPillarWeight(
+  private justifyPillarWeight(
     rowNode: TreeNode,
     pesoAnterior: number,
     event: Event
@@ -242,7 +293,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     });
   }
 
-  subirAtePorNode(node: TreeNode, tipo: string): TreeNode | null {
+  private subirAtePorNode(node: TreeNode, tipo: string): TreeNode | null {
     let current: TreeNode | undefined = node.parent;
     while (current) {
       if (current.data.objectType === tipo) {
@@ -253,12 +304,12 @@ export class EvaluatePlansEditComponent implements OnInit {
     return null;
   }
 
-  highlightChange(event: Event): void {
+  public highlightChange(event: Event): void {
     const target = event.target as HTMLSelectElement;
     target.style.border = "2px solid red";
   }
 
-  expandirTodos(): void {
+  public expandirTodos(): void {
     this.expandirRecursivo(this.treeData);
   }
 
@@ -271,11 +322,11 @@ export class EvaluatePlansEditComponent implements OnInit {
     }
   }
 
-  storePreviousWeight(rowData: any) {
+  public storePreviousPillarWeight(rowData: any) {
     rowData.pesoAnterior = rowData.weight;
   }
 
-  canEditWeight(rowData: any): boolean {
+  public canEditPillarWeight(rowData: any): boolean {
     const isSupervisor = rowData.supervisor?.id === this.currentUser?.id;
     const isChefe = this.curUserRole === "Chefe";
     const isAllowedPeriod = rowData.periodoPermitido;
@@ -283,7 +334,11 @@ export class EvaluatePlansEditComponent implements OnInit {
     return (isSupervisor || isChefe) && isAllowedPeriod;
   }
 
-  onWeightBlur(event: Event, rowNode: TreeNode, rowData: any): void {
+  public onPillarWeightBlur(
+    event: Event,
+    rowNode: TreeNode,
+    rowData: any
+  ): void {
     const input = event.target as HTMLInputElement;
     const novoPeso = Number(input.value);
     const pesoAnterior = Number(rowData.pesoAnterior);
@@ -311,7 +366,8 @@ export class EvaluatePlansEditComponent implements OnInit {
 
     const somaTotal = this.somarPesos(this.treeData);
     if (somaTotal > 100) {
-      const mensagem = "A soma dos pesos dos pilares não pode ser superior a 100%.";
+      const mensagem =
+        "A soma dos pesos dos pilares não pode ser superior a 100%.";
       this.dialog
         .open(MensagemDialogComponent, {
           width: "400px",
@@ -325,12 +381,12 @@ export class EvaluatePlansEditComponent implements OnInit {
         });
     }
     if (somaTotal < 100) {
-      const mensagem = "A soma dos pesos dos pilares não deve ser inferior a 100%.";
-      this.dialog
-        .open(MensagemDialogComponent, {
-          width: "400px",
-          data: { title: "Atenção", message: mensagem },
-        });
+      const mensagem =
+        "A soma dos pesos dos pilares não deve ser inferior a 100%.";
+      this.dialog.open(MensagemDialogComponent, {
+        width: "400px",
+        data: { title: "Atenção", message: mensagem },
+      });
     }
     if (pesoAnterior !== novoPeso) {
       this.justifyPillarWeight(rowNode, pesoAnterior, event);
@@ -338,7 +394,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     }
   }
 
-  canEditElementGrade(rowData: any): boolean {
+  public canEditElementGrade(rowData: any): boolean {
     const isAuditorOrSupervisor =
       rowData.auditor?.id === this.currentUser.id ||
       rowData.supervisor?.id === this.currentUser.id;
@@ -350,7 +406,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     return (isAuditorOrSupervisor || isChief) && hasWeight && isWithinPeriod;
   }
 
-  canEditElementWeight(rowData: any) {
+  public canEditElementWeight(rowData: any) {
     const isSupervisor = rowData.supervisor?.id === this.currentUser.id;
 
     const isChief = this.curUserRole === "Chefe";
@@ -360,7 +416,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     return (isSupervisor || isChief) && hasWeight && isWithinPeriod;
   }
 
-  motivarPeso(
+  private justifyWeight(
     rowNode: TreeNode | undefined,
     pesoAnterior: number,
     novoPeso: number
@@ -370,15 +426,18 @@ export class EvaluatePlansEditComponent implements OnInit {
       if (rowNode) {
         console.log("rowNode.node:", (rowNode as any).node);
       }
-      return;
     }
-    const entidade = this.subirAtePorNode(rowNode, "Entidade");
-    const ciclo = this.subirAtePorNode(rowNode, "Ciclo");
-    const pilar = this.subirAtePorNode(rowNode, "Pilar");
-    const tipoNota = this.subirAtePorNode(rowNode, "Tipo Nota");
-    const plano = this.subirAtePorNode(rowNode, "Plano");
-    const componente = this.subirAtePorNode(rowNode, "Componente");
-    const elemento = rowNode;
+    const entidade = rowNode ? this.subirAtePorNode(rowNode, "Entidade") : null;
+    const ciclo = rowNode ? this.subirAtePorNode(rowNode, "Ciclo") : null;
+    const pilar = rowNode ? this.subirAtePorNode(rowNode, "Pilar") : null;
+    const tipoNota = rowNode
+      ? this.subirAtePorNode(rowNode, "Tipo Nota")
+      : null;
+    const plano = rowNode ? this.subirAtePorNode(rowNode, "Plano") : null;
+    const componente = rowNode
+      ? this.subirAtePorNode(rowNode, "Componente")
+      : null;
+    const elemento = rowNode?.node;
 
     const dialogRef = this.dialog.open(MotivarPesoComponent, {
       width: "1000px",
@@ -398,35 +457,6 @@ export class EvaluatePlansEditComponent implements OnInit {
     });
   }
 
-  checkSomaPesos(treeNodes: TreeNode[]): void {
-    const somaTotal = this.somarPesos(treeNodes);
-    if (somaTotal < 100) {
-      this.dialog.open(MensagemDialogComponent, {
-        width: "400px",
-        data: {
-          title: "Atenção",
-          message: "A soma dos pesos dos pilares é inferior a 100%.",
-        },
-      });
-    } else if (somaTotal > 100) {
-      this.dialog.open(MensagemDialogComponent, {
-        width: "400px",
-        data: {
-          title: "Atenção",
-          message: "A soma dos pesos dos pilares é superior a 100%.",
-        },
-      });
-    } else {
-      this.dialog.open(MensagemDialogComponent, {
-        width: "400px",
-        data: {
-          title: "Sucesso",
-          message: "A soma dos pesos dos pilares está igual a 100%.",
-        },
-      });
-    }
-  }
-
   private somarPesos(treeNodes: TreeNode[]): number {
     let soma = 0;
 
@@ -444,5 +474,44 @@ export class EvaluatePlansEditComponent implements OnInit {
     }
 
     return soma;
+  }
+  public storePreviousGrade(rowData: any) {
+    rowData.pesoAnterior = rowData.weight;
+  }
+
+  public onGradeChange(
+    novaNota: number,
+    rowNode: TreeNode,
+    rowData: any
+  ): void {
+    const notaAnterior = Number(rowData.grade);
+
+    rowData.nota = novaNota;
+
+    if (notaAnterior !== novaNota) {
+      rowData.notaAnterior = novaNota;
+      rowData.grade = novaNota;
+      this.justifyGrade(rowNode, notaAnterior, novaNota);
+    }
+  }
+
+  public storePreviousWeight(rowData: any) {
+    rowData.pesoAnterior = rowData.weight;
+  }
+
+  public onWeightChange(
+    novoPeso: number,
+    rowNode: TreeNode,
+    rowData: any
+  ): void {
+    const pesoAnterior = Number(rowData.weight);
+
+    rowData.weight = novoPeso;
+
+    if (pesoAnterior !== novoPeso) {
+      rowData.notaAnterior = novoPeso;
+      rowData.weight = novoPeso;
+      this.justifyWeight(rowNode, pesoAnterior, novoPeso);
+    }
   }
 }

@@ -1,34 +1,30 @@
 <!-- Main -->
 <div class="flex-auto py-6">
-  <!-- Header -->
-  <div
-    class="flex flex-col sm:flex-row md:flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b"
-  >
-    <!-- Title -->
-    <div>
-      <div class="text-4xl font-extrabold tracking-tight leading-none">
-        Avaliar Planos
-      </div>
-    </div>
-
-    <!-- Main actions -->
-    <div class="flex items-center mt-4 sm:mt-0 md:mt-4">
-      <!-- Search -->
-      <div class="flex-auto">
-        <form [formGroup]="searchForm">
-          <mat-form-field class="w-full mt-auto" appearance="outline">
-            <input
-              formControlName="filterValue"
-              matInput
-              placeholder="Digite para pesquisar"
-            />
-            <mat-icon matSuffix>search</mat-icon>
-          </mat-form-field>
-        </form>
-      </div>
-    </div>
-  </div>
   <ng-container *ngIf="!showTree; else treeComponent">
+    <!-- Header -->
+    <div
+      class="flex flex-col sm:flex-row md:flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b"
+    >
+      <!-- Title -->
+      <div>
+        <div class="text-4xl font-extrabold tracking-tight leading-none">
+          Avaliar Planos
+        </div>
+      </div>
+    </div>
+    <!-- Search -->
+    <div class="flex-auto">
+      <form [formGroup]="searchForm">
+        <mat-form-field class="w-full mt-auto" appearance="outline">
+          <input
+            formControlName="filterValue"
+            matInput
+            placeholder="Digite para pesquisar"
+          />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </form>
+    </div>
     <div class="overflow-x-auto mx-6">
       <table
         class="w-full bg-transparent"

@@ -67,7 +67,7 @@ salvarPesoElemento(payload: {
     componenteId: number;
     tipoNotaId: number;
     elementoId: number;
-    novoPeso: number;
+    peso: number;
     pesoAnterior: number;
     motivacao: string;
   }) {

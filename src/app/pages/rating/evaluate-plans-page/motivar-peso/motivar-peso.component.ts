@@ -101,20 +101,30 @@ export class MotivarPesoComponent {
         componenteId: this.data.componente.id,
         tipoNotaId: this.data.tipoNota.id,
         elementoId: this.data.elemento.id,
-        novoPeso: this.data.novoPeso!,
+        peso: this.data.novoPeso!,
         pesoAnterior: this.data.pesoAnterior!,
         motivacao: this.motivarPesoForm.get("motivation")?.value,
       })
       .subscribe({
         next: (res: any) => {
           const mensagem = `A nota foi atualizada com sucesso de ${this.data.pesoAnterior} para ${this.data.novoPeso}.`;
-          // Atualiza o valor da nota no nó do ciclo          
-          const cicloNota = parseFloat(res.cicloNota || "0");
-          const cicloNode = this.data.rowNode ? this.subirAtePorNode(this.data.rowNode, "Ciclo") : null;
-          if (cicloNode && cicloNota) {
-            cicloNode.data.grade = cicloNota;
-          }
-
+          this.data.pesoAnterior = this.data.novoPeso;
+          this.motivarPesoForm
+            .get("pesoAnterior")
+            ?.setValue(this.data.novoPeso);
+          const cicloNode = this.data.ciclo;
+          const pilarNode = this.data.pilar;
+          const componenteNode = this.data.componente;
+          const tipoNotaNode = this.data.tipoNota;
+          const planoNode = this.data.plano;
+          this.atualizarPesosViaTreeNodes(res, {
+            ciclo: cicloNode,
+            pilar: pilarNode,
+            componente: componenteNode,
+            plano: planoNode,
+            tipoNota: tipoNotaNode,
+          });
+          this.data.pesoAnterior = this.data.novoPeso;
           this.dialog
             .open(MensagemDialogComponent, {
               width: "400px",
@@ -126,8 +136,37 @@ export class MotivarPesoComponent {
               this.dialogRef.close();
             });
         },
-        error: (err) => console.error("Erro ao salvar nota:", err),
+        error: (err) => console.error("Erro ao salvar peso:", err),
       });
+  }
+
+  private atualizarPesosViaTreeNodes(
+    res: any,
+    nodes: {
+      ciclo: any;
+      pilar: any;
+      componente: any;
+      plano: any;
+      tipoNota: any;
+    }
+  ): void {
+    const cicloNota = this.parseDecimal(res.cicloNota || "0");
+    const pilarNota = this.parseDecimal(res.pilarNota || "0");
+    const componenteNota = this.parseDecimal(res.componenteNota || "0");
+    const planoNota = this.parseDecimal(res.planoNota || "0");
+    const tipoNotaNota = this.parseDecimal(res.tipoNotaNota || "0");
+
+    if (nodes.ciclo && !isNaN(cicloNota)) nodes.ciclo.grade = cicloNota;
+    if (nodes.pilar && !isNaN(pilarNota)) nodes.pilar.grade = pilarNota;
+    if (nodes.componente && !isNaN(componenteNota))
+      nodes.componente.grade = componenteNota;
+    if (nodes.plano && !isNaN(planoNota)) nodes.plano.grade = planoNota;
+    if (nodes.tipoNota && !isNaN(tipoNotaNota))
+      nodes.tipoNota.grade = tipoNotaNota;
+  }
+
+  private parseDecimal(valor: string | null | undefined): number {
+    return parseFloat((valor || "0").replace(",", "."));
   }
 
   atualizarContador() {

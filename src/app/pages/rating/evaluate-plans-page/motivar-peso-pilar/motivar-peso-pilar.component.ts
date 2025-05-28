@@ -104,9 +104,9 @@ export class MotivarPesoPilarComponent {
       .subscribe({
         next: (res: any) => {
           const mensagem = `O peso foi atualizado com sucesso de ${this.data.pesoAnterior} para ${this.data.novoPeso}.`;
-        this.data.pesoAnterior = this.data.novoPeso;
-        this.data.pilar.weight = this.data.novoPeso;
-        const cicloNota = parseFloat(res.cicloNota || "0");
+          this.data.pesoAnterior = this.data.novoPeso;
+          this.data.pilar.weight = this.data.novoPeso;
+          const cicloNota = parseFloat(res.cicloNota || "0");
           const cicloNode = this.data.rowNode
             ? this.subirAtePorNode(this.data.rowNode, "Ciclo")
             : null;

@@ -1,3 +1,28 @@
+<!-- Header -->
+<div
+  class="flex flex-col sm:flex-row md:flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b"
+>
+  <!-- Title -->
+  <div>
+    <div class="text-4xl font-extrabold tracking-tight leading-none">
+      Avaliar Planos
+    </div>
+  </div>
+</div>
+<!-- Search -->
+<div class="flex-auto">
+  <form [formGroup]="searchForm">
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <input
+        formControlName="filterValue"
+        matInput
+        placeholder="Digite para pesquisar"
+      />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </form>
+</div>
+
 <p-treeTable [value]="treeData" [scrollable]="true" class="responsive-table">
   <ng-template pTemplate="header">
     <tr>
@@ -49,11 +74,11 @@
           <input
             type="decimal"
             class="pillar-weight"
-            (focus)="storePreviousWeight(rowData)"
-            (blur)="onWeightBlur($event, rowNode, rowData)"
+            (focus)="storePreviousPillarWeight(rowData)"
+            (blur)="onPillarWeightBlur($event, rowNode, rowData)"
             (change)="highlightChange($event)"
             [ngModel]="rowData.weight"
-            [disabled]="!canEditWeight(rowData)"
+            [disabled]="!canEditPillarWeight(rowData)"
             style="text-align: center; width: 50px"
           />
         </ng-container>
@@ -68,29 +93,29 @@
         </ng-container>
         <ng-container *ngIf="rowData.objectType === 'Plano'">
           <input
-            type="decimal"
+            type="text"
             class="plan-weight"
             [ngModel]="rowData.weight"
             [disabled]="true"
             style="text-align: center; width: 50px"
           />
+            %
         </ng-container>
         <ng-container *ngIf="rowData.objectType === 'Tipo Nota'">
           <input
-            type="decimal"
+            type="text"
             class="grade-type-weight"
             [ngModel]="rowData.weight"
             [disabled]="true"
             style="text-align: center; width: 50px"
           />
+            %
         </ng-container>
         <ng-container *ngIf="rowData.objectType === 'Elemento'">
           <select
             [ngModel]="rowData.weight"
-            (focus)="rowData.pesoAnterior = rowData.weight"
-            (ngModelChange)="
-              motivarPeso(rowNode.node, rowData.pesoAnterior, $event)
-            "
+            (focus)="storePreviousWeight(rowData)"
+            (ngModelChange)="onWeightChange($event, rowNode, rowData)"
             (change)="highlightChange($event)"
             class="grade-column"
             [disabled]="!canEditElementWeight(rowData)"
@@ -101,7 +126,7 @@
             <option [value]="4">4</option>
             <option [value]="8">8</option>
           </select>
-        </ng-container>        
+        </ng-container>
       </td>
       <td class="method-column">{{ rowData.letter || "" }}</td>
       <td class="grade-column">
@@ -139,7 +164,7 @@
             [ngModel]="rowData.grade || 0"
             style="text-align: center; width: 50px"
           />
-        </ng-container>                
+        </ng-container>
         <ng-container *ngIf="rowData.objectType === 'Tipo Nota'">
           <input
             type="decimal"
@@ -148,16 +173,14 @@
             [ngModel]="rowData.grade || 0"
             style="text-align: center; width: 50px"
           />
-        </ng-container>                
+        </ng-container>
         <ng-container *ngIf="rowData.objectType === 'Elemento'">
           <select
             [ngModel]="rowData.grade"
-            (focus)="rowData.notaAnterior = rowData.grade"
-            (ngModelChange)="
-              motivarNota(rowNode.node, rowData.notaAnterior, $event)
-            "
+            (focus)="storePreviousGrade(rowData)"
+            (ngModelChange)="onGradeChange($event, rowNode, rowData)"
             (change)="highlightChange($event)"
-            class="grade-column"
+            [ngModel]="rowData.grade"
             [disabled]="!canEditElementGrade(rowData)"
           >
             <option [value]="0">N/A</option>
