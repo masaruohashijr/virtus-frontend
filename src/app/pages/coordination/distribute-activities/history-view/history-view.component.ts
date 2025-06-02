@@ -1,11 +1,10 @@
 import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { HistoryComponentDTO } from 'src/app/domain/dto/history-component';
-import { History } from 'src/app/domain/dto/history.dto';
+import { ProductComponentHistoryWithDetailsDTO } from 'src/app/domain/dto/product-component-history-details.dto';
+import { ProductComponentHistoryDTO } from 'src/app/domain/dto/product-component-history.dto';
 import { ProductComponentDTO } from 'src/app/domain/dto/product-component.dto';
-import { DistributeActivitiesService } from 'src/app/services/coordination/distribute-activities.service';
-import { HistoryService } from 'src/app/services/coordination/history.service';
+import { ProductComponentHistoryService } from 'src/app/services/coordination/product-component-history.service';
 
 @Component({
   selector: 'app-history-view',
@@ -15,15 +14,15 @@ import { HistoryService } from 'src/app/services/coordination/history.service';
 export class HistoryViewComponent implements OnInit {
 
   historyForm!: FormGroup;
-  history!: HistoryComponentDTO[];
+  history!: ProductComponentHistoryDTO[];
 
   constructor(
     private errorDialog: MatDialog,
     private formBuilder: FormBuilder,
-    private _service: HistoryService,
+    private _service: ProductComponentHistoryService,
     public dialogRef: MatDialogRef<ProductComponentDTO>,
     private cdRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: History
+    @Inject(MAT_DIALOG_DATA) public data: ProductComponentHistoryWithDetailsDTO
   ) { }
 
   ngOnInit(): void {

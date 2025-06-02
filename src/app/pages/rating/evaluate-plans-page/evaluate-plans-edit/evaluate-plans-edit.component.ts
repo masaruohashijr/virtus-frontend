@@ -1,9 +1,10 @@
+import { ProductPillarHistoryService } from "src/app/services/coordination/product-pillar-history.service";
 import { HttpClient } from "@angular/common/http";
 import { Component, Input, OnInit } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { TreeNode } from "primeng/api";
-import { MotivarPesoPilarComponent } from "./../motivar-peso-pilar/motivar-peso-pilar.component";
+import { JustifyPillarWeightComponent } from "../justify-pillar-weight/justify-pillar-weight.component";
 
 import { AuditorDTO } from "src/app/domain/dto/auditor.dto";
 import { CurrentUser } from "src/app/domain/dto/current-user.dto";
@@ -13,7 +14,6 @@ import { ProductComponentDTO } from "src/app/domain/dto/product-component.dto";
 import { UserDTO } from "src/app/domain/dto/user.dto";
 import { UsersService } from "src/app/services/administration/users.service";
 import { EvaluatePlansService } from "src/app/services/rating/evaluate-plans.service";
-import { ProductItemDTO } from "./../../../../domain/dto/product-item.dto";
 import {
   MotivarNotaComponent,
   MotivarNotaData,
@@ -22,7 +22,12 @@ import {
   MotivarPesoComponent,
   MotivarPesoData,
 } from "./../motivar-peso/motivar-peso.component";
-import { MensagemDialogComponent } from "./../mensagem/mensagem-dialog.component";
+import {
+  PillarChangeHistoryComponent,
+  PillarChangeHistoryData,
+} from "./../pillar-change-history/pillar-change-history.component";
+import { PlainMessageDialogComponent } from "../mensagem/plain-message-dialog.component";
+import { ProductPillarHistoryDTO } from "src/app/domain/dto/product-pillar-history.dto";
 
 @Component({
   selector: "app-evaluate-plans-edit",
@@ -54,6 +59,7 @@ export class EvaluatePlansEditComponent implements OnInit {
 
   constructor(
     private _service: EvaluatePlansService,
+    private _historyService: ProductPillarHistoryService,
     private _usersService: UsersService,
     private dialog: MatDialog,
     private _formBuilder: FormBuilder
@@ -194,15 +200,6 @@ export class EvaluatePlansEditComponent implements OnInit {
     }
   }
 
-  public onNotaChange(novaNota: number, object: ProductItemDTO) {
-    if (this.dadosCarregando) return; // Ignora alterações automáticas na carga
-    const dialogRef = this.dialog.open(MotivarPesoComponent, {
-      width: "600px",
-      data: object,
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {});
-  }
   private async carregarDados(): Promise<void> {
     try {
       this.treeData.forEach((node) => {
@@ -279,13 +276,14 @@ export class EvaluatePlansEditComponent implements OnInit {
     const entidade = this.subirAtePorNode(rowNode, "Entidade");
     const ciclo = this.subirAtePorNode(rowNode, "Ciclo");
     const pilar = rowNode.node;
-    const dialogRef = this.dialog.open(MotivarPesoPilarComponent, {
+    const dialogRef = this.dialog.open(JustifyPillarWeightComponent, {
       width: "1000px",
       data: {
         rowNode: rowNode,
         entidade: entidade?.data || "",
         ciclo: ciclo?.data || "",
         pilar: pilar?.data || "",
+        supervisor: pilar?.data.supervisor || "",
         pesoAnterior: pesoAnterior,
         novoPeso: novoPeso,
         texto: "",
@@ -348,7 +346,7 @@ export class EvaluatePlansEditComponent implements OnInit {
       const mensagem = "O peso deve ser um número entre 1 e 100.";
 
       this.dialog
-        .open(MensagemDialogComponent, {
+        .open(PlainMessageDialogComponent, {
           width: "400px",
           data: { title: "Atenção", message: mensagem },
         })
@@ -369,7 +367,7 @@ export class EvaluatePlansEditComponent implements OnInit {
       const mensagem =
         "A soma dos pesos dos pilares não pode ser superior a 100%.";
       this.dialog
-        .open(MensagemDialogComponent, {
+        .open(PlainMessageDialogComponent, {
           width: "400px",
           data: { title: "Atenção", message: mensagem },
         })
@@ -383,7 +381,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     if (somaTotal < 100) {
       const mensagem =
         "A soma dos pesos dos pilares não deve ser inferior a 100%.";
-      this.dialog.open(MensagemDialogComponent, {
+      this.dialog.open(PlainMessageDialogComponent, {
         width: "400px",
         data: { title: "Atenção", message: mensagem },
       });
@@ -421,12 +419,6 @@ export class EvaluatePlansEditComponent implements OnInit {
     pesoAnterior: number,
     novoPeso: number
   ): void {
-    if (!rowNode?.data) {
-      console.log("rowNode:", rowNode);
-      if (rowNode) {
-        console.log("rowNode.node:", (rowNode as any).node);
-      }
-    }
     const entidade = rowNode ? this.subirAtePorNode(rowNode, "Entidade") : null;
     const ciclo = rowNode ? this.subirAtePorNode(rowNode, "Ciclo") : null;
     const pilar = rowNode ? this.subirAtePorNode(rowNode, "Pilar") : null;
@@ -513,5 +505,39 @@ export class EvaluatePlansEditComponent implements OnInit {
       rowData.weight = novoPeso;
       this.justifyWeight(rowNode, pesoAnterior, novoPeso);
     }
+  }
+
+  onHistoryButtonClick(rowNode: any): void {
+    // Retrieve required IDs from the node hierarchy
+    const entidadeNode = this.subirAtePorNode(rowNode, "Entidade");
+    const cicloNode = this.subirAtePorNode(rowNode, "Ciclo");
+    const pilarNode = rowNode.node;
+
+    const entidadeId = entidadeNode?.data?.id;
+    const cicloId = cicloNode?.data?.id;
+    const pilarId = pilarNode?.data?.id;
+    this._historyService
+      .getHistory(entidadeId, cicloId, pilarId)
+      .subscribe((logs) => {
+        this.showPillarChangeHistory(rowNode, logs);
+      });
+  }
+
+  showPillarChangeHistory(rowNode: any, logs: ProductPillarHistoryDTO[]) {
+    const entidade = rowNode ? this.subirAtePorNode(rowNode, "Entidade") : null;
+    const ciclo = rowNode ? this.subirAtePorNode(rowNode, "Ciclo") : null;
+    const pilar = rowNode?.node;
+    const dialogRef = this.dialog.open(PillarChangeHistoryComponent, {
+      width: "1000px",
+      data: {
+        entidade: entidade || "",
+        ciclo: ciclo || "",
+        pilar: pilar || "",
+        peso: rowNode.node.data.weight || null,
+        nota: rowNode.node.data.grade || null,
+        historicoDataSource: logs,
+        metodo: rowNode.node.data.idTipoPontuacao || null,
+      },
+    });
   }
 }

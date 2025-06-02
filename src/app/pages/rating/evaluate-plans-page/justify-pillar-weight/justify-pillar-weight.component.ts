@@ -1,12 +1,13 @@
+import { EvaluatePlansService } from 'src/app/services/rating/evaluate-plans.service';
 import { Component, EventEmitter, Inject, Input, Output } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import {
   MAT_DIALOG_DATA,
-  MatDialogRef,
   MatDialog,
+  MatDialogRef,
 } from "@angular/material/dialog";
-import { EvaluatePlansService } from "src/app/services/rating/evaluate-plans.service";
-import { MensagemDialogComponent } from "../mensagem/mensagem-dialog.component";
+import { PlainMessageDialogComponent } from "../mensagem/plain-message-dialog.component";
+import { ProductPillarHistoryService } from '../../../../services/coordination/product-pillar-history.service';
 
 // Define TreeNode interface if not imported from elsewhere
 interface TreeNode {
@@ -14,7 +15,7 @@ interface TreeNode {
   parent?: TreeNode;
 }
 
-export interface MotivarPesoPilarData {
+export interface JustifyPillarWeightData {
   entidade: string;
   ciclo: string;
   pilar: string;
@@ -28,37 +29,34 @@ export interface MotivarPesoPilarData {
 }
 
 @Component({
-  selector: "app-motivar-peso-pilar",
-  templateUrl: "./motivar-peso-pilar.component.html",
-  styleUrls: ["./motivar-peso-pilar.component.css"],
+  selector: "app-justify-pillar-weight",
+  templateUrl: "./justify-pillar-weight.component.html",
+  styleUrls: ["./justify-pillar-weight.component.css"],
 })
-export class MotivarPesoPilarComponent {
+export class JustifyPillarWeightComponent {
   @Input() visible: boolean = false;
   @Output() onClose = new EventEmitter<void>();
-  @Output() onSave = new EventEmitter<MotivarPesoPilarData>();
+  @Output() onSave = new EventEmitter<JustifyPillarWeightData>();
 
   contador = 0;
-  motivarPesoPilarForm!: FormGroup;
+  justifyPillarWeightForm!: FormGroup;
   entidade: any;
   ciclo: any;
   pilar: any;
-  componente: any;
-  tipoNota: any;
-  elemento: any;
+  supervisor: any;
   texto: any;
-  plano: any;
   novoPeso: any;
   pesoAnterior: any;
   rowNode: TreeNode | undefined;
   weight: any;
   constructor(
     private formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: MotivarPesoPilarComponent,
-    private evaluatePlansService: EvaluatePlansService,
+    @Inject(MAT_DIALOG_DATA) public data: JustifyPillarWeightComponent,
+    private _service: EvaluatePlansService,
     private dialog: MatDialog,
-    private dialogRef: MatDialogRef<MotivarPesoPilarComponent>
+    private dialogRef: MatDialogRef<JustifyPillarWeightComponent>
   ) {
-    this.motivarPesoPilarForm = this.formBuilder.group({
+    this.justifyPillarWeightForm = this.formBuilder.group({
       entity: [this.data.entidade.name],
       cycle: [this.data.ciclo.name],
       pillar: [this.data.pilar.name],
@@ -79,7 +77,7 @@ export class MotivarPesoPilarComponent {
   }
 
   getTitle() {
-    return "Motivar Nota";
+    return "Motivar Peso do Pilar " + this.data.pilar.name;
   }
 
   fechar() {
@@ -88,25 +86,26 @@ export class MotivarPesoPilarComponent {
   }
 
   salvar() {
-    if (this.motivarPesoPilarForm.invalid) return;
+    if (this.justifyPillarWeightForm.invalid) return;
 
-    const motivacao = this.motivarPesoPilarForm.get("motivation")?.value;
+    const motivacao = this.justifyPillarWeightForm.get("motivation")?.value;
 
-    this.evaluatePlansService
+    this._service
       .salvarPesoPilar({
         entidadeId: this.data.entidade.id,
         cicloId: this.data.ciclo.id,
         pilarId: this.data.pilar.id,
+        supervisorId: this.data.supervisor.id,
         novoPeso: this.data.novoPeso!,
         pesoAnterior: this.data.pesoAnterior!,
-        motivacao: this.motivarPesoPilarForm.get("motivation")?.value,
+        motivacao: this.justifyPillarWeightForm.get("motivation")?.value,
       })
       .subscribe({
         next: (res: any) => {
           const mensagem = `O peso foi atualizado com sucesso de ${this.data.pesoAnterior} para ${this.data.novoPeso}.`;
           this.data.pesoAnterior = this.data.novoPeso;
           this.data.pilar.weight = this.data.novoPeso;
-          const cicloNota = parseFloat(res.cicloNota || "0");
+          const cicloNota = this.parseDecimal(res.cicloNota);
           const cicloNode = this.data.rowNode
             ? this.subirAtePorNode(this.data.rowNode, "Ciclo")
             : null;
@@ -115,7 +114,7 @@ export class MotivarPesoPilarComponent {
           }
 
           this.dialog
-            .open(MensagemDialogComponent, {
+            .open(PlainMessageDialogComponent, {
               width: "400px",
               data: { message: mensagem },
             })
@@ -131,6 +130,10 @@ export class MotivarPesoPilarComponent {
 
   atualizarContador() {
     this.contador = this.data.texto?.length || 0;
+  }
+
+  parseDecimal(valor: string | null | undefined): number {
+    return parseFloat((valor || "0").replace(",", "."));
   }
 
   subirAtePorNode(node: TreeNode, tipo: string): TreeNode | null {

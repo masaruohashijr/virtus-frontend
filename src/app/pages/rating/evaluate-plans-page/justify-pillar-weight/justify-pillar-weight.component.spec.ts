@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { MotivarPesoPilarComponent } from './motivar-peso-pilar.component';
+import { JustifyPillarWeightComponent } from './justify-pillar-weight.component';
 
-describe('MotivarPesoPilarComponent', () => {
-  let component: MotivarPesoPilarComponent;
-  let fixture: ComponentFixture<MotivarPesoPilarComponent>;
+describe('JustifyPillarWeightComponent', () => {
+  let component: JustifyPillarWeightComponent;
+  let fixture: ComponentFixture<JustifyPillarWeightComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MotivarPesoPilarComponent],
+      declarations: [JustifyPillarWeightComponent],
       imports: [FormsModule]
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MotivarPesoPilarComponent);
+    fixture = TestBed.createComponent(JustifyPillarWeightComponent);
     component = fixture.componentInstance;
     component.visible = true;
     component.data = {
@@ -46,7 +46,7 @@ describe('MotivarPesoPilarComponent', () => {
     spyOn(component.onSave, 'emit');
     component.data.texto = 'Motivação válida';
     component.salvar();
-    expect(component.onSave.emit).toHaveBeenCalledWith(component.data);
+    expect(component.onSave.emit).toHaveBeenCalledWith(jasmine.objectContaining({ ...component.data }));
   });
 
   it('não deve emitir onSave com texto vazio', () => {

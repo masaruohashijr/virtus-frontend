@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { HistoryViewReasonComponent } from '../history-view-reason/history-view-reason.component';
-import { HistoryComponentDTO } from 'src/app/domain/dto/history-component';
+import { ProductComponentHistoryDTO } from 'src/app/domain/dto/product-component-history.dto';
 
 @Component({
   selector: 'app-history-list',
@@ -13,9 +13,9 @@ import { HistoryComponentDTO } from 'src/app/domain/dto/history-component';
 })
 export class HistoryListComponent implements OnInit {
 
-  @Input() history: HistoryComponentDTO[] = [];
+  @Input() history: ProductComponentHistoryDTO[] = [];
 
-  objectDataSource: MatTableDataSource<HistoryComponentDTO> = new MatTableDataSource();
+  objectDataSource: MatTableDataSource<ProductComponentHistoryDTO> = new MatTableDataSource();
   objectTableColumns: string[] = ['name', 'averageType', 'standardWeight', 'author', 'createdAt', "actions"];
 
   constructor(
@@ -49,7 +49,7 @@ export class HistoryListComponent implements OnInit {
     }
   }
 
-  viewObject(object: HistoryComponentDTO) {
+  viewObject(object: ProductComponentHistoryDTO) {
     debugger
     const dialogRef = this.dialog.open(HistoryViewReasonComponent, {
       width: '700px',

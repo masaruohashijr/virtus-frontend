@@ -8,12 +8,12 @@
     font-weight: normal;
   "
 >
-  Motivar Peso do Pilar
+  {{getTitle()}}
 </div>
 
 <!-- Conteúdo principal -->
 <div style="padding: 16px">
-  <form [formGroup]="motivarPesoPilarForm">
+  <form [formGroup]="justifyPillarWeightForm">
     <div style="display: flex; gap: 16px">
       <!-- COLUNA ESQUERDA: DADOS -->
       <table
@@ -23,19 +23,19 @@
           <td>
             <label style="color: #003f87; font-weight: normal">EFPC</label>
           </td>
-          <td>{{ motivarPesoPilarForm.get("entity")?.value }}</td>
+          <td>{{ justifyPillarWeightForm.get("entity")?.value }}</td>
         </tr>
         <tr>
           <td>
             <label style="color: #003f87; font-weight: normal">Ciclo</label>
           </td>
-          <td>{{ motivarPesoPilarForm.get("cycle")?.value }}</td>
+          <td>{{ justifyPillarWeightForm.get("cycle")?.value }}</td>
         </tr>
         <tr>
           <td>
             <label style="color: #003f87; font-weight: normal">Pilar</label>
           </td>
-          <td>{{ motivarPesoPilarForm.get("pillar")?.value }}</td>
+          <td>{{ justifyPillarWeightForm.get("pillar")?.value }}</td>
         </tr>
         <tr>
           <td colspan="2">
@@ -86,12 +86,12 @@
           "
         ></textarea>
         <div style="text-align: right; font-size: 12px; margin-top: 4px">
-          {{ motivarPesoPilarForm.get("motivation")?.value?.length || 0 }} / 400
+          {{ justifyPillarWeightForm.get("motivation")?.value?.length || 0 }} / 400
         </div>
         <div
           *ngIf="
-            motivarPesoPilarForm.get('motivation')?.invalid &&
-            motivarPesoPilarForm.get('motivation')?.touched
+            justifyPillarWeightForm.get('motivation')?.invalid &&
+            justifyPillarWeightForm.get('motivation')?.touched
           "
           style="color: red; font-size: 12px"
         >
@@ -115,7 +115,7 @@
     mat-raised-button
     color="primary"
     (click)="salvar()"
-    [disabled]="motivarPesoPilarForm.invalid"
+    [disabled]="justifyPillarWeightForm.invalid"
   >
     Salvar
   </button>

@@ -1,15 +1,16 @@
-import { Injectable } from "@angular/core";
-import { EntityVirtusDTO } from "src/app/domain/dto/entity-virtus.dto";
-import { BaseService } from "../common/base.service";
 import { HttpClient, HttpParams } from "@angular/common/http";
+import { Injectable } from "@angular/core";
 import { URL_API } from "src/app/common/service-constants";
-import { EvaluatePlansTreeDTO } from "src/app/domain/dto/evaluate-plans-tree-dto";
+import { EntityVirtusDTO } from "src/app/domain/dto/entity-virtus.dto";
 import { EvaluatePlansTreeNode } from "src/app/domain/dto/eveluate-plans-tree-node";
+import { BaseService } from "../common/base.service";
+
 
 @Injectable({
   providedIn: "root",
 })
 export class EvaluatePlansService extends BaseService<EntityVirtusDTO> {
+
   constructor(private _httpClient: HttpClient) {
     super();
   }
@@ -76,11 +77,11 @@ salvarPesoElemento(payload: {
       payload
     );
   }
-
   salvarPesoPilar(payload: {
     entidadeId: any;
     cicloId: any;
     pilarId: any;
+    supervisorId: any;
     novoPeso: any;
     pesoAnterior: any;
     motivacao: any;
@@ -90,4 +91,5 @@ salvarPesoElemento(payload: {
       payload
     );
   }
+
 }

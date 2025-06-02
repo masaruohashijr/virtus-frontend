@@ -13,9 +13,9 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
     </div>
   `,
 })
-export class MensagemDialogComponent {
+export class PlainMessageDialogComponent {
   constructor(
-    public dialogRef: MatDialogRef<MensagemDialogComponent>,
+    public dialogRef: MatDialogRef<PlainMessageDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { title?: string; message: string }
   ) {}
 }

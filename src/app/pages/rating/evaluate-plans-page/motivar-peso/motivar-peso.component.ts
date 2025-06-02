@@ -6,7 +6,7 @@ import {
   MatDialog,
 } from "@angular/material/dialog";
 import { EvaluatePlansService } from "src/app/services/rating/evaluate-plans.service";
-import { MensagemDialogComponent } from "../mensagem/mensagem-dialog.component";
+import { PlainMessageDialogComponent } from "../mensagem/plain-message-dialog.component";
 
 // Define TreeNode interface if not imported from elsewhere
 interface TreeNode {
@@ -79,7 +79,7 @@ export class MotivarPesoComponent {
   }
 
   getTitle() {
-    return "Motivar Nota";
+    return "Motivar Peso do Elemento " + this.data.elemento.name;
   }
 
   fechar() {
@@ -126,7 +126,7 @@ export class MotivarPesoComponent {
           });
           this.data.pesoAnterior = this.data.novoPeso;
           this.dialog
-            .open(MensagemDialogComponent, {
+            .open(PlainMessageDialogComponent, {
               width: "400px",
               data: { message: mensagem },
             })

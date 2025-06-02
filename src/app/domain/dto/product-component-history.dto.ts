@@ -1,6 +1,6 @@
 import { BaseDTO } from "../common/base.dto";
 
-export interface HistoryComponentDTO extends BaseDTO {
+export interface ProductComponentHistoryDTO extends BaseDTO {
     idProdutoComponenteHistorico: number;
     idEntidade: number;
     idCiclo: number;

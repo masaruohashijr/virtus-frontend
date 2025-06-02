@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { HistoryComponentDTO } from 'src/app/domain/dto/history-component';
+import { ProductComponentHistoryDTO } from 'src/app/domain/dto/product-component-history.dto';
 
 @Component({
   selector: 'app-history-view-reason',
@@ -14,7 +14,7 @@ export class HistoryViewReasonComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<HistoryViewReasonComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: HistoryComponentDTO,
+    @Inject(MAT_DIALOG_DATA) public data: ProductComponentHistoryDTO,
     private fb: FormBuilder
   ) {
 

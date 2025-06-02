@@ -102,10 +102,12 @@ import { HistoryViewReasonComponent } from './pages/coordination/distribute-acti
 import { HistoryViewComponent } from './pages/coordination/distribute-activities/history-view/history-view.component';
 import { EvaluatePlansEditComponent } from './pages/rating/evaluate-plans-page/evaluate-plans-edit/evaluate-plans-edit.component';
 import { EvaluatePlansPageComponent } from './pages/rating/evaluate-plans-page/evaluate-plans-page.component';
-import { MensagemDialogComponent } from './pages/rating/evaluate-plans-page/mensagem/mensagem-dialog.component';
+import { PlainMessageDialogComponent } from './pages/rating/evaluate-plans-page/mensagem/plain-message-dialog.component';
 import { MotivarNotaComponent } from './pages/rating/evaluate-plans-page/motivar-nota/motivar-nota.component';
 import { MotivarPesoComponent } from './pages/rating/evaluate-plans-page/motivar-peso/motivar-peso.component';
-import { MotivarPesoPilarComponent } from './pages/rating/evaluate-plans-page/motivar-peso-pilar/motivar-peso-pilar.component';
+import { JustifyPillarWeightComponent } from './pages/rating/evaluate-plans-page/justify-pillar-weight/justify-pillar-weight.component';
+import { PillarChangeHistoryComponent } from './pages/rating/evaluate-plans-page/pillar-change-history/pillar-change-history.component';
+import { PillarHistoryDetailsComponent } from './pages/rating/evaluate-plans-page/pillar-history-details/pillar-history-details.component';
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -191,8 +193,10 @@ export const MY_DATE_FORMATS = {
     EvaluatePlansEditComponent,
     MotivarNotaComponent,
     MotivarPesoComponent,
-    MensagemDialogComponent,
-    MotivarPesoPilarComponent
+    PlainMessageDialogComponent,
+    JustifyPillarWeightComponent,
+    PillarChangeHistoryComponent,
+    PillarHistoryDetailsComponent
   ],
   imports: [
     TreeTableModule,

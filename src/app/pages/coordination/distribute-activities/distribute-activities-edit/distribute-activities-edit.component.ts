@@ -11,8 +11,8 @@ import { BaseCrudEditComponent } from 'src/app/pages/common/base-crud-page/base-
 import { DistributeActivitiesService } from 'src/app/services/coordination/distribute-activities.service';
 import { ConfigPlansComponent } from '../config-plans-edit/config-plans-edit.component';
 import { HistoryViewComponent } from '../history-view/history-view.component';
-import { HistoryService } from 'src/app/services/coordination/history.service';
-import { History } from 'src/app/domain/dto/history.dto';
+import { ProductComponentHistoryService } from 'src/app/services/coordination/product-component-history.service';
+import { ProductComponentHistoryWithDetailsDTO } from 'src/app/domain/dto/product-component-history-details.dto';
 
 @Component({
   selector: 'app-distribute-activities-edit',
@@ -32,7 +32,7 @@ export class DistributeActivitiesEditComponent extends BaseCrudEditComponent<Dis
     public dialogRef: MatDialogRef<DistributeActivitiesTreeDTO>,
     @Inject(MAT_DIALOG_DATA) public distributeActivities: DistributeActivitiesDTO,
     private service: DistributeActivitiesService,
-    private _historyService: HistoryService,
+    private _productComponentHistoryService: ProductComponentHistoryService,
     private errorDialog: MatDialog) {
     super();
   }
@@ -226,11 +226,11 @@ export class DistributeActivitiesEditComponent extends BaseCrudEditComponent<Dis
 
   openHistory(object: ProductComponentDTO) {
     if (object.cycle.cycle) {
-      this._historyService.getHistory(object.entity.id, object.cycle.cycle.id, object.pillar.id, object.component.id)
+      this._productComponentHistoryService.getHistory(object.entity.id, object.cycle.cycle.id, object.pillar.id, object.component.id)
         .pipe()
         .subscribe(resp => {
-          const obj: History = {
-            historic: resp,
+          const obj: ProductComponentHistoryWithDetailsDTO = {
+            details: resp,
             productComponent: object
           }
           const dialogRef = this.dialog.open(HistoryViewComponent, {
