@@ -6,8 +6,8 @@ import {
   MatDialogRef,
 } from "@angular/material/dialog";
 import { MatTableDataSource } from "@angular/material/table";
-import { ProductPillarHistoryDTO } from "src/app/domain/dto/product-pillar-history.dto";
-import { PillarHistoryDetailsComponent } from "./pillar-history-details/pillar-history-details.component";
+import { ProductComponentHistoryDTO } from "src/app/domain/dto/product-component-history.dto";
+import { ComponentHistoryDetailsComponent } from "./component-history-details/component-history-details.component";
 
 // Define TreeNode interface if not imported from elsewhere
 interface TreeNode {
@@ -15,63 +15,61 @@ interface TreeNode {
   parent?: TreeNode;
 }
 
-export interface PillarChangeHistoryData {
+export interface ComponentChangeHistoryData {
   entidade: { data: { name: string } }; // <- Agora você pode acessar entidade.name
   ciclo: { data: { name: string } };
   pilar: { data: { name: string } };
-  historicoDataSource: ProductPillarHistoryDTO[];
-  peso: number | null;
-  nota: number | null;
-  metodo: string;
-  motivacaoPeso?: string; // Added missing property
+  componente: { data: { name: string } };
+  historicoDataSource: ProductComponentHistoryDTO[];
+  motivacao?: string;
+  peso?: number;
+  nota?: number;
 }
 
 @Component({
-  selector: "app-pillar-change-history.component",
-  templateUrl: "./pillar-change-history.component.html",
-  styleUrls: ["./pillar-change-history.component.css"],
+  selector: "app-component-change-history.component",
+  templateUrl: "./component-change-history.component.html",
+  styleUrls: ["./component-change-history.component.css"],
 })
-export class PillarChangeHistoryComponent {
+export class ComponentChangeHistoryComponent {
   texto: string = "";
 
   @Input() visible: boolean = false;
   @Output() onClose = new EventEmitter<void>();
-  @Output() onSave = new EventEmitter<PillarChangeHistoryData>();
+  @Output() onSave = new EventEmitter<ComponentChangeHistoryData>();
   displayedColumns: string[] = [
-    "tipoAlteracao",
-    "nota",
-    "metodo",
-    "peso",
-    "autor",
-    "data",
-    "acoes",
+    "Alterou",
+    "De",
+    "Para",
+    "Autor",
+    "Data",
+    "Acoes",
   ];
 
-  historicos = new MatTableDataSource<ProductPillarHistoryDTO>([]);
+  historicos = new MatTableDataSource<ProductComponentHistoryDTO>([]);
   contador = 0;
-  pillarChangeHistoryForm!: FormGroup;
+  componentChangeHistoryForm!: FormGroup;
   constructor(
     private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA)
-    public data: PillarChangeHistoryData & {
-      historico: ProductPillarHistoryDTO[];
+    public data: ComponentChangeHistoryData & {
+      historico: ProductComponentHistoryDTO[];
     },
     private dialog: MatDialog
   ) {
-    this.pillarChangeHistoryForm = this.formBuilder.group({
+    this.componentChangeHistoryForm = this.formBuilder.group({
       entity: [this.data.entidade.data.name],
       cycle: [this.data.ciclo.data.name],
       pillar: [this.data.pilar.data.name],
+      component: [this.data.componente.data.name],
       weight: [this.data.peso],
       grade: [this.data.nota],
-      motivacao: [this.data.motivacaoPeso],
-      metodo: [this.data.metodo],
     });
     this.historicos.data = this.data.historicoDataSource || [];
   }
 
   getTitle() {
-    return "Histórico do Pilar";
+    return "Histórico do Componente";
   }
 
   fechar() {
@@ -91,7 +89,7 @@ export class PillarChangeHistoryComponent {
   }
 
   showHistoryDetails(row: any) {
-    this.dialog.open(PillarHistoryDetailsComponent, {
+    this.dialog.open(ComponentHistoryDetailsComponent, {
       width: "800px",
       data: row,
     });

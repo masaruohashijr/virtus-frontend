@@ -214,16 +214,23 @@
             mat-raised-button
             class="success-button"
             [matTooltip]="'Descrição'"
+            (click)="onDescriptionButtonClick(rowNode)"
           >
             <mat-icon>description</mat-icon>
           </button>
           <button
-            *ngIf="
-              rowData.objectType != 'Entidade' && rowData.objectType != 'Ciclo'
-            "
+            *ngIf="rowData.objectType == 'Pilar'"
             mat-raised-button
             [matTooltip]="'Histórico'"
-            (click)="onHistoryButtonClick(rowNode)"
+            (click)="onProductPillarHistoryClick(rowNode)"
+          >
+            <mat-icon>history</mat-icon>
+          </button>
+          <button
+            *ngIf="rowData.objectType == 'Componente'"
+            mat-raised-button
+            [matTooltip]="'Histórico'"
+            (click)="onProductComponentHistoryClick(rowNode)"
           >
             <mat-icon>history</mat-icon>
           </button>

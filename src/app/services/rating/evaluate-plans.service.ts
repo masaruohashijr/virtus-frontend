@@ -4,13 +4,12 @@ import { URL_API } from "src/app/common/service-constants";
 import { EntityVirtusDTO } from "src/app/domain/dto/entity-virtus.dto";
 import { EvaluatePlansTreeNode } from "src/app/domain/dto/eveluate-plans-tree-node";
 import { BaseService } from "../common/base.service";
-
+import { Observable } from "rxjs/internal/Observable";
 
 @Injectable({
   providedIn: "root",
 })
 export class EvaluatePlansService extends BaseService<EntityVirtusDTO> {
-
   constructor(private _httpClient: HttpClient) {
     super();
   }
@@ -60,7 +59,7 @@ export class EvaluatePlansService extends BaseService<EntityVirtusDTO> {
     );
   }
 
-salvarPesoElemento(payload: {
+  salvarPesoElemento(payload: {
     entidadeId: number;
     cicloId: number;
     pilarId: number;
@@ -92,4 +91,17 @@ salvarPesoElemento(payload: {
     );
   }
 
+  getDescription(
+    id: number,
+    objectType: string
+  ): Observable<{ description: string }> {
+    const queryParams = new HttpParams()
+      .set("id", id.toString())
+      .set("objectType", objectType);
+
+    return this._httpClient.get<{ description: string }>(
+      URL_API + this.rootEndpoint() + "/description",
+      { params: queryParams }
+    );
+  }
 }

@@ -28,6 +28,10 @@ import {
 } from "./../pillar-change-history/pillar-change-history.component";
 import { PlainMessageDialogComponent } from "../mensagem/plain-message-dialog.component";
 import { ProductPillarHistoryDTO } from "src/app/domain/dto/product-pillar-history.dto";
+import { ShowDescriptionComponent } from "../show-description/show-description.component";
+import { ProductComponentHistoryService } from "src/app/services/coordination/product-component-history.service";
+import { ProductComponentHistoryDTO } from "src/app/domain/dto/product-component-history.dto";
+import { ComponentChangeHistoryComponent } from "../component-change-history/component-change-history.component";
 
 @Component({
   selector: "app-evaluate-plans-edit",
@@ -35,6 +39,7 @@ import { ProductPillarHistoryDTO } from "src/app/domain/dto/product-pillar-histo
   styleUrls: ["./evaluate-plans-edit.component.css"],
 })
 export class EvaluatePlansEditComponent implements OnInit {
+
   @Input() object!: EntityVirtusDTO;
   treeData: TreeNode[] = [];
   treeDataOriginal: TreeNode[] = [];
@@ -59,7 +64,8 @@ export class EvaluatePlansEditComponent implements OnInit {
 
   constructor(
     private _service: EvaluatePlansService,
-    private _historyService: ProductPillarHistoryService,
+    private _productPillarHistoryService: ProductPillarHistoryService,
+    private _productComponentHistoryService: ProductComponentHistoryService,
     private _usersService: UsersService,
     private dialog: MatDialog,
     private _formBuilder: FormBuilder
@@ -507,7 +513,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     }
   }
 
-  onHistoryButtonClick(rowNode: any): void {
+  onProductPillarHistoryClick(rowNode: any): void {
     // Retrieve required IDs from the node hierarchy
     const entidadeNode = this.subirAtePorNode(rowNode, "Entidade");
     const cicloNode = this.subirAtePorNode(rowNode, "Ciclo");
@@ -516,7 +522,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     const entidadeId = entidadeNode?.data?.id;
     const cicloId = cicloNode?.data?.id;
     const pilarId = pilarNode?.data?.id;
-    this._historyService
+    this._productPillarHistoryService
       .getHistory(entidadeId, cicloId, pilarId)
       .subscribe((logs) => {
         this.showPillarChangeHistory(rowNode, logs);
@@ -537,6 +543,124 @@ export class EvaluatePlansEditComponent implements OnInit {
         nota: rowNode.node.data.grade || null,
         historicoDataSource: logs,
         metodo: rowNode.node.data.idTipoPontuacao || null,
+      },
+    });
+  }
+
+  onDescriptionButtonClick(rowNode: any): void {
+    const LEVEL_ID = rowNode?.node?.data?.id;
+    const objectType = rowNode?.node?.data?.objectType;
+    const entidadeNode = this.subirAtePorNode(rowNode, "Entidade");
+    const cicloNode = this.subirAtePorNode(rowNode, "Ciclo");
+    let pilarNode: any = null;
+    if(objectType === "Pilar") {
+      pilarNode = rowNode?.node;
+    } else {
+      pilarNode = this.subirAtePorNode(rowNode, "Pilar");
+    }    
+    let componenteNode: any = null;
+    if(objectType === "Componente") {
+      componenteNode = rowNode?.node;
+    } else {
+      componenteNode = this.subirAtePorNode(rowNode, "Componente");
+    }
+    let planoNode: any = null;
+    if(objectType === "Plano") {
+      planoNode = rowNode?.node;
+    } else {
+      planoNode = this.subirAtePorNode(rowNode, "Plano");
+    }
+    let tipoNotaNode: any = null;
+    if(objectType === "Tipo Nota") {
+      tipoNotaNode = rowNode?.node;
+    } else {
+      tipoNotaNode = this.subirAtePorNode(rowNode, "Tipo Nota");
+    }
+    let elementoNode: any = null;
+    if(objectType === "Elemento") {
+      elementoNode = rowNode?.node;
+    } else {
+      elementoNode = this.subirAtePorNode(rowNode, "Elemento");
+    }
+    let itemNode: any = null;
+    if(objectType === "Item") {
+      itemNode = rowNode?.node;
+    } else {
+      itemNode = this.subirAtePorNode(rowNode, "Item");
+    }
+    const grade = rowNode?.node?.data?.grade;
+    const weight = rowNode?.node?.data?.weight;
+    if (!LEVEL_ID || !objectType) {
+      console.warn("ID ou objectType ausente:", { LEVEL_ID, objectType });
+      return;
+    }
+
+    this._service.getDescription(LEVEL_ID, objectType).subscribe({
+      next: (response) => {
+        const description = response.description;        
+        this.dialog.open(ShowDescriptionComponent, {
+          width: "1000px",
+          data: {
+            id: LEVEL_ID,
+            objectType: objectType,
+            description: description,
+            entidade: entidadeNode?.data || null, 
+            ciclo: cicloNode?.data || null,
+            pilar: pilarNode?.data || null,
+            componente: componenteNode?.data || null,
+            plano: planoNode?.data || null,
+            tipoNota: tipoNotaNode?.data || null,
+            elemento: elementoNode?.data || null,
+            item: itemNode?.data || null,
+            grade: grade || null,
+            weight: weight || null,
+          },
+        });
+      },
+      error: (err) => {
+        console.error("Erro ao carregar descrição:", err);
+        this.dialog.open(ShowDescriptionComponent, {
+          width: "500px",
+          data: { description: "Erro ao carregar descrição." },
+        });
+      },
+    });
+  }
+
+    onProductComponentHistoryClick(rowNode: any): void {
+    // Retrieve required IDs from the node hierarchy
+    const entidadeNode = this.subirAtePorNode(rowNode, "Entidade");
+    const cicloNode = this.subirAtePorNode(rowNode, "Ciclo");
+    const pilarNode = this.subirAtePorNode(rowNode, "Pilar");
+    const componentNode = rowNode.node;
+
+    const entidadeId = entidadeNode?.data?.id;
+    const cicloId = cicloNode?.data?.id;
+    const pilarId = pilarNode?.data?.id;
+    const componentId = componentNode?.data?.id;
+    this._productComponentHistoryService
+      .getHistory(entidadeId, cicloId, pilarId, componentId)
+      .subscribe((dtoHistory) => {
+        this.showComponentChangeHistory(rowNode, dtoHistory);
+      });
+  }
+
+  showComponentChangeHistory(rowNode: any, dtoHistory: ProductComponentHistoryDTO[]) {
+    const entidade = rowNode ? this.subirAtePorNode(rowNode, "Entidade") : null;
+    const ciclo = rowNode ? this.subirAtePorNode(rowNode, "Ciclo") : null;
+    const pilar = rowNode ? this.subirAtePorNode(rowNode, "Pilar") : null;
+    const componente = rowNode?.node;
+    const dialogRef = this.dialog.open(ComponentChangeHistoryComponent, {
+      width: "1000px",
+      height: "600px",
+      data: {
+        entidade: entidade || "",
+        ciclo: ciclo || "",
+        pilar: pilar || "",
+        componente: componente || "",
+        peso: rowNode.node.data.weight || null,
+        nota: rowNode.node.data.grade || null,        
+        historicoDataSource: dtoHistory,
       },
     });
   }

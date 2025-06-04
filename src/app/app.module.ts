@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
@@ -107,7 +107,10 @@ import { MotivarNotaComponent } from './pages/rating/evaluate-plans-page/motivar
 import { MotivarPesoComponent } from './pages/rating/evaluate-plans-page/motivar-peso/motivar-peso.component';
 import { JustifyPillarWeightComponent } from './pages/rating/evaluate-plans-page/justify-pillar-weight/justify-pillar-weight.component';
 import { PillarChangeHistoryComponent } from './pages/rating/evaluate-plans-page/pillar-change-history/pillar-change-history.component';
-import { PillarHistoryDetailsComponent } from './pages/rating/evaluate-plans-page/pillar-history-details/pillar-history-details.component';
+import { PillarHistoryDetailsComponent } from './pages/rating/evaluate-plans-page/pillar-change-history/pillar-history-details/pillar-history-details.component';
+import { ShowDescriptionComponent } from './pages/rating/evaluate-plans-page/show-description/show-description.component';
+import { ComponentChangeHistoryComponent } from './pages/rating/evaluate-plans-page/component-change-history/component-change-history.component';
+import { ComponentHistoryDetailsComponent } from './pages/rating/evaluate-plans-page/component-change-history/component-history-details/component-history-details.component';
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -196,7 +199,10 @@ export const MY_DATE_FORMATS = {
     PlainMessageDialogComponent,
     JustifyPillarWeightComponent,
     PillarChangeHistoryComponent,
-    PillarHistoryDetailsComponent
+    PillarHistoryDetailsComponent,
+    ShowDescriptionComponent,
+    ComponentChangeHistoryComponent,
+    ComponentHistoryDetailsComponent
   ],
   imports: [
     TreeTableModule,

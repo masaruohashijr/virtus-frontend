@@ -1,14 +1,15 @@
-import { Injectable } from "@angular/core";
-import { ProductPillarHistoryDTO } from "src/app/domain/dto/product-pillar-history.dto";
 import { HttpClient, HttpParams } from "@angular/common/http";
+import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { URL_API } from "src/app/common/service-constants";
+import { ProductPillarHistoryDTO } from "src/app/domain/dto/product-pillar-history.dto";
 import { BaseService } from "../common/base.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class ProductPillarHistoryService extends BaseService<ProductPillarHistoryDTO> {
+
   constructor(private _httpClient: HttpClient) {
     super();
   }

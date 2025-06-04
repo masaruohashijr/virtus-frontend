@@ -1,0 +1,162 @@
+<!-- Cabeçalho com faixa azul -->
+<div
+  style="background-color: #003f87; color: white; padding: 12px; font-size: 18px; font-weight: normal;"
+>
+  {{ getTitle() }}
+</div>
+
+<!-- Conteúdo principal -->
+<div style="padding: 16px">
+  <form [formGroup]="showDescriptionForm">
+    <div style="display: flex; gap: 16px">
+      <!-- COLUNA ESQUERDA: DADOS -->
+      <table style="flex: 1; width: 100%; font-size: 14px; border-collapse: collapse">
+        <tr *ngIf="showDescriptionForm.get('entity')?.value">
+          <td><label style="color: #003f87">EFPC</label></td>
+          <td>
+            <input
+              [value]="showDescriptionForm.get('entity')?.value"
+              disabled
+              style="width: 100%; border: none; background: transparent;"
+            />
+          </td>
+        </tr>
+        <tr *ngIf="showDescriptionForm.get('cycle')?.value">
+          <td><label style="color: #003f87">Ciclo</label></td>
+          <td>
+            <input
+              [value]="showDescriptionForm.get('cycle')?.value"
+              disabled
+              style="width: 100%; border: none; background: transparent;"
+            />
+          </td>
+        </tr>
+        <tr *ngIf="showDescriptionForm.get('pillar')?.value">
+          <td><label style="color: #003f87">Pilar</label></td>
+          <td>
+            <input
+              [value]="showDescriptionForm.get('pillar')?.value"
+              disabled readonly
+              style="width: 100%; border: none; background: transparent;"
+            />
+          </td>
+        </tr>
+        <tr *ngIf="showDescriptionForm.get('component')?.value">
+          <td><label style="color: #003f87">Componente</label></td>
+          <td>
+            <input
+              [value]="showDescriptionForm.get('component')?.value"
+              disabled readonly
+              style="width: 100%; border: none; background: transparent;"
+            />
+          </td>
+        </tr>
+        <tr *ngIf="showDescriptionForm.get('plan')?.value">
+          <td><label style="color: #003f87">Plano</label></td>
+          <td>
+            <input
+              [value]="showDescriptionForm.get('plan')?.value"
+              disabled readonly
+              style="width: 100%; border: none; background: transparent;"
+            />
+          </td>
+        </tr>
+        <tr *ngIf="showDescriptionForm.get('gradeType')?.value">
+          <td><label style="color: #003f87">Tipo Nota</label></td>
+          <td>
+            <input
+              [value]="showDescriptionForm.get('gradeType')?.value"
+              disabled readonly
+              style="width: 100%; border: none; background: transparent;"
+            />
+          </td>
+        </tr>
+        <tr *ngIf="showDescriptionForm.get('element')?.value">
+          <td><label style="color: #003f87">Elemento</label></td>
+          <td>
+            <input
+              [value]="showDescriptionForm.get('element')?.value"
+              disabled readonly
+              style="width: 100%; border: none; background: transparent;"
+            />
+          </td>
+        </tr>
+        <tr *ngIf="showDescriptionForm.get('item')?.value">
+          <td><label style="color: #003f87">Item</label></td>
+          <td>
+            <textarea
+          formControlName="item"
+          [disabled] = "true"
+          [readOnly] = "true"
+          rows="2"
+          style="
+            width: 100%;
+            height: 50px;
+            border: 1px solid #ccc;
+            padding: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            box-sizing: border-box;
+            resize: none;
+            background-color: #f9f9f9;
+          "
+        ></textarea>
+          </td>
+        </tr>
+
+        <!-- Peso e Nota SOMENTE SE EXISTIREM -->
+        <tr *ngIf="showDescriptionForm.get('weight')?.value || showDescriptionForm.get('grade')?.value">
+          <td colspan="2">
+            <div style="display: flex; justify-content: space-between; gap: 16px">
+              <div style="width: 100%" *ngIf="showDescriptionForm.get('weight')?.value">
+                <label style="color: #003f87">Peso</label><br />
+                <input
+                  formControlName="weight"
+                  [disabled] = "true"
+                  [readOnly] = "true"
+                  style="width: 100%; padding: 6px; border: 1px solid #ccc"
+                />
+              </div>
+              <div style="width: 100%" *ngIf="showDescriptionForm.get('grade')?.value">
+                <label style="color: #003f87">Nota</label><br />
+                <input
+                  formControlName="grade"
+                  [disabled] = "true" 
+                  [readOnly] = "true"
+                  style="width: 100%; padding: 6px; border: 1px solid #ccc"
+                />
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      <!-- COLUNA DIREITA: DESCRIÇÃO -->
+      <div style="flex: 1">
+        <label style="color: #003f87">Descrição</label><br />
+        <textarea
+          formControlName="description"
+          [disabled] = "true"
+          [readOnly] = "true"
+          rows="14"
+          style="
+            width: 100%;
+            height: 95%;
+            border: 1px solid #ccc;
+            padding: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            box-sizing: border-box;
+            resize: vertical;
+            background-color: #f9f9f9;
+          "
+        ></textarea>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Rodapé com ações -->
+<div style="display: flex; justify-content: flex-end; align-items: center; padding: 16px">
+  <button mat-button [mat-dialog-close]>Fechar</button>
+</div>

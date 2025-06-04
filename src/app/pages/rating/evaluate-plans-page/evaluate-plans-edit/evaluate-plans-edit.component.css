@@ -21,7 +21,7 @@ td {
 .grade-column {
   flex: 1;
   /* Colunas menores */
-  width: 50px;
+  width: 60px;
 }
 
 .user-component-column {
