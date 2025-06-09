@@ -1,0 +1,140 @@
+<!-- Cabeçalho com faixa azul -->
+<div
+  style="
+    background-color: #003f87;
+    color: white;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: normal;
+  "
+>
+  {{ getTitle() }}
+</div>
+
+<!-- Conteúdo principal -->
+<div style="padding: 16px">
+  <form [formGroup]="justifyAuditorReplacementForm">
+    <div style="display: flex; gap: 16px">
+      <!-- COLUNA ESQUERDA: DADOS -->
+      <table
+        style="flex: 1; width: 100%; font-size: 14px; border-collapse: collapse"
+      >
+        <tr>
+          <td>
+            <label style="color: #003f87; font-weight: normal">EFPC</label>
+          </td>
+          <td>{{ justifyAuditorReplacementForm.get("entity")?.value }}</td>
+        </tr>
+        <tr>
+          <td>
+            <label style="color: #003f87; font-weight: normal">Ciclo</label>
+          </td>
+          <td>{{ justifyAuditorReplacementForm.get("cycle")?.value }}</td>
+        </tr>
+        <tr>
+          <td>
+            <label style="color: #003f87; font-weight: normal">Pilar</label>
+          </td>
+          <td>{{ justifyAuditorReplacementForm.get("pillar")?.value }}</td>
+        </tr>
+        <tr>
+          <td>
+            <label style="color: #003f87; font-weight: normal"
+              >Componente</label
+            >
+          </td>
+          <td>{{ justifyAuditorReplacementForm.get("component")?.value }}</td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div
+              style="display: flex; justify-content: space-between; gap: 16px"
+            >
+              <div style="width: 100%">
+                <label style="color: #003f87; font-weight: normal"
+                  >Auditor Anterior</label
+                ><br />
+                <input
+                  formControlName="auditorAnterior"
+                  [disabled]="true"
+                  readonly
+                  tabindex="-1"
+                  style="width: 100%; padding: 6px; border: 1px solid #ccc"
+                />
+              </div>
+              <div style="width: 100%">
+                <label style="color: #003f87; font-weight: normal"
+                  >Novo Auditor</label
+                ><br />
+                <input
+                  formControlName="novoAuditor"
+                  [disabled]="true"
+                  readonly
+                  tabindex="-1"
+                  style="width: 100%; padding: 6px; border: 1px solid #ccc"
+                />
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      <!-- COLUNA DIREITA: MOTIVAÇÃO -->
+      <div style="flex: 1">
+        <label style="color: #003f87; font-weight: normal">Motivo</label><br />
+        <textarea
+          #motivationInput
+          formControlName="motivation"
+          rows="14"
+          style="
+            width: 100%;
+            height: 95%;
+            border: 1px solid #ccc;
+            padding: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            box-sizing: border-box;
+            resize: vertical;
+          "
+        ></textarea>
+        <div style="text-align: right; font-size: 12px; margin-top: 4px">
+          {{
+            justifyAuditorReplacementForm.get("motivation")?.value?.length || 0
+          }}
+          / 400
+        </div>
+        <div
+          *ngIf="
+            justifyAuditorReplacementForm.get('motivation')?.invalid &&
+            justifyAuditorReplacementForm.get('motivation')?.touched
+          "
+          style="color: red; font-size: 12px"
+        >
+          A motivação deve conter entre 4 e 400 caracteres.
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Rodapé com ações -->
+<div
+  style="
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 16px;
+  "
+>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="salvar()"
+    [disabled]="justifyAuditorReplacementForm.invalid"
+  >
+    Salvar
+  </button>
+  <button mat-button [mat-dialog-close]="" style="margin-left: 8px">
+    Cancelar
+  </button>
+</div>

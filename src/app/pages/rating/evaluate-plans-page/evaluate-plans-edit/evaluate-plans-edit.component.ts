@@ -26,7 +26,7 @@ import {
   PillarChangeHistoryComponent,
   PillarChangeHistoryData,
 } from "./../pillar-change-history/pillar-change-history.component";
-import { PlainMessageDialogComponent } from "../mensagem/plain-message-dialog.component";
+import { PlainMessageDialogComponent } from "../../../administration/plain-message/plain-message-dialog.component";
 import { ProductPillarHistoryDTO } from "src/app/domain/dto/product-pillar-history.dto";
 import { ShowDescriptionComponent } from "../show-description/show-description.component";
 import { ProductComponentHistoryService } from "src/app/services/coordination/product-component-history.service";

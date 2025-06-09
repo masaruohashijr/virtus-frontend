@@ -38,9 +38,9 @@ export class ComponentChangeHistoryComponent {
   @Output() onClose = new EventEmitter<void>();
   @Output() onSave = new EventEmitter<ComponentChangeHistoryData>();
   displayedColumns: string[] = [
-    "Alterou",
-    "De",
-    "Para",
+    "Alteracao",
+    "ValorDe",
+    "ValorPara",
     "Autor",
     "Data",
     "Acoes",
@@ -49,6 +49,12 @@ export class ComponentChangeHistoryComponent {
   historicos = new MatTableDataSource<ProductComponentHistoryDTO>([]);
   contador = 0;
   componentChangeHistoryForm!: FormGroup;
+
+  ngOnInit(): void {
+    this.prepareHistoryData();
+  }
+
+
   constructor(
     private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA)
@@ -64,6 +70,7 @@ export class ComponentChangeHistoryComponent {
       component: [this.data.componente.data.name],
       weight: [this.data.peso],
       grade: [this.data.nota],
+      motivation: [this.data.motivacao],
     });
     this.historicos.data = this.data.historicoDataSource || [];
   }
@@ -92,6 +99,43 @@ export class ComponentChangeHistoryComponent {
     this.dialog.open(ComponentHistoryDetailsComponent, {
       width: "800px",
       data: row,
+    });
+  }
+
+  prepareHistoryData(): void {
+    this.historicos.data = (this.data.historicoDataSource || []).map((row) => {
+      let alteracao = "";
+      let de = "";
+      let para = "";
+
+      switch (row.tipoAlteracao) {
+        case "P":
+          alteracao = "Planos";
+          de = row.configAnterior || "Vazio";
+          para = row.config;
+          break;
+        case "R":
+          alteracao = "Auditor";
+          de = row.auditorAnteriorName || "—";
+          para = row.auditorName || "—";
+          break;
+        default:
+          alteracao = "Nota";
+          de = row.configAnterior || "Vazio";
+          para = row.config;
+      }
+
+      // Create a new instance of ProductComponentHistoryDTO and assign extra properties
+      const dto = Object.assign(
+        Object.create(Object.getPrototypeOf(row)),
+        row,
+        {
+          alteracaoLabel: alteracao,
+          valorDe: de,
+          valorPara: para,
+        }
+      );
+      return dto;
     });
   }
 }

@@ -10,7 +10,8 @@
 >
   {{
     componentChangeHistoryForm.get("component")?.value
-      ? "Histórico do Componente: " + componentChangeHistoryForm.get("component")?.value
+      ? "Histórico do Componente: " +
+        componentChangeHistoryForm.get("component")?.value
       : "Histórico do Componente"
   }}
 </div>
@@ -43,7 +44,9 @@
         </tr>
         <tr *ngIf="componentChangeHistoryForm.get('component')?.value">
           <td>
-            <label style="color: #003f87; font-weight: normal">Componente</label>
+            <label style="color: #003f87; font-weight: normal"
+              >Componente</label
+            >
           </td>
           <td>{{ componentChangeHistoryForm.get("component")?.value }}</td>
         </tr>
@@ -52,17 +55,33 @@
             <div
               style="display: flex; justify-content: space-between; gap: 16px"
             >
-              <div style="width: 100%" *ngIf="componentChangeHistoryForm.get('weight')?.value">
+              <div
+                style="width: 100%"
+                *ngIf="componentChangeHistoryForm.get('weight')?.value"
+              >
                 <label style="color: #003f87; font-weight: normal"
                   >Peso Atual</label
                 ><br />
-                {{ componentChangeHistoryForm.get("weight")?.value }}
+                <input
+                  type="number"
+                  [value]="componentChangeHistoryForm.get('weight')?.value"
+                  disabled
+                  style="width: 100px; padding: 6px; border: 1px solid #ccc"
+                />
               </div>
-              <div style="width: 100%" *ngIf="componentChangeHistoryForm.get('grade')?.value">
+              <div
+                style="width: 100%"
+                *ngIf="componentChangeHistoryForm.get('grade')?.value"
+              >
                 <label style="color: #003f87; font-weight: normal"
                   >Nota Atual</label
                 ><br />
-                {{ componentChangeHistoryForm.get("grade")?.value }}
+                <input
+                  type="number"
+                  [value]="componentChangeHistoryForm.get('grade')?.value"
+                  disabled
+                  style="width: 100px; padding: 6px; border: 1px solid #ccc"
+                />
               </div>
             </div>
           </td>
@@ -94,24 +113,22 @@
     class="mat-elevation-z1"
     style="width: 100%; font-size: 14px"
   >
-    <!-- Alterou -->
-    <ng-container matColumnDef="Alterou">
-      <th mat-header-cell *matHeaderCellDef>Alterou</th>
-      <td mat-cell *matCellDef="let row">
-        {{ row.tipoAlteracao === "P" ? "Planos" : "Nota" }}
-      </td>
+    <!-- Alteração -->
+    <ng-container matColumnDef="Alteracao">
+      <th mat-header-cell *matHeaderCellDef>Alteração</th>
+      <td mat-cell *matCellDef="let row">{{ row.alteracaoLabel }}</td>
     </ng-container>
 
     <!-- De -->
-    <ng-container matColumnDef="De">
+    <ng-container matColumnDef="ValorDe">
       <th mat-header-cell *matHeaderCellDef>De</th>
-      <td mat-cell *matCellDef="let row">{{ row.configAnterior === "" ? "Vazio" : row.configAnterior }}</td>
+      <td mat-cell *matCellDef="let row">{{ row.valorDe }}</td>
     </ng-container>
 
     <!-- Para -->
-    <ng-container matColumnDef="Para">
+    <ng-container matColumnDef="ValorPara">
       <th mat-header-cell *matHeaderCellDef>Para</th>
-      <td mat-cell *matCellDef="let row">{{ row.config }}</td>
+      <td mat-cell *matCellDef="let row">{{ row.valorPara }}</td>
     </ng-container>
 
     <!-- Autor -->

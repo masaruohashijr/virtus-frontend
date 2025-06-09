@@ -96,13 +96,9 @@ import { SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button'; // Se precisar de botões do PrimeNG
 import { TreeTableModule } from 'primeng/treetable';
 import { ConfigPlansComponent } from './pages/coordination/distribute-activities/config-plans-edit/config-plans-edit.component';
-import { HistoryListComponent } from './pages/coordination/distribute-activities/history-view/history-list/history-list.component';
-import { HistoryTableComponent } from './pages/coordination/distribute-activities/history-view/history-table/history-table.component';
-import { HistoryViewReasonComponent } from './pages/coordination/distribute-activities/history-view/history-view-reason/history-view-reason.component';
-import { HistoryViewComponent } from './pages/coordination/distribute-activities/history-view/history-view.component';
 import { EvaluatePlansEditComponent } from './pages/rating/evaluate-plans-page/evaluate-plans-edit/evaluate-plans-edit.component';
 import { EvaluatePlansPageComponent } from './pages/rating/evaluate-plans-page/evaluate-plans-page.component';
-import { PlainMessageDialogComponent } from './pages/rating/evaluate-plans-page/mensagem/plain-message-dialog.component';
+import { PlainMessageDialogComponent } from './pages/administration/plain-message/plain-message-dialog.component';
 import { MotivarNotaComponent } from './pages/rating/evaluate-plans-page/motivar-nota/motivar-nota.component';
 import { MotivarPesoComponent } from './pages/rating/evaluate-plans-page/motivar-peso/motivar-peso.component';
 import { JustifyPillarWeightComponent } from './pages/rating/evaluate-plans-page/justify-pillar-weight/justify-pillar-weight.component';
@@ -111,6 +107,8 @@ import { PillarHistoryDetailsComponent } from './pages/rating/evaluate-plans-pag
 import { ShowDescriptionComponent } from './pages/rating/evaluate-plans-page/show-description/show-description.component';
 import { ComponentChangeHistoryComponent } from './pages/rating/evaluate-plans-page/component-change-history/component-change-history.component';
 import { ComponentHistoryDetailsComponent } from './pages/rating/evaluate-plans-page/component-change-history/component-history-details/component-history-details.component';
+import { JustifyAuditorReplacementComponent } from './pages/coordination/distribute-activities/distribute-activities-edit/justify-auditor-replacement/justify-auditor-replacement.component';
+import { JustifyReschedulingComponent } from './pages/coordination/distribute-activities/distribute-activities-edit/justify-rescheduling/justify-rescheduling.component';
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -188,10 +186,6 @@ export const MY_DATE_FORMATS = {
     DistributeActivitiesComponent,
     DistributeActivitiesEditComponent,
     ConfigPlansComponent,
-    HistoryViewComponent,
-    HistoryTableComponent,
-    HistoryListComponent,
-    HistoryViewReasonComponent,
     EvaluatePlansPageComponent,
     EvaluatePlansEditComponent,
     MotivarNotaComponent,
@@ -202,7 +196,9 @@ export const MY_DATE_FORMATS = {
     PillarHistoryDetailsComponent,
     ShowDescriptionComponent,
     ComponentChangeHistoryComponent,
-    ComponentHistoryDetailsComponent
+    ComponentHistoryDetailsComponent,
+    JustifyAuditorReplacementComponent,
+    JustifyReschedulingComponent
   ],
   imports: [
     TreeTableModule,

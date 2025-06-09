@@ -1,49 +1,70 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { TreeNode } from 'primeng/api';
-import { catchError, tap, throwError } from 'rxjs';
-import { AlertDialogComponent } from 'src/app/components/dialog/alert-dialog/alert-dialog.component';
-import { AuditorDTO } from 'src/app/domain/dto/auditor.dto';
-import { DistributeActivitiesDTO } from 'src/app/domain/dto/distribute-activities-dto';
-import { DistributeActivitiesTreeDTO } from 'src/app/domain/dto/distribute-activities-tree-dto';
-import { ProductComponentDTO } from 'src/app/domain/dto/product-component.dto';
-import { BaseCrudEditComponent } from 'src/app/pages/common/base-crud-page/base-crud-edit/base-crud-edit.component';
-import { DistributeActivitiesService } from 'src/app/services/coordination/distribute-activities.service';
-import { ConfigPlansComponent } from '../config-plans-edit/config-plans-edit.component';
-import { HistoryViewComponent } from '../history-view/history-view.component';
-import { ProductComponentHistoryService } from 'src/app/services/coordination/product-component-history.service';
-import { ProductComponentHistoryWithDetailsDTO } from 'src/app/domain/dto/product-component-history-details.dto';
+import { Component, Inject, OnInit } from "@angular/core";
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from "@angular/material/dialog";
+import { TreeNode } from "primeng/api";
+import { catchError, tap, throwError } from "rxjs";
+import { AlertDialogComponent } from "src/app/components/dialog/alert-dialog/alert-dialog.component";
+import { AuditorDTO } from "src/app/domain/dto/auditor.dto";
+import { DistributeActivitiesDTO } from "src/app/domain/dto/distribute-activities-dto";
+import { DistributeActivitiesTreeDTO } from "src/app/domain/dto/distribute-activities-tree-dto";
+import { ProductComponentHistoryDTO } from "src/app/domain/dto/product-component-history.dto";
+import { ProductComponentDTO } from "src/app/domain/dto/product-component.dto";
+import { BaseCrudEditComponent } from "src/app/pages/common/base-crud-page/base-crud-edit/base-crud-edit.component";
+import { ComponentChangeHistoryComponent } from "src/app/pages/rating/evaluate-plans-page/component-change-history/component-change-history.component";
+import { DistributeActivitiesService } from "src/app/services/coordination/distribute-activities.service";
+import { ProductComponentHistoryService } from "src/app/services/coordination/product-component-history.service";
+import { ProductComponentService } from "src/app/services/coordination/product-component.service";
+import { ConfigPlansComponent } from "../config-plans-edit/config-plans-edit.component";
+import { JustifyAuditorReplacementComponent } from "./justify-auditor-replacement/justify-auditor-replacement.component";
+import {
+  TipoData,
+  JustifyReschedulingComponent,
+} from "./justify-rescheduling/justify-rescheduling.component";
 
 @Component({
-  selector: 'app-distribute-activities-edit',
-  templateUrl: './distribute-activities-edit.component.html',
-  styleUrls: ['./distribute-activities-edit.component.css']
+  selector: "app-distribute-activities-edit",
+  templateUrl: "./distribute-activities-edit.component.html",
+  styleUrls: ["./distribute-activities-edit.component.css"],
 })
-export class DistributeActivitiesEditComponent extends BaseCrudEditComponent<DistributeActivitiesTreeDTO> implements OnInit {
-
+export class DistributeActivitiesEditComponent
+  extends BaseCrudEditComponent<DistributeActivitiesTreeDTO>
+  implements OnInit
+{
   distributeActivitiesTree!: DistributeActivitiesTreeDTO;
   treeData!: TreeNode[];
-
+  previousAuditor: AuditorDTO = { userId: 0, name: "" };
+  previousStartsAt: Date | undefined;
+  previousEndsAt: Date | undefined;
   products: ProductComponentDTO[] = [];
+  previousDatesMap = new Map<string, { startsAt: Date; endsAt: Date }>();
 
   constructor(
     public dialog: MatDialog,
     public deleteDialog: MatDialog,
     public dialogRef: MatDialogRef<DistributeActivitiesTreeDTO>,
-    @Inject(MAT_DIALOG_DATA) public distributeActivities: DistributeActivitiesDTO,
-    private service: DistributeActivitiesService,
+    @Inject(MAT_DIALOG_DATA)
+    public distributeActivities: DistributeActivitiesDTO,
+    private _service: DistributeActivitiesService,
     private _productComponentHistoryService: ProductComponentHistoryService,
-    private errorDialog: MatDialog) {
+    private errorDialog: MatDialog
+  ) {
     super();
   }
 
   ngOnInit(): void {
-    this.service.getDistributeActivitiesTreeByEntityAndCycleId(this.distributeActivities.entityId, this.distributeActivities.cycle?.id)
+    this._service
+      .getDistributeActivitiesTreeByEntityAndCycleId(
+        this.distributeActivities.entityId,
+        this.distributeActivities.cycle?.id
+      )
       .pipe()
-      .subscribe(resp => {
+      .subscribe((resp) => {
         this.distributeActivitiesTree = resp;
         this.products = resp.products;
-        console.log(resp)
+        console.log(resp);
         this.treeData = this.buildTree(resp);
       });
   }
@@ -55,50 +76,54 @@ export class DistributeActivitiesEditComponent extends BaseCrudEditComponent<Dis
 
     const entityMap: Map<string, TreeNode> = new Map();
 
-    data.products.forEach(item => {
-      const entityName = item.entity?.name || 'Unknown Entity';
-      const cycleName = item.cycle?.cycle?.name || 'Unknown Cycle';
-      const pillarName = item.pillar?.name || 'Unknown Pillar';
-      const componentName = item.component?.name || 'Unknown Component';
+    data.products.forEach((item) => {
+      const entityName = item.entity?.name || "Unknown Entity";
+      const cycleName = item.cycle?.cycle?.name || "Unknown Cycle";
+      const pillarName = item.pillar?.name || "Unknown Pillar";
+      const componentName = item.component?.name || "Unknown Component";
 
       if (!entityMap.has(entityName)) {
         entityMap.set(entityName, {
           data: {
             name: entityName,
-            objectType: 'Entidade',
-            object: item.entity
+            objectType: "Entidade",
+            object: item.entity,
           },
           expanded: true,
-          children: []
+          children: [],
         });
       }
 
       const entityNode = entityMap.get(entityName)!;
 
-      let cycleNode = entityNode.children?.find(child => child.data.name === cycleName);
+      let cycleNode = entityNode.children?.find(
+        (child) => child.data.name === cycleName
+      );
       if (!cycleNode) {
         cycleNode = {
           data: {
             name: cycleName,
-            objectType: 'Ciclo',
-            object: item.cycle
+            objectType: "Ciclo",
+            object: item.cycle,
           },
           expanded: true,
-          children: []
+          children: [],
         };
         entityNode.children?.push(cycleNode);
       }
 
-      let pillarNode = cycleNode.children?.find(child => child.data.name === pillarName);
+      let pillarNode = cycleNode.children?.find(
+        (child) => child.data.name === pillarName
+      );
       if (!pillarNode) {
         pillarNode = {
           data: {
             name: pillarName,
-            objectType: 'Pilar',
-            object: item.pillar
+            objectType: "Pilar",
+            object: item.pillar,
           },
           expanded: true,
-          children: []
+          children: [],
         };
         cycleNode.children?.push(pillarNode);
       }
@@ -106,9 +131,9 @@ export class DistributeActivitiesEditComponent extends BaseCrudEditComponent<Dis
       pillarNode.children?.push({
         data: {
           name: componentName,
-          objectType: 'Componente',
-          object: item
-        }
+          objectType: "Componente",
+          object: item,
+        },
       });
     });
 
@@ -118,47 +143,45 @@ export class DistributeActivitiesEditComponent extends BaseCrudEditComponent<Dis
   save() {
     console.log(this.products);
     if (this.isValidToDistribute()) {
-
       let activities: ActivitiesByProductComponentRequestDto[] = [];
-      this.products.forEach(product => {
+      this.products.forEach((product) => {
         const activityRequest: ActivitiesByProductComponentRequestDto = {
           productComponentId: product?.id,
           supervisorId: product?.supervisor?.userId,
           auditorId: product?.auditor?.userId,
           startsAt: product?.startsAt,
-          endsAt: product?.endsAt
+          endsAt: product?.endsAt,
         };
         activities.push(activityRequest);
       });
 
-      this.service.distributeActivities(activities).pipe(
-        tap(resp => {
-          this.dialogRef.close(resp);
-        }),
-        catchError(error => {
-          this.mostrarErro(error, this.errorDialog);
-
-          return throwError(error);
-        })
-      ).subscribe();
+      this._service
+        .distributeActivities(activities)
+        .pipe(
+          tap((resp) => {
+            this.dialogRef.close(resp);
+          }),
+          catchError((error) => {
+            this.mostrarErro(error, this.errorDialog);
+            return throwError(error);
+          })
+        )
+        .subscribe();
     } else {
       const errorDialogRef = this.errorDialog.open(AlertDialogComponent, {
-        width: '350px',
+        width: "350px",
         data: {
           title: "Erro",
-          message: "Todos os campos devem ser preenchidos!"
+          message: "Todos os campos devem ser preenchidos!",
         },
       });
 
-      errorDialogRef.afterClosed().subscribe(result => {
-
-      });
-
+      errorDialogRef.afterClosed().subscribe((result) => {});
     }
   }
 
   getTitle() {
-    return "Distribuir atividades"
+    return "Distribuir atividades";
   }
 
   hasCycles(_: number, node: any): boolean {
@@ -173,34 +196,202 @@ export class DistributeActivitiesEditComponent extends BaseCrudEditComponent<Dis
     return !!node.components && node.components.length > 0;
   }
 
-  setAuditor(item: ProductComponentDTO, auditor: AuditorDTO) {
-    console.log(item)
-    const index = this.products.findIndex(product => product.id === item.id);
+  setPreviousAuditor(auditor: AuditorDTO) {
+    this.previousAuditor = auditor;
+  }
+
+  parseDateBR(dateStr: string): Date {
+    const [year, month, day] = dateStr.split("-").map(Number);
+    const dt = new Date(year, month - 1, day);
+    return dt;
+  }
+
+  private generateKey(
+    cicloId: string | number,
+    pilarId: string | number,
+    componenteId: string | number
+  ): string {
+    return `${cicloId}-${pilarId}-${componenteId}`;
+  }
+
+  setPreviousDates(rowNode: any, startsAt: any, endsAt: any) {
+    if (!startsAt || !endsAt) return;
+    const cicloNode = this.subirAtePorNode(rowNode, "Ciclo");
+    const pilarNode = this.subirAtePorNode(rowNode, "Pilar");
+    const componentNode = rowNode.node.data.object.component;
+    const parsedStartsAt =
+      typeof startsAt === "string"
+        ? this.parseDateBR(startsAt)
+        : new Date(startsAt);
+    const parsedEndsAt =
+      typeof endsAt === "string" ? this.parseDateBR(endsAt) : new Date(endsAt);
+
+    this.previousStartsAt = parsedStartsAt;
+    this.previousEndsAt = parsedEndsAt;
+
+    // Extract IDs safely or use fallback
+    const cicloId = cicloNode?.data?.object?.id;
+    const pilarId = pilarNode?.data?.object?.id;
+    const componenteId = componentNode.id;
+
+    // Gera chave composta
+    const key = this.generateKey(cicloId, pilarId, componenteId);
+
+    // Armazena no mapa
+    if (!this.previousDatesMap.get(key)) {
+      this.previousDatesMap.set(key, {
+        startsAt: parsedStartsAt,
+        endsAt: parsedEndsAt,
+      });
+    }
+
+    // Debug opcional
+    const formattedStartsAt = parsedStartsAt.toLocaleDateString("pt-BR");
+    const formattedEndsAt = parsedEndsAt.toLocaleDateString("pt-BR");
+
+    console.log(
+      `Armazenado para chave ${key}: Início ${formattedStartsAt}, Fim ${formattedEndsAt}`
+    );
+  }
+
+  getPreviousDates(
+    cicloId: string | number,
+    pilarId: string | number,
+    componenteId: string | number
+  ): { startsAt: Date; endsAt: Date } | undefined {
+    const key = this.generateKey(cicloId, pilarId, componenteId);
+    return this.previousDatesMap.get(key);
+  }
+
+  onStartsChange(rowNode: any, dto: ProductComponentDTO, newStart: Date) {
+    const index = this.products.findIndex((product) => product.id === dto.id);
     if (index !== -1) {
-      this.products[index].auditor = auditor;
+      const previous = this.products[index].startsAt;
+      this.products[index].startsAt = newStart;
+      // Verifica se datas estão invertidas
+      const endsAt = this.products[index].endsAt;
+      const previousDates = this.getPreviousDates(
+        dto.cycle?.id,
+        dto.pillar?.id,
+        dto.component?.id
+      );
+
+      if (
+        previousDates?.startsAt &&
+        newStart &&
+        new Date(previousDates.startsAt).getTime() !==
+          new Date(newStart).getTime()
+      ) {
+        this.justifyReschedulingDateChange(
+          rowNode,
+          dto,
+          previousDates.startsAt,
+          newStart,
+          previousDates.endsAt,
+          dto.endsAt,
+          TipoData.Inicial
+        );
+      }
     }
   }
 
-  onStartsChange(item: ProductComponentDTO, startsAt: Date) {
-    const index = this.products.findIndex(product => product.id === item.id);
+  onEndsChange(rowNode: any, dto: ProductComponentDTO, newEnd: Date) {
+    const index = this.products.findIndex((product) => product.id === dto.id);
     if (index !== -1) {
-      this.products[index].startsAt = startsAt;
+      const previous = this.products[index].endsAt;
+      this.products[index].endsAt = newEnd;
+      // Verifica se datas estão invertidas
+      const startsAt = this.products[index].startsAt;
+      const previousDates = this.getPreviousDates(
+        dto.cycle?.id,
+        dto.pillar?.id,
+        dto.component?.id
+      );
+
+      if (
+        previousDates?.endsAt &&
+        newEnd &&
+        new Date(previousDates.endsAt).getTime() !== new Date(newEnd).getTime()
+      ) {
+        this.justifyReschedulingDateChange(
+          rowNode,
+          dto,
+          previousDates.startsAt,
+          dto.startsAt,
+          previousDates.endsAt,
+          newEnd,
+          TipoData.Final
+        );
+      }
     }
   }
 
-  onEndsChange(item: ProductComponentDTO, endsAt: Date) {
+  justifyReschedulingDateChange(
+    rowNode: any,
+    item: ProductComponentDTO,
+    dataInicialAnterior: Date | undefined,
+    novaDataInicial: Date,
+    dataFinalAnterior: Date | undefined,
+    novaDataFinal: Date,
+    tipo: TipoData
+  ) {
+    const entidadeNode = this.subirAtePorNode(rowNode, "Entidade");
+    const cicloNode = this.subirAtePorNode(rowNode, "Ciclo");
+    const pilarNode = this.subirAtePorNode(rowNode, "Pilar");
+    const componentNode = rowNode.node;
+    const dialogRef = this.dialog.open(JustifyReschedulingComponent, {
+      width: "1000px",
+      autoFocus: false,
+      data: {
+        entidade: entidadeNode || "",
+        ciclo: cicloNode || "",
+        pilar: pilarNode || "",
+        componente: componentNode || "",
+        dataInicialAnterior: dataInicialAnterior,
+        novaDataInicial: novaDataInicial,
+        dataFinalAnterior: dataFinalAnterior,
+        novaDataFinal: novaDataFinal,
+        texto: "",
+        tipoData: tipo,
+      },
+    });
 
-    const index = this.products.findIndex(product => product.id === item.id);
-    if (index !== -1) {
-      this.products[index].endsAt = endsAt;
-    }
+    dialogRef.componentInstance.onClose.subscribe(() => {
+      const index = this.products.findIndex((p) => p.id === item.id);
+      if (index !== -1 && dataInicialAnterior) {
+        if (tipo === TipoData.Inicial) {
+          this.products[index].startsAt = dataInicialAnterior;
+        } else {
+          if (dataFinalAnterior) {
+            this.products[index].endsAt = dataFinalAnterior;
+          }
+        }
+      }
+      const warnText = document.getElementById("Warns");
+      const warnBox = document.getElementById("warn-message");
+      if (warnText && warnBox) {
+        warnText.innerText =
+          "Datas início e término estão invertidas no componente.";
+        warnBox.style.display = "block";
+      }
+      dialogRef.close();
+    });
+
+    dialogRef.componentInstance.onSave.subscribe(() => {
+      alert("Justificativa salva com sucesso!");
+    });
   }
 
   isValidToDistribute() {
     let isValid = false;
 
     for (let product of this.products) {
-      if (product.auditor && product.endsAt && product.startsAt && product.supervisor) {
+      if (
+        product.auditor &&
+        product.endsAt &&
+        product.startsAt &&
+        product.supervisor
+      ) {
         isValid = true;
         break;
       }
@@ -215,37 +406,91 @@ export class DistributeActivitiesEditComponent extends BaseCrudEditComponent<Dis
 
   openPlansConfig(object: ProductComponentDTO) {
     const dialogRef = this.dialog.open(ConfigPlansComponent, {
-      width: '600px',
+      width: "600px",
       data: object,
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {});
+  }
 
+  onProductComponentHistoryClick(rowNode: any): void {
+    // Retrieve required IDs from the node hierarchy
+    const entidadeNode = this.subirAtePorNode(rowNode, "Entidade");
+    const cicloNode = this.subirAtePorNode(rowNode, "Ciclo");
+    const pilarNode = this.subirAtePorNode(rowNode, "Pilar");
+    const componentNode = rowNode.node;
+
+    const entidadeId = entidadeNode?.data?.object?.id;
+    const cicloId = cicloNode?.data?.object?.id;
+    const pilarId = pilarNode?.data?.object?.id;
+    const componentId = componentNode?.data?.object?.component.id;
+    this._productComponentHistoryService
+      .getHistory(entidadeId, cicloId, pilarId, componentId)
+      .subscribe((dtoHistory) => {
+        this.showComponentChangeHistory(rowNode, dtoHistory);
+      });
+  }
+
+  showComponentChangeHistory(
+    rowNode: any,
+    dtoHistory: ProductComponentHistoryDTO[]
+  ) {
+    const entidade = rowNode ? this.subirAtePorNode(rowNode, "Entidade") : null;
+    const ciclo = rowNode ? this.subirAtePorNode(rowNode, "Ciclo") : null;
+    const pilar = rowNode ? this.subirAtePorNode(rowNode, "Pilar") : null;
+    const componente = rowNode?.node;
+    const dialogRef = this.dialog.open(ComponentChangeHistoryComponent, {
+      width: "1000px",
+      height: "600px",
+      data: {
+        entidade: entidade || "",
+        ciclo: ciclo || "",
+        pilar: pilar || "",
+        componente: componente || "",
+        peso: rowNode.node.data.weight || null,
+        nota: rowNode.node.data.grade || null,
+        historicoDataSource: dtoHistory,
+      },
     });
   }
 
-  openHistory(object: ProductComponentDTO) {
-    if (object.cycle.cycle) {
-      this._productComponentHistoryService.getHistory(object.entity.id, object.cycle.cycle.id, object.pillar.id, object.component.id)
-        .pipe()
-        .subscribe(resp => {
-          const obj: ProductComponentHistoryWithDetailsDTO = {
-            details: resp,
-            productComponent: object
-          }
-          const dialogRef = this.dialog.open(HistoryViewComponent, {
-            width: '100%',
-            data: obj,
-          });
-        });
+  justifyAuditorReplacement(rowNode: any, newAuditor: AuditorDTO) {
+    const entidadeNode = this.subirAtePorNode(rowNode, "Entidade");
+    const cicloNode = this.subirAtePorNode(rowNode, "Ciclo");
+    const pilarNode = this.subirAtePorNode(rowNode, "Pilar");
+    const componentNode = rowNode.node;
 
-    }
-    //dialogRef.afterClosed().subscribe(result => {
-
-    //});
+    const dialogRef = this.dialog.open(JustifyAuditorReplacementComponent, {
+      width: "1000px",
+      autoFocus: false,
+      data: {
+        entidade: entidadeNode || "",
+        ciclo: cicloNode || "",
+        pilar: pilarNode || "",
+        componente: componentNode || "",
+        novoAuditor: newAuditor,
+        auditorAnterior: this.previousAuditor,
+        texto: "",
+      },
+    });
   }
-}
 
+  parseDecimal(valor: string | null | undefined): number {
+    return parseFloat((valor || "0").replace(",", "."));
+  }
+
+  subirAtePorNode(node: TreeNode, tipo: string): TreeNode | null {
+    let current: TreeNode | undefined = node.parent;
+    while (current) {
+      if (current.data.objectType === tipo) {
+        return current;
+      }
+      current = current.parent;
+    }
+    return null;
+  }
+
+}
 
 export interface ActivitiesByProductComponentRequestDto {
   productComponentId: number;

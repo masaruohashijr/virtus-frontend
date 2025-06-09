@@ -6,7 +6,7 @@ import {
   MatDialog,
 } from "@angular/material/dialog";
 import { EvaluatePlansService } from "src/app/services/rating/evaluate-plans.service";
-import { PlainMessageDialogComponent } from "../mensagem/plain-message-dialog.component";
+import { PlainMessageDialogComponent } from "../../../administration/plain-message/plain-message-dialog.component";
 
 // Define TreeNode interface if not imported from elsewhere
 interface TreeNode {

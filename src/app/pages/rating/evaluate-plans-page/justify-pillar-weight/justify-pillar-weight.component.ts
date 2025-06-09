@@ -6,7 +6,7 @@ import {
   MatDialog,
   MatDialogRef,
 } from "@angular/material/dialog";
-import { PlainMessageDialogComponent } from "../mensagem/plain-message-dialog.component";
+import { PlainMessageDialogComponent } from "../../../administration/plain-message/plain-message-dialog.component";
 import { ProductPillarHistoryService } from '../../../../services/coordination/product-pillar-history.service';
 
 // Define TreeNode interface if not imported from elsewhere

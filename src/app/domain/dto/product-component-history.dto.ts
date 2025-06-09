@@ -22,4 +22,6 @@ export interface ProductComponentHistoryDTO extends BaseDTO {
     authorName: string;
     alteradoEm: string;
     motivacao: string;
+    auditorAnteriorName: string;
+    auditorName: string;    
 }

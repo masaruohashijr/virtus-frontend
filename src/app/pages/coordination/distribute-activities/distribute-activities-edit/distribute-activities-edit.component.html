@@ -1,85 +1,185 @@
-<h1 mat-dialog-title>{{getTitle()}}</h1>
+<h1 mat-dialog-title>{{ getTitle() }}</h1>
+
 <div mat-dialog-content>
-    <p-treeTable [value]="treeData" [scrollable]="true" [tableStyle]="{'min-width':'50rem'}">
-        <ng-template pTemplate="header">
-            <tr>
-                <th style="width: 165px;">Nível</th>
-                <th>Sumário</th>
-                <th style="width: 100px;">Planos</th>
-                <th>Equipe</th>
-                <th>Cronograma</th>
-                <th style="width: 100px;">Ações</th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
-            <tr [ttRow]="rowNode">
-                <td style="width: 165px;">
-                    <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
-                    {{rowData.objectType}}
-                </td>
-                <td>{{rowData.name}}</td>
-                <td style="width: 100px;">
-                    <span *ngIf="rowData.objectType != 'Componente'"></span>
-                    <button *ngIf="rowData.objectType == 'Componente'" (click)="openPlansConfig(rowData.object)"
-                        mat-raised-button [color]="'primary'"
-                        [ngClass]="{'success-button': rowData.object.plans && rowData.object.plans.length}"
-                        cdkFocusInitial>
-                        Planos
-                    </button>
-                </td>
-                <td>
-                    <span *ngIf="rowData.objectType == 'Entidade'"></span>
-                    <span *ngIf="rowData.objectType == 'Ciclo'">
-                        <mat-form-field class="mat-form-field" class="example-full-width" appearance="outline">
-                            <mat-label>Supervisor</mat-label>
-                            <input matInput [value]="rowData.object.supervisor.name" readonly>
-                        </mat-form-field>
-                    </span>
-                    <span *ngIf="rowData.objectType == 'Pilar'"></span>
-                    <span *ngIf="rowData.objectType == 'Componente'">
-                        <span *ngIf="rowData.objectType == 'Componente'">
-                            <mat-form-field class="mat-form-field" appearance="outline">
-                                <mat-label>Auditor</mat-label>
-                                <mat-select [(ngModel)]="rowData.object.auditor"
-                                    (selectionChange)="setAuditor(rowData.object, $event.value)"
-                                    [compareWith]="compareAuditors">
-                                    <mat-option *ngFor="let auditor of distributeActivitiesTree?.auditors"
-                                        [value]="auditor">
-                                        {{auditor.name}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </span>
-                    </span>
-                </td>
-                <td>
-                    <span *ngIf="rowData.objectType != 'Componente'"></span>
-                    <span *ngIf="rowData.objectType == 'Componente'">
-                        <mat-form-field class="mat-form-field" appearance="outline">
-                            <mat-label>Inicia em - Termina em</mat-label>
-                            <mat-date-range-input [rangePicker]="picker">
-                                <input matStartDate [(ngModel)]="rowData.object.startsAt"
-                                    (dateChange)="onStartsChange(rowData.object, $event.value)" placeholder="Inicia em">
-                                <input matEndDate [(ngModel)]="rowData.object.endsAt"
-                                    (dateChange)="onEndsChange(rowData.object, $event.value)" placeholder="Termina em">
-                            </mat-date-range-input>
-                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                            <mat-date-range-picker #picker></mat-date-range-picker>
-                        </mat-form-field>
-                    </span>
-                </td>
-                <td style="width: 100px;">
-                    <span *ngIf="rowData.objectType != 'Componente'"></span>
-                    <span *ngIf="rowData.objectType == 'Componente'">
-                        <button mat-raised-button cdkFocusInitial
-                            (click)="openHistory(rowData.object)">Histórico</button>
-                    </span>
-                </td>
-            </tr>
-        </ng-template>
-    </p-treeTable>
+  <p-treeTable
+    [value]="treeData"
+    [scrollable]="true"
+    [tableStyle]="{ 'min-width': '50rem' }"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 140px; box-sizing: border-box">Nível</th>
+        <th style="width: 200px; box-sizing: border-box">Sumário</th>
+        <th style="width: 80px; box-sizing: border-box">Planos</th>
+        <th style="width: 180px; box-sizing: border-box">Equipe</th>
+        <th style="width: 280px; box-sizing: border-box">Cronograma</th>
+        <th style="width: 100px; box-sizing: border-box">Histórico</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+      <tr [ttRow]="rowNode">
+        <!-- Nível -->
+        <td style="width: 140px; box-sizing: border-box">
+          <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+          {{ rowData.objectType }}
+        </td>
+
+        <!-- Sumário -->
+        <td style="width: 200px; box-sizing: border-box">
+          {{ rowData.name }}
+        </td>
+
+        <!-- Planos -->
+        <td style="width: 80px; box-sizing: border-box">
+          <ng-container *ngIf="rowData.objectType === 'Componente'">
+            <button
+              mat-raised-button
+              color="primary"
+              style="width: 100%"
+              (click)="openPlansConfig(rowData.object)"
+              [ngClass]="{
+                'success-button': rowData.object.plans?.length > 0
+              }"
+            >
+              Planos
+            </button>
+          </ng-container>
+        </td>
+
+        <!-- Equipe -->
+        <td style="width: 180px; box-sizing: border-box">
+          <ng-container [ngSwitch]="rowData.objectType">
+            <span *ngSwitchCase="'Ciclo'" style="font-size: 13px">
+              {{ rowData.object.supervisor?.name }}
+            </span>
+            <mat-form-field
+              *ngSwitchCase="'Componente'"
+              appearance="outline"
+              style="width: 100%; margin: 0"
+            >
+              <mat-label>Auditor</mat-label>
+              <mat-select
+                [(ngModel)]="rowData.object.auditor"
+                (openedChange)="setPreviousAuditor(rowData.object.auditor)"
+                (selectionChange)="
+                  justifyAuditorReplacement(rowNode, $event.value)
+                "
+                [compareWith]="compareAuditors"
+              >
+                <mat-option
+                  *ngFor="let auditor of distributeActivitiesTree?.auditors"
+                  [value]="auditor"
+                >
+                  {{ auditor.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-container>
+        </td>
+
+        <!-- Cronograma -->
+        <td style="width: 240px; box-sizing: border-box">
+          <div style="display: flex; gap: 8px">
+            <!-- Inicia em -->
+            <ng-container *ngIf="rowData.objectType === 'Componente'">
+              <mat-form-field
+                appearance="outline"
+                style="width: 140px; margin: 0"
+              >
+                <mat-label>Inicia</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="startPicker"
+                  [value]="rowData.object.startsAt"
+                  (focus)="
+                    setPreviousDates(
+                      rowNode,
+                      rowData.object.startsAt,
+                      rowData.object.endsAt
+                    )
+                  "
+                  (dateChange)="
+                    onStartsChange(rowNode, rowData.object, $event.value)
+                  "
+                  placeholder="Início"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="startPicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker
+                  #startPicker
+                  (opened)="
+                    setPreviousDates(
+                      rowNode,
+                      rowData.object.startsAt,
+                      rowData.object.endsAt
+                    )
+                  "
+                ></mat-datepicker>
+              </mat-form-field>
+
+              <!-- Termina em -->
+              <mat-form-field
+                appearance="outline"
+                style="width: 140px; margin: 0"
+              >
+                <mat-label>Termina</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="endPicker"
+                  [value]="rowData.object.endsAt"
+                  (focus)="
+                    setPreviousDates(
+                      rowNode,
+                      rowData.object.startsAt,
+                      rowData.object.endsAt
+                    )
+                  "
+                  (dateChange)="
+                    onEndsChange(rowNode, rowData.object, $event.value)
+                  "
+                  placeholder="Término"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="endPicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker
+                  #endPicker
+                  (opened)="
+                    setPreviousDates(
+                      rowNode,
+                      rowData.object.startsAt,
+                      rowData.object.endsAt
+                    )
+                  "
+                ></mat-datepicker>
+              </mat-form-field>
+            </ng-container>
+          </div>
+        </td>
+
+        <!-- Histórico -->
+        <td style="width: 100px; box-sizing: border-box; text-align: left">
+          <ng-container *ngIf="rowData.objectType === 'Componente'">
+            <button
+              mat-raised-button
+              style="width: 100%"
+              (click)="onProductComponentHistoryClick(rowNode)"
+            >
+              Histórico
+            </button>
+          </ng-container>
+        </td>
+      </tr>
+    </ng-template>
+  </p-treeTable>
 </div>
 <div mat-dialog-actions [align]="'end'">
-    <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>Salvar</button>
-    <button mat-flat-button [mat-dialog-close]="">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>
+    Salvar
+  </button>
+  <button mat-flat-button [mat-dialog-close]="">Cancelar</button>
 </div>
