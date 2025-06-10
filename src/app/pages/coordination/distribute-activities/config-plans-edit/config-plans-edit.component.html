@@ -1,45 +1,101 @@
-<h1 mat-dialog-title>{{getTitle()}}</h1>
-<div mat-dialog-content>
-    <form [formGroup]="configPlansForm">
-        <mat-form-field class="w-full mt-auto" appearance="outline">
-            <mat-label>Entidate</mat-label>
-            <input formControlName="entity" matInput>
-        </mat-form-field>
-        <mat-form-field class="w-full mt-auto" appearance="outline">
-            <mat-label>Ciclo</mat-label>
-            <input formControlName="cycle" matInput>
-        </mat-form-field>
-        <mat-form-field class="w-full mt-auto" appearance="outline">
-            <mat-label>Pilar</mat-label>
-            <input formControlName="pillar" matInput>
-        </mat-form-field>
-        <mat-form-field class="w-full mt-auto" appearance="outline">
-            <mat-label>Componente</mat-label>
-            <input formControlName="component" matInput>
-        </mat-form-field>
-        <mat-form-field class="w-full mt-auto" appearance="outline">
-            <mat-label>Planos</mat-label>
-            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addPlan($event)">
+<!-- Cabeçalho com faixa azul -->
+<div
+  style="
+    background-color: #003f87;
+    color: white;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: normal;
+  "
+>
+  {{ getTitle() }}
+</div>
+
+<!-- Conteúdo principal -->
+<div style="padding: 16px">
+  <form [formGroup]="configPlansForm">
+    <div style="display: flex; gap: 16px">
+      <!-- COLUNA ESQUERDA: DADOS -->
+      <table style="flex: 1; width: 100%; font-size: 14px; border-collapse: collapse">
+        <tr>
+          <td><label style="color: #003f87; font-weight: normal">Entidade</label></td>
+          <td>{{ configPlansForm.get("entity")?.value }}</td>
+        </tr>
+        <tr>
+          <td><label style="color: #003f87; font-weight: normal">Ciclo</label></td>
+          <td>{{ configPlansForm.get("cycle")?.value }}</td>
+        </tr>
+        <tr>
+          <td><label style="color: #003f87; font-weight: normal">Pilar</label></td>
+          <td>{{ configPlansForm.get("pillar")?.value }}</td>
+        </tr>
+        <tr>
+          <td><label style="color: #003f87; font-weight: normal">Componente</label></td>
+          <td>{{ configPlansForm.get("component")?.value }}</td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <mat-form-field class="w-full mt-2" appearance="outline" style="width: 100%">
+              <mat-label>Planos</mat-label>
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addPlan($event)">
                 <mat-option *ngFor="let plan of plans" [value]="plan">
-                    {{ plan.cnpb }} - {{ plan.modality }} - {{formatValue(plan.guaranteeResource)}}
+                  {{ plan.cnpb }} - {{ plan.modality }} - {{ formatValue(plan.guaranteeResource) }}
                 </mat-option>
-            </mat-autocomplete>
-            <mat-chip-list #chipList [compareWith]="compare">
-                <mat-chip *ngFor="let selected of configPlansForm.get('plans')?.value" [removable]="true"
-                    (removed)="removePlan(selected)">
-                    {{ selected.cnpb }} - {{ selected.modality }} - {{formatValue(selected.guaranteeResource)}}
-                    <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-autocomplete>
+              <mat-chip-list #chipList [compareWith]="compare">
+                <mat-chip *ngFor="let selected of configPlansForm.get('plans')?.value" [removable]="true" (removed)="removePlan(selected)">
+                  {{ selected.cnpb }} - {{ selected.modality }} - {{ formatValue(selected.guaranteeResource) }}
+                  <mat-icon matChipRemove>cancel</mat-icon>
                 </mat-chip>
                 <input placeholder="Adicionar um Plano" matInput [matAutocomplete]="auto" [formControl]="planInput">
-            </mat-chip-list>
-        </mat-form-field>
-        <mat-form-field class="w-full mt-auto" appearance="outline" *ngIf="plansChanged">
-            <mat-label>Motivação de Reconfiguração</mat-label>
-            <textarea formControlName="motivation" matInput rows="5"></textarea>
-        </mat-form-field>
-    </form>
+              </mat-chip-list>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+
+      <!-- COLUNA DIREITA: MOTIVAÇÃO -->
+      <div style="flex: 1" *ngIf="plansChanged">
+        <label style="color: #003f87; font-weight: normal">Motivo</label><br />
+        <textarea
+          formControlName="motivation"
+          rows="14"
+          style="
+            width: 100%;
+            height: 95%;
+            border: 1px solid #ccc;
+            padding: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            box-sizing: border-box;
+            resize: vertical;
+          "
+        ></textarea>
+        <div style="text-align: right; font-size: 12px; margin-top: 4px">
+          {{ configPlansForm.get("motivation")?.value?.length || 0 }} / 400
+        </div>
+        <div
+          *ngIf="configPlansForm.get('motivation')?.invalid && configPlansForm.get('motivation')?.touched"
+          style="color: red; font-size: 12px"
+        >
+          A motivação deve conter entre 4 e 400 caracteres.
+        </div>
+      </div>
+    </div>
+  </form>
 </div>
-<div mat-dialog-actions [align]="'end'">
-    <button mat-raised-button color="primary" (click)="updateConfigPlans()" cdkFocusInitial>Salvar</button>
-    <button mat-flat-button [mat-dialog-close]="">Cancelar</button>
+
+<!-- Rodapé com ações -->
+<div
+  style="
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 16px;
+  "
+>
+  <button mat-raised-button color="primary" (click)="updateConfigPlans()" [disabled]="configPlansForm.invalid">
+    Salvar
+  </button>
+  <button mat-button [mat-dialog-close]="" style="margin-left: 8px">Cancelar</button>
 </div>

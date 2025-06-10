@@ -268,7 +268,6 @@ export class DistributeActivitiesEditComponent
     if (index !== -1) {
       const previous = this.products[index].startsAt;
       this.products[index].startsAt = newStart;
-      // Verifica se datas estão invertidas
       const endsAt = this.products[index].endsAt;
       const previousDates = this.getPreviousDates(
         dto.cycle?.id,
@@ -282,12 +281,20 @@ export class DistributeActivitiesEditComponent
         new Date(previousDates.startsAt).getTime() !==
           new Date(newStart).getTime()
       ) {
+        let iniciaEmAnterior = previousDates.startsAt;
+        let iniciaEm = newStart;
+        let terminaEmAnterior = previousDates.endsAt;
+        let terminaEm = dto.endsAt;
+
+        if (iniciaEm && terminaEm && iniciaEm > terminaEm) {
+          [iniciaEm, terminaEm] = [terminaEm, iniciaEm];
+        }
         this.justifyReschedulingDateChange(
           rowNode,
-          previousDates.startsAt,
-          newStart,
-          previousDates.endsAt,
-          dto.endsAt,
+          iniciaEmAnterior,
+          iniciaEm,
+          terminaEmAnterior,
+          terminaEm,
           TipoData.INICIA_EM
         );
       }
@@ -311,12 +318,20 @@ export class DistributeActivitiesEditComponent
         newEnd &&
         new Date(previousDates.endsAt).getTime() !== new Date(newEnd).getTime()
       ) {
+        let iniciaEmAnterior = previousDates.startsAt;
+        let terminaEm = newEnd;
+        let terminaEmAnterior = previousDates.endsAt;
+        let iniciaEm = dto.startsAt;
+
+        if (iniciaEm && terminaEm && iniciaEm > terminaEm) {
+          [iniciaEm, terminaEm] = [terminaEm, iniciaEm];
+        }
         this.justifyReschedulingDateChange(
           rowNode,
-          previousDates.startsAt,
-          dto.startsAt,
-          previousDates.endsAt,
-          newEnd,
+          iniciaEmAnterior,
+          iniciaEm,
+          terminaEmAnterior,
+          terminaEm,
           TipoData.TERMINA_EM
         );
       }
@@ -365,7 +380,6 @@ export class DistributeActivitiesEditComponent
       });
       console.log(`Mapa atualizado após salvar: ${key}`);
     });
-
   }
 
   isValidToDistribute() {
@@ -392,7 +406,7 @@ export class DistributeActivitiesEditComponent
 
   openPlansConfig(object: ProductComponentDTO) {
     const dialogRef = this.dialog.open(ConfigPlansComponent, {
-      width: "600px",
+      width: "1000px",
       data: object,
     });
 
