@@ -284,12 +284,11 @@ export class DistributeActivitiesEditComponent
       ) {
         this.justifyReschedulingDateChange(
           rowNode,
-          dto,
           previousDates.startsAt,
           newStart,
           previousDates.endsAt,
           dto.endsAt,
-          TipoData.Inicial
+          TipoData.INICIA_EM
         );
       }
     }
@@ -301,7 +300,6 @@ export class DistributeActivitiesEditComponent
       const previous = this.products[index].endsAt;
       this.products[index].endsAt = newEnd;
       // Verifica se datas estão invertidas
-      const startsAt = this.products[index].startsAt;
       const previousDates = this.getPreviousDates(
         dto.cycle?.id,
         dto.pillar?.id,
@@ -315,12 +313,11 @@ export class DistributeActivitiesEditComponent
       ) {
         this.justifyReschedulingDateChange(
           rowNode,
-          dto,
           previousDates.startsAt,
           dto.startsAt,
           previousDates.endsAt,
           newEnd,
-          TipoData.Final
+          TipoData.TERMINA_EM
         );
       }
     }
@@ -328,11 +325,10 @@ export class DistributeActivitiesEditComponent
 
   justifyReschedulingDateChange(
     rowNode: any,
-    item: ProductComponentDTO,
-    dataInicialAnterior: Date | undefined,
-    novaDataInicial: Date,
-    dataFinalAnterior: Date | undefined,
-    novaDataFinal: Date,
+    iniciaEmAnterior: Date | undefined,
+    iniciaEm: Date,
+    terminaEmAnterior: Date | undefined,
+    terminaEm: Date,
     tipo: TipoData
   ) {
     const entidadeNode = this.subirAtePorNode(rowNode, "Entidade");
@@ -347,39 +343,29 @@ export class DistributeActivitiesEditComponent
         ciclo: cicloNode || "",
         pilar: pilarNode || "",
         componente: componentNode || "",
-        dataInicialAnterior: dataInicialAnterior,
-        novaDataInicial: novaDataInicial,
-        dataFinalAnterior: dataFinalAnterior,
-        novaDataFinal: novaDataFinal,
+        iniciaEmAnterior: iniciaEmAnterior,
+        iniciaEm: iniciaEm,
+        terminaEmAnterior: terminaEmAnterior,
+        terminaEm: terminaEm,
         texto: "",
         tipoData: tipo,
       },
     });
 
-    dialogRef.componentInstance.onClose.subscribe(() => {
-      const index = this.products.findIndex((p) => p.id === item.id);
-      if (index !== -1 && dataInicialAnterior) {
-        if (tipo === TipoData.Inicial) {
-          this.products[index].startsAt = dataInicialAnterior;
-        } else {
-          if (dataFinalAnterior) {
-            this.products[index].endsAt = dataFinalAnterior;
-          }
-        }
-      }
-      const warnText = document.getElementById("Warns");
-      const warnBox = document.getElementById("warn-message");
-      if (warnText && warnBox) {
-        warnText.innerText =
-          "Datas início e término estão invertidas no componente.";
-        warnBox.style.display = "block";
-      }
-      dialogRef.close();
+    dialogRef.componentInstance.onSave.subscribe(() => {
+      const cicloId = cicloNode?.data?.object?.id;
+      const pilarId = pilarNode?.data?.object?.id;
+      const componenteId = componentNode?.data?.object?.component?.id;
+
+      const key = this.generateKey(cicloId, pilarId, componenteId);
+
+      this.previousDatesMap.set(key, {
+        startsAt: iniciaEm,
+        endsAt: terminaEm,
+      });
+      console.log(`Mapa atualizado após salvar: ${key}`);
     });
 
-    dialogRef.componentInstance.onSave.subscribe(() => {
-      alert("Justificativa salva com sucesso!");
-    });
   }
 
   isValidToDistribute() {
@@ -489,7 +475,6 @@ export class DistributeActivitiesEditComponent
     }
     return null;
   }
-
 }
 
 export interface ActivitiesByProductComponentRequestDto {

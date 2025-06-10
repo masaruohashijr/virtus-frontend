@@ -20,13 +20,7 @@
     <tr>
       <td>
         <input
-          [value]="
-            data.tipoAlteracao === 'P'
-              ? 'Planos'
-              : data.tipoAlteracao === 'R'
-              ? 'Auditor'
-              : 'Nota'
-          "
+          [value]="tipoAlteracaoLabel"
           disabled
           style="
             width: 100%;
@@ -44,11 +38,7 @@
     <tr>
       <td>
         <input
-          [value]="
-            data.tipoAlteracao === 'R'
-              ? data.auditorAnteriorName || '—'
-              : data.configAnterior || 'Vazio'
-          "
+          [value]="valorAnterior"
           disabled
           style="
             width: 100%;
@@ -60,9 +50,7 @@
       </td>
       <td>
         <input
-          [value]="
-            data.tipoAlteracao === 'R' ? data.auditorName || '—' : data.config
-          "
+          [value]="valorAtual"
           disabled
           style="
             width: 100%;

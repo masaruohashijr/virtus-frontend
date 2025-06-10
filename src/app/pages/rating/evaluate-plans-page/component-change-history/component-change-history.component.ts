@@ -119,6 +119,16 @@ export class ComponentChangeHistoryComponent {
           de = row.auditorAnteriorName || "—";
           para = row.auditorName || "—";
           break;
+        case "I":
+          alteracao = "Inicia Em";
+          de = row.iniciaEmAnterior || "—";
+          para = row.iniciaEm || "—";
+          break;
+        case "T":
+          alteracao = "Termina Em";
+          de = row.terminaEmAnterior || "—";
+          para = row.terminaEm || "—";
+          break;
         default:
           alteracao = "Nota";
           de = row.configAnterior || "Vazio";

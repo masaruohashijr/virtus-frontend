@@ -45,18 +45,20 @@
           </td>
           <td>{{ JustifyReschedulingForm.get("componenteNome")?.value }}</td>
         </tr>
-        <tr>
+
+        <!-- Se tipoData for 'I', mostra datas iniciais -->
+        <tr *ngIf="JustifyReschedulingForm.get('tipoData')?.value === 'I'">
           <td colspan="2">
             <div
               style="display: flex; justify-content: space-between; gap: 16px"
             >
               <div style="width: 100%">
-                <label style="color: #003f87; font-weight: normal">
-                  {{"Data Inicial Anterior"}}
-                </label>
+                <label style="color: #003f87; font-weight: normal"
+                  >Inicia Em Anterior</label
+                >
                 <br />
                 <input
-                  formControlName="dataInicialAnterior"
+                  formControlName="iniciaEmAnterior"
                   [disabled]="true"
                   readonly
                   tabindex="-1"
@@ -64,12 +66,12 @@
                 />
               </div>
               <div style="width: 100%">
-                <label style="color: #003f87; font-weight: normal">
-                  {{"Nova Data Inicial"}}
-                </label>
+                <label style="color: #003f87; font-weight: normal"
+                  >Inicia Em</label
+                >
                 <br />
                 <input
-                  formControlName="novaDataInicial"
+                  formControlName="iniciaEm"
                   [disabled]="true"
                   readonly
                   tabindex="-1"
@@ -79,18 +81,20 @@
             </div>
           </td>
         </tr>
-        <tr>
+
+        <!-- Se tipoData for 'T', mostra datas finais -->
+        <tr *ngIf="JustifyReschedulingForm.get('tipoData')?.value === 'T'">
           <td colspan="2">
             <div
               style="display: flex; justify-content: space-between; gap: 16px"
             >
               <div style="width: 100%">
-                <label style="color: #003f87; font-weight: normal">
-                  {{"Data Final Anterior"}}
-                </label>
+                <label style="color: #003f87; font-weight: normal"
+                  >Termina Em Anterior</label
+                >
                 <br />
                 <input
-                  formControlName="dataFinalAnterior"
+                  formControlName="terminaEmAnterior"
                   [disabled]="true"
                   readonly
                   tabindex="-1"
@@ -98,12 +102,12 @@
                 />
               </div>
               <div style="width: 100%">
-                <label style="color: #003f87; font-weight: normal">
-                  {{"Nova Data Final"}}
-                </label>
+                <label style="color: #003f87; font-weight: normal"
+                  >Termina Em</label
+                >
                 <br />
                 <input
-                  formControlName="novaDataFinal"
+                  formControlName="terminaEm"
                   [disabled]="true"
                   readonly
                   tabindex="-1"
