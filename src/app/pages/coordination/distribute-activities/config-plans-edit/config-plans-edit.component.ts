@@ -13,6 +13,7 @@ import {
 } from "@angular/material/dialog";
 import { catchError, tap, throwError } from "rxjs";
 import { AlertDialogComponent } from "src/app/components/dialog/alert-dialog/alert-dialog.component";
+import { PlainMessageDialogComponent } from "src/app/pages/administration/plain-message/plain-message-dialog.component";
 import { PlanDTO } from "src/app/domain/dto/plan.dto";
 import { ProductComponentDTO } from "src/app/domain/dto/product-component.dto";
 import { DistributeActivitiesService } from "src/app/services/coordination/distribute-activities.service";
@@ -38,6 +39,7 @@ export class ConfigPlansComponent implements OnInit {
     private formBuilder: FormBuilder,
     private _service: DistributeActivitiesService,
     public dialogRef: MatDialogRef<ProductComponentDTO>,
+    public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: ProductComponentDTO
   ) {
     console.log(typeof data);
@@ -209,7 +211,17 @@ export class ConfigPlansComponent implements OnInit {
       .pipe(
         tap((resp) => {
           this.data.plans = this.selectedPlans;
-          this.dialogRef.close(resp);
+          const mensagem = `A configuração dos planos foi atualizada com sucesso.`;
+          this.dialog
+                    .open(PlainMessageDialogComponent, {
+                      width: "400px",
+                      data: { message: mensagem },
+                    })
+                    .afterClosed()
+                    .subscribe(() => {
+                      // Fecha o modal de motivação após confirmação
+                      this.dialogRef.close();
+                    });
         }),
         catchError((error) => {
           const errorDialogRef = this.errorDialog.open(AlertDialogComponent, {

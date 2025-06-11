@@ -266,14 +266,34 @@ export class DistributeActivitiesEditComponent
   onStartsChange(rowNode: any, dto: ProductComponentDTO, newStart: Date) {
     const index = this.products.findIndex((product) => product.id === dto.id);
     if (index !== -1) {
-      const previous = this.products[index].startsAt;
       this.products[index].startsAt = newStart;
-      const endsAt = this.products[index].endsAt;
+
       const previousDates = this.getPreviousDates(
         dto.cycle?.id,
         dto.pillar?.id,
         dto.component?.id
       );
+
+      const currentEndsAt = this.products[index].endsAt;
+
+      const startDate =
+        newStart instanceof Date ? newStart : new Date(newStart);
+      const endDate =
+        currentEndsAt instanceof Date ? currentEndsAt : new Date(currentEndsAt);
+
+      if (startDate && endDate && startDate.getTime() > endDate.getTime()) {
+        this.errorDialog.open(AlertDialogComponent, {
+          width: "400px",
+          data: {
+            title: "Datas inválidas",
+            message:
+              "A data de início não pode ser posterior à data de término.",
+          },
+        });
+        this.products[index].startsAt =
+          previousDates?.startsAt ?? this.products[index].startsAt; // Reverte
+        return;
+      }
 
       if (
         previousDates?.startsAt &&
@@ -281,20 +301,12 @@ export class DistributeActivitiesEditComponent
         new Date(previousDates.startsAt).getTime() !==
           new Date(newStart).getTime()
       ) {
-        let iniciaEmAnterior = previousDates.startsAt;
-        let iniciaEm = newStart;
-        let terminaEmAnterior = previousDates.endsAt;
-        let terminaEm = dto.endsAt;
-
-        if (iniciaEm && terminaEm && iniciaEm > terminaEm) {
-          [iniciaEm, terminaEm] = [terminaEm, iniciaEm];
-        }
         this.justifyReschedulingDateChange(
           rowNode,
-          iniciaEmAnterior,
-          iniciaEm,
-          terminaEmAnterior,
-          terminaEm,
+          previousDates.startsAt,
+          newStart,
+          previousDates.endsAt,
+          currentEndsAt,
           TipoData.INICIA_EM
         );
       }
@@ -304,34 +316,51 @@ export class DistributeActivitiesEditComponent
   onEndsChange(rowNode: any, dto: ProductComponentDTO, newEnd: Date) {
     const index = this.products.findIndex((product) => product.id === dto.id);
     if (index !== -1) {
-      const previous = this.products[index].endsAt;
       this.products[index].endsAt = newEnd;
-      // Verifica se datas estão invertidas
+
       const previousDates = this.getPreviousDates(
         dto.cycle?.id,
         dto.pillar?.id,
         dto.component?.id
       );
 
+      const currentStartsAt = this.products[index].startsAt;
+      const startDate =
+        currentStartsAt instanceof Date
+          ? currentStartsAt
+          : new Date(currentStartsAt);
+      const endDate = newEnd instanceof Date ? newEnd : new Date(newEnd);
+
+      if (
+        startDate instanceof Date &&
+        !isNaN(startDate.getTime()) &&
+        endDate instanceof Date &&
+        !isNaN(endDate.getTime()) &&
+        startDate.getTime() > endDate.getTime()
+      ) {
+        this.errorDialog.open(AlertDialogComponent, {
+          width: "400px",
+          data: {
+            title: "Datas inválidas",
+            message:
+              "A data de término não pode ser anterior à data de início.",
+          },
+        });
+        this.products[index].endsAt = previousDates?.endsAt ?? new Date(); // Reverte
+        return;
+      }
+
       if (
         previousDates?.endsAt &&
         newEnd &&
         new Date(previousDates.endsAt).getTime() !== new Date(newEnd).getTime()
       ) {
-        let iniciaEmAnterior = previousDates.startsAt;
-        let terminaEm = newEnd;
-        let terminaEmAnterior = previousDates.endsAt;
-        let iniciaEm = dto.startsAt;
-
-        if (iniciaEm && terminaEm && iniciaEm > terminaEm) {
-          [iniciaEm, terminaEm] = [terminaEm, iniciaEm];
-        }
         this.justifyReschedulingDateChange(
           rowNode,
-          iniciaEmAnterior,
-          iniciaEm,
-          terminaEmAnterior,
-          terminaEm,
+          previousDates.startsAt,
+          currentStartsAt,
+          previousDates.endsAt,
+          newEnd,
           TipoData.TERMINA_EM
         );
       }
@@ -464,12 +493,15 @@ export class DistributeActivitiesEditComponent
       width: "1000px",
       autoFocus: false,
       data: {
-        entidade: entidadeNode || "",
-        ciclo: cicloNode || "",
-        pilar: pilarNode || "",
-        componente: componentNode || "",
-        novoAuditor: newAuditor,
-        auditorAnterior: this.previousAuditor,
+        entidade: entidadeNode?.data ?? { name: "", object: { id: null } },
+        ciclo: cicloNode?.data ?? { name: "", object: { id: null } },
+        pilar: pilarNode?.data ?? { name: "", object: { id: null } },
+        componente: componentNode?.data ?? {
+          name: "",
+          object: { component: { id: null } },
+        },
+        novoAuditor: newAuditor ?? { name: "", userId: null },
+        auditorAnterior: this.previousAuditor ?? { name: "", userId: null },
         texto: "",
       },
     });

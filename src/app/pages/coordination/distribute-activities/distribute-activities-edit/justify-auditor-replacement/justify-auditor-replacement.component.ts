@@ -63,14 +63,23 @@ export class JustifyAuditorReplacementComponent {
     private dialogRef: MatDialogRef<JustifyAuditorReplacementComponent>,
     @Inject(MAT_DIALOG_DATA) public data: JustifyAuditorReplacementComponent,
     private _service: DistributeActivitiesService
-  ) {
+  ) {}
+
+  ngOnInit(): void {
+    const entidade = this.data?.entidade?.data?.name || "";
+    const ciclo = this.data?.ciclo?.data?.name || "";
+    const pilar = this.data?.pilar?.data?.name || "";
+    const componente = this.data?.componente?.data?.name || "";
+    const auditorAnterior = this.data?.auditorAnterior?.name || "";
+    const novoAuditor = this.data?.novoAuditor?.name || "";
+
     this.justifyAuditorReplacementForm = this.formBuilder.group({
-      entity: [this.data.entidade.data.name],
-      cycle: [this.data.ciclo.data.name],
-      pillar: [this.data.pilar.data.name],
-      component: [this.data.componente.data.name],
+      entity: [this.data.entidade.name],
+      cycle: [this.data.ciclo.name],
+      pillar: [this.data.pilar.name],
+      component: [this.data.componente.name],
       novoAuditor: [this.data.novoAuditor.name],
-      auditorAnterior: [this.data.auditorAnterior.name],
+      auditorAnterior: [this.data.auditorAnterior.name || "Não designado"],
       motivation: [
         "",
         [
@@ -83,9 +92,8 @@ export class JustifyAuditorReplacementComponent {
   }
 
   getTitle() {
-    return (
-      "Motivar a Substituição do Auditor " + this.data.auditorAnterior.name
-    );
+    const nome = this.data?.auditorAnterior?.name ?? "anterior";
+    return `Motivar a Substituição do Auditor ${nome}`;
   }
 
   fechar() {
@@ -96,16 +104,22 @@ export class JustifyAuditorReplacementComponent {
   salvar() {
     if (this.justifyAuditorReplacementForm.invalid) return;
 
-    const motivacao =
-      this.justifyAuditorReplacementForm.get("motivation")?.value;
+    const componenteObject = this.data.componente?.object?.component;
 
+    if (!componenteObject) {
+      console.error(
+        "Componente não definido corretamente:",
+        this.data.componente
+      );
+      return;
+    }
     const body = {
-      entidadeId: this.data.entidade.data.object.id,
-      cicloId: this.data.ciclo.data.object.id,
-      pilarId: this.data.pilar.data.object.id,
-      componenteId: this.data.componente.data.object.component.id,
+      entidadeId: this.data.entidade.object.id,
+      cicloId: this.data.ciclo.object.id,
+      pilarId: this.data.pilar.object.id,
+      componenteId: componenteObject.id,
       novoAuditorId: this.data.novoAuditor.userId,
-      auditorAnteriorId: this.data.auditorAnterior.userId,
+      auditorAnteriorId: this.data?.auditorAnterior?.userId ?? null,
       motivacao: this.justifyAuditorReplacementForm.get("motivation")?.value,
     };
 

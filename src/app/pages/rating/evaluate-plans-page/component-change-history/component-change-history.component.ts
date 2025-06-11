@@ -54,7 +54,6 @@ export class ComponentChangeHistoryComponent {
     this.prepareHistoryData();
   }
 
-
   constructor(
     private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA)
@@ -116,7 +115,7 @@ export class ComponentChangeHistoryComponent {
           break;
         case "R":
           alteracao = "Auditor";
-          de = row.auditorAnteriorName || "—";
+          de = row.auditorAnteriorName || "Não designado";
           para = row.auditorName || "—";
           break;
         case "I":
