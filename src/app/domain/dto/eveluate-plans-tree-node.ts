@@ -14,4 +14,5 @@ export interface EvaluatePlansTreeNode {
     letter: string;
     grade: number;
     periodoPermitido?: boolean;
+    periodoCiclo?: boolean;
 }

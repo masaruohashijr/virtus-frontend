@@ -8,7 +8,7 @@
     font-weight: normal;
   "
 >
-  {{getTitle()}}
+  {{ getTitle() }}
 </div>
 
 <!-- Conteúdo principal -->
@@ -69,10 +69,13 @@
 
       <!-- COLUNA DIREITA: MOTIVAÇÃO -->
       <div style="flex: 1">
-        <label style="color: #003f87; font-weight: normal">Motivação do Peso do Pilar</label
+        <label style="color: #003f87; font-weight: normal"
+          >Motivação do Peso do Pilar</label
         ><br />
         <textarea
+          id="motivation"
           formControlName="motivation"
+          #motivationInput
           rows="14"
           style="
             width: 100%;
@@ -86,7 +89,8 @@
           "
         ></textarea>
         <div style="text-align: right; font-size: 12px; margin-top: 4px">
-          {{ justifyPillarWeightForm.get("motivation")?.value?.length || 0 }} / 400
+          {{ justifyPillarWeightForm.get("motivation")?.value?.length || 0 }} /
+          400
         </div>
         <div
           *ngIf="
@@ -119,7 +123,7 @@
   >
     Salvar
   </button>
-  <button mat-button [mat-dialog-close]="" style="margin-left: 8px">
+  <button mat-button [mat-dialog-close]="" style="margin-left: 8px" (click)="fechar()">
     Cancelar
   </button>
 </div>

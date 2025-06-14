@@ -1,0 +1,111 @@
+<!-- Cabeçalho -->
+<div
+  style="background-color: #003f87; color: white; padding: 12px; font-size: 18px"
+>
+  Motivo da alteração
+</div>
+
+<!-- Corpo principal -->
+<div style="padding: 16px; font-size: 14px">
+  <table style="width: 100%; border-collapse: collapse">
+    <tr>
+      <th style="text-align: left; padding: 4px">Alteração de</th>
+    </tr>
+    <tr>
+      <td>
+        <input
+          [value]="data.tipoAlteracao"
+          disabled
+          style="width: 25%; border: none; background-color: #f7f7f7; padding: 6px"
+        />
+      </td>
+    </tr>
+
+    <!-- Cabeçalho condicional -->
+    <tr *ngIf="data.tipoAlteracao === 'Peso'">
+      <th style="text-align: left; padding: 4px">Peso Atual</th>
+      <th style="text-align: left; padding: 4px">Peso Anterior</th>
+    </tr>
+    <tr *ngIf="data.tipoAlteracao === 'Nota'">
+      <th style="text-align: left; padding: 4px">Nota Anterior</th>
+      <th style="text-align: left; padding: 4px">Nota Atual</th>
+    </tr>
+
+    <!-- Linhas condicionais -->
+    <tr *ngIf="data.tipoAlteracao === 'Peso'">
+      <td>
+        <input
+          [value]="data.pesoAnterior"
+          disabled
+          style="width: 25%; border: none; background-color: #f7f7f7; padding: 6px"
+        />
+      </td>
+      <td>
+        <input
+          [value]="data.peso"
+          disabled
+          style="width: 25%; border: none; background-color: #f7f7f7; padding: 6px"
+        />
+      </td>
+    </tr>
+
+    <tr *ngIf="data.tipoAlteracao === 'Nota'">
+      <td>
+        <input
+          [value]="data.notaAnterior"
+          disabled
+          style="width: 25%; border: none; background-color: #f7f7f7; padding: 6px"
+        />
+      </td>
+      <td>
+        <input
+          [value]="data.nota"
+          disabled
+          style="width: 25%; border: none; background-color: #f7f7f7; padding: 6px"
+        />
+      </td>
+    </tr>
+
+    <!-- Autor e Data -->
+    <tr>
+      <th style="text-align: left; padding: 4px">Autor</th>
+      <th style="text-align: left; padding: 4px">Alterado em</th>
+    </tr>
+    <tr>
+      <td style="padding: 4px">
+        <input
+          [value]="data.authorName"
+          disabled
+          style="width: 75%; border: none; background-color: #f7f7f7; padding: 6px"
+        />
+      </td>
+      <td style="padding: 4px">
+        <input
+          [value]="data.alteradoEm"
+          disabled
+          style="width: 75%; border: none; background-color: #f7f7f7; padding: 6px"
+        />
+      </td>
+    </tr>
+
+    <!-- Motivação -->
+    <tr>
+      <th colspan="2" style="text-align: left; padding: 4px">Motivação</th>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <textarea
+          readonly
+          rows="6"
+          [value]="data.motivacao || '-'"
+          style="width: 100%; padding: 8px; font-size: 14px; border: 1px solid #ccc; resize: vertical"
+        ></textarea>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<!-- Rodapé -->
+<div style="display: flex; justify-content: flex-end; padding: 16px">
+  <button mat-button [mat-dialog-close]="">Fechar</button>
+</div>

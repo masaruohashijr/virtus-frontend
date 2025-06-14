@@ -107,6 +107,8 @@ import { PillarHistoryDetailsComponent } from './pages/rating/evaluate-plans-pag
 import { ShowDescriptionComponent } from './pages/rating/evaluate-plans-page/show-description/show-description.component';
 import { ComponentChangeHistoryComponent } from './pages/rating/evaluate-plans-page/component-change-history/component-change-history.component';
 import { ComponentHistoryDetailsComponent } from './pages/rating/evaluate-plans-page/component-change-history/component-history-details/component-history-details.component';
+import { ElementChangeHistoryComponent } from './pages/rating/evaluate-plans-page/element-change-history/element-change-history.component';
+import { ElementHistoryDetailsComponent } from './pages/rating/evaluate-plans-page/element-change-history/element-history-details/element-history-details.component';
 import { JustifyAuditorReplacementComponent } from './pages/coordination/distribute-activities/distribute-activities-edit/justify-auditor-replacement/justify-auditor-replacement.component';
 import { JustifyReschedulingComponent } from './pages/coordination/distribute-activities/distribute-activities-edit/justify-rescheduling/justify-rescheduling.component';
 export const MY_DATE_FORMATS = {
@@ -197,6 +199,8 @@ export const MY_DATE_FORMATS = {
     ShowDescriptionComponent,
     ComponentChangeHistoryComponent,
     ComponentHistoryDetailsComponent,
+    ElementChangeHistoryComponent,
+    ElementHistoryDetailsComponent,
     JustifyAuditorReplacementComponent,
     JustifyReschedulingComponent
   ],

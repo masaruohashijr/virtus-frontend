@@ -1,5 +1,15 @@
-import { EvaluatePlansService } from 'src/app/services/rating/evaluate-plans.service';
-import { Component, EventEmitter, Inject, Input, Output } from "@angular/core";
+import { EvaluatePlansService } from "src/app/services/rating/evaluate-plans.service";
+import {
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  Output,
+  ViewChild,
+  OnInit,
+  OnDestroy,
+  ElementRef,
+} from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import {
   MAT_DIALOG_DATA,
@@ -7,7 +17,6 @@ import {
   MatDialogRef,
 } from "@angular/material/dialog";
 import { PlainMessageDialogComponent } from "../../../administration/plain-message/plain-message-dialog.component";
-import { ProductPillarHistoryService } from '../../../../services/coordination/product-pillar-history.service';
 
 // Define TreeNode interface if not imported from elsewhere
 interface TreeNode {
@@ -33,10 +42,11 @@ export interface JustifyPillarWeightData {
   templateUrl: "./justify-pillar-weight.component.html",
   styleUrls: ["./justify-pillar-weight.component.css"],
 })
-export class JustifyPillarWeightComponent {
+export class JustifyPillarWeightComponent implements OnInit, OnDestroy {
   @Input() visible: boolean = false;
   @Output() onClose = new EventEmitter<void>();
   @Output() onSave = new EventEmitter<JustifyPillarWeightData>();
+  @ViewChild("motivationInput") motivationInput!: ElementRef;
 
   contador = 0;
   justifyPillarWeightForm!: FormGroup;
@@ -49,6 +59,10 @@ export class JustifyPillarWeightComponent {
   pesoAnterior: any;
   rowNode: TreeNode | undefined;
   weight: any;
+
+  originalPesoAnterior: number | null = null;
+  originalPilarPeso: number | null = null;
+
   constructor(
     private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: JustifyPillarWeightComponent,
@@ -74,6 +88,21 @@ export class JustifyPillarWeightComponent {
         ],
       ],
     });
+    // Salva os valores originais para restaurar se cancelar
+    this.originalPesoAnterior = this.data.pesoAnterior;
+    this.originalPilarPeso = this.data.pilar.weight;    
+  }
+
+  ngOnInit(): void {
+    setTimeout(() => {
+      this.motivationInput?.nativeElement?.focus();
+    }, 200);
+  }
+
+  ngOnDestroy(): void {
+    // Restaura os valores originais caso o modal seja fechado sem salvar
+    this.data.pesoAnterior = this.originalPesoAnterior;
+    this.data.pilar.weight = this.originalPilarPeso;
   }
 
   getTitle() {
@@ -81,6 +110,9 @@ export class JustifyPillarWeightComponent {
   }
 
   fechar() {
+    // Restaura os valores originais manualmente
+    this.data.pesoAnterior = this.originalPesoAnterior;
+    this.data.pilar.weight = this.originalPilarPeso;
     this.onClose.emit();
     this.contador = 0;
   }

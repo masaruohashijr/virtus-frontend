@@ -234,6 +234,14 @@
           >
             <mat-icon>history</mat-icon>
           </button>
+          <button
+            *ngIf="rowData.objectType == 'Elemento'"
+            mat-raised-button
+            [matTooltip]="'Histórico'"
+            (click)="onProductElementHistoryClick(rowNode)"
+          >
+            <mat-icon>history</mat-icon>
+          </button>
         </div>
       </td>
     </tr>
