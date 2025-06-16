@@ -11,41 +11,35 @@ td {
 /* Ajustando a largura relativa das colunas */
 .level-column,
 .grade-type-column,
-.weight-column{
+.weight-column {
   flex: 1;
-  /* Colunas menores */
   width: 100px;
 }
 
 .method-column,
 .grade-column {
   flex: 1;
-  /* Colunas menores */
   width: 60px;
 }
 
 .user-component-column {
   flex: 2;
-  /* Tamanho médio (Supervisor e Auditor) */
   width: 130px;
 }
 
 .sumary-column {
   flex: 6;
-  /* Coluna maior (Sumário) */
   width: 480px;
 }
 
 .actions-column {
   flex: 3;
-  /* Botões em um tamanho médio */
   width: 200px;
   text-align: center;
 }
 
 /* Ajuste para telas menores */
 @media (max-width: 768px) {
-
   th,
   td {
     min-width: 100px;
@@ -53,7 +47,6 @@ td {
 
   .sumary-column {
     flex: 3;
-    /* Ainda será maior, mas ajustável */
   }
 
   .user-component-column {
@@ -66,8 +59,7 @@ td {
 }
 
 .success-button {
-  background-color: #4CAF50 !important;
-  /* Verde */
+  background-color: #4CAF50 !important; /* Verde */
   color: white !important;
 }
 
@@ -94,4 +86,20 @@ th {
   text-align: justify;
   text-indent: 160px;
   padding-left: 160px;
+}
+
+/* ESTILOS PARA STATUS DA ANÁLISE (LUPA) */
+.analisado {
+  background-color: #006400 !important; /* Verde */
+  color: white !important;
+}
+
+.descrito {
+  background-color: #1976d2 !important; /* Verde */
+  color: white !important;
+}
+
+.pendente {
+  background-color: #f4f4f4 !important; /* Azul */
+  color: black !important;
 }

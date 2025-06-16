@@ -1,3 +1,4 @@
+import { AnalyzeTierComponent } from "./../analyze-tier/analyze-tier.component";
 import { ProductPillarHistoryService } from "src/app/services/coordination/product-pillar-history.service";
 import { HttpClient } from "@angular/common/http";
 import { Component, Input, OnInit } from "@angular/core";
@@ -42,6 +43,7 @@ import { ElementChangeHistoryComponent } from "../element-change-history/element
   styleUrls: ["./evaluate-plans-edit.component.css"],
 })
 export class EvaluatePlansEditComponent implements OnInit {
+
   @Input() object!: EntityVirtusDTO;
   treeData: TreeNode[] = [];
   treeDataOriginal: TreeNode[] = [];
@@ -182,6 +184,20 @@ export class EvaluatePlansEditComponent implements OnInit {
             gradeOriginal: node.grade,
             periodoPermitido: node.periodoPermitido,
             periodoCiclo: node.periodoCiclo,
+            cicloAnalisado: node.cicloAnalisado,
+            pilarAnalisado: node.pilarAnalisado,
+            componenteAnalisado: node.componenteAnalisado,
+            planoAnalisado: node.planoAnalisado,
+            tipoNotaAnalisado: node.tipoNotaAnalisado,
+            elementoAnalisado: node.elementoAnalisado,
+            itemAnalisado: node.itemAnalisado,
+            cicloDescrito: node.cicloDescrito,
+            pilarDescrito: node.pilarDescrito,
+            componenteDescrito: node.componenteDescrito,
+            planoDescrito: node.planoDescrito,
+            tipoNotaDescrito: node.tipoNotaDescrito,
+            elementoDescrito: node.elementoDescrito,
+            itemDescrito: node.itemDescrito
           },
           children: node.children
             ? this.transformToTreeTableFormat(node.children)
@@ -226,6 +242,7 @@ export class EvaluatePlansEditComponent implements OnInit {
               this.object.cycleSelected.id
             )
             .subscribe((data) => {
+              console.log("Dados recebidos:", data);
               this.treeData = this.transformToTreeTableFormat(data);
               this.treeDataOriginal = [...this.treeData]; // <- salva a estrutura original
             });
@@ -558,6 +575,116 @@ export class EvaluatePlansEditComponent implements OnInit {
     });
   }
 
+  onAnalysisButtonClick(rowNode: any): void {
+    const LEVEL_ID = rowNode?.node?.data?.id;
+    const objectType = rowNode?.node?.data?.objectType;
+    const entidadeNode = this.subirAtePorNode(rowNode, "Entidade");
+
+    let cicloNode: any =
+      objectType === "Ciclo"
+        ? rowNode?.node
+        : this.subirAtePorNode(rowNode, "Ciclo");
+    let pilarNode: any =
+      objectType === "Pilar"
+        ? rowNode?.node
+        : this.subirAtePorNode(rowNode, "Pilar");
+    let componenteNode: any =
+      objectType === "Componente"
+        ? rowNode?.node
+        : this.subirAtePorNode(rowNode, "Componente");
+    let planoNode: any =
+      objectType === "Plano"
+        ? rowNode?.node
+        : this.subirAtePorNode(rowNode, "Plano");
+    let tipoNotaNode: any =
+      objectType === "Tipo Nota"
+        ? rowNode?.node
+        : this.subirAtePorNode(rowNode, "Tipo Nota");
+    let elementoNode: any =
+      objectType === "Elemento"
+        ? rowNode?.node
+        : this.subirAtePorNode(rowNode, "Elemento");
+    let itemNode: any =
+      objectType === "Item"
+        ? rowNode?.node
+        : this.subirAtePorNode(rowNode, "Item");
+
+    const grade = rowNode?.node?.data?.grade;
+    const weight = rowNode?.node?.data?.weight;
+
+    if (!LEVEL_ID || !objectType) {
+      console.warn("ID ou objectType ausente:", { LEVEL_ID, objectType });
+      return;
+    }
+
+    this._service
+      .getAnalysis(
+        objectType,
+        entidadeNode?.data.id,
+        cicloNode?.data?.id,
+        pilarNode?.data?.id,
+        componenteNode?.data?.id,
+        planoNode?.data?.id,
+        tipoNotaNode?.data?.id,
+        elementoNode?.data?.id,
+        itemNode?.data?.id
+      )
+      .subscribe({
+        next: (response) => {
+          const analysis = response.analysis;
+
+          const dialogRef = this.dialog.open(AnalyzeTierComponent, {
+            width: "1000px",
+            data: {
+              objectType: objectType,
+              analysis: analysis,
+              entidade: entidadeNode?.data || null,
+              ciclo: cicloNode?.data || null,
+              pilar: pilarNode?.data || null,
+              componente: componenteNode?.data || null,
+              plano: planoNode?.data || null,
+              tipoNota: tipoNotaNode?.data || null,
+              elemento: elementoNode?.data || null,
+              item: itemNode?.data || null,
+              grade: grade || null,
+              weight: weight || null,
+            },
+          });
+
+          // OUVIR evento de sucesso após salvar
+          dialogRef.componentInstance.onSave.subscribe(() => {
+            // Atualiza o flag "analisado" visualmente
+            const analysisValue =
+              dialogRef.componentInstance.analyzeTierForm?.get("analysis")
+                ?.value || "";
+            const isFilled = analysisValue?.trim().length > 0;
+            if (objectType === "Ciclo") {
+              rowNode.node.data.cicloAnalisado = isFilled;
+            } else if (objectType === "Pilar") {
+              rowNode.node.data.pilarAnalisado = isFilled;
+            } else if (objectType === "Componente") {
+              rowNode.node.data.componenteAnalisado = isFilled;
+            } else if (objectType === "Plano") {
+              rowNode.node.data.planoAnalisado = isFilled;
+            } else if (objectType === "Tipo Nota") {
+              rowNode.node.data.tipoNotaAnalisado = isFilled;
+            } else if (objectType === "Elemento") {
+              rowNode.node.data.elementoAnalisado = isFilled;
+            } else if (objectType === "Item") {
+              rowNode.node.data.itemAnalisado = isFilled;
+            }
+          });
+        },
+        error: (err) => {
+          console.error("Erro ao carregar a análise:", err);
+          this.dialog.open(AnalyzeTierComponent, {
+            width: "500px",
+            data: { analysis: "Erro ao carregar a análise." },
+          });
+        },
+      });
+  }
+
   onDescriptionButtonClick(rowNode: any): void {
     const LEVEL_ID = rowNode?.node?.data?.id;
     const objectType = rowNode?.node?.data?.objectType;
@@ -695,7 +822,14 @@ export class EvaluatePlansEditComponent implements OnInit {
     const planoId = planNode?.data?.id;
     const elementoId = elementNode?.data?.id;
     this._productElementHistoryService
-      .getHistory(entidadeId, cicloId, pilarId, componenteId, planoId, elementoId)
+      .getHistory(
+        entidadeId,
+        cicloId,
+        pilarId,
+        componenteId,
+        planoId,
+        elementoId
+      )
       .subscribe((dtoHistory) => {
         this.showElementChangeHistory(rowNode, dtoHistory);
       });
@@ -708,9 +842,13 @@ export class EvaluatePlansEditComponent implements OnInit {
     const entidade = rowNode ? this.subirAtePorNode(rowNode, "Entidade") : null;
     const ciclo = rowNode ? this.subirAtePorNode(rowNode, "Ciclo") : null;
     const pilar = rowNode ? this.subirAtePorNode(rowNode, "Pilar") : null;
-    const componente = rowNode ? this.subirAtePorNode(rowNode, "Componente") : null;
+    const componente = rowNode
+      ? this.subirAtePorNode(rowNode, "Componente")
+      : null;
     const plano = rowNode ? this.subirAtePorNode(rowNode, "Plano") : null;
-    const tipoNota = rowNode ? this.subirAtePorNode(rowNode, "Tipo Nota") : null;
+    const tipoNota = rowNode
+      ? this.subirAtePorNode(rowNode, "Tipo Nota")
+      : null;
     const elemento = rowNode?.node;
     const dialogRef = this.dialog.open(ElementChangeHistoryComponent, {
       width: "1000px",
@@ -729,6 +867,33 @@ export class EvaluatePlansEditComponent implements OnInit {
       },
     });
   }
+
+  // Quem pode realizar uma Análise?
+  // A Análise de qualquer nível (Ciclo, Pilar, Componente, etc.) somente poderá ser realizada se atender a todos os critérios abaixo:
+  // 
+  // 1 - Ser Auditor ou o Supervisor responsável por esse nível e o período de avaliação estiver permitido
+  // OU
+  // 2 - Ser Chefe e o período do ciclo estiver permitido.
+  // Além disso:
+  // 
+  // 3 - Sempre deve haver um peso para o item do nível que não pode ser igual a zero.
+  // 
+  // Exemplo de bloqueio:
+  // Mesmo que o usuário seja Auditor, não conseguirá analisar se o item tiver peso 0 ou estiver fora do período de avaliação permitido.
+  // Mesmo que o usuário seja Chefe só poderá alterar a análise, se estiver dentro do período do ciclo.
+  canAnalyseTier(rowData: any) {
+
+    const isAuditorOrSupervisor =
+      rowData.auditor?.id === this.currentUser.id ||
+      rowData.supervisor?.id === this.currentUser.id;
+
+    const isChief = this.curUserRole === "Chefe";
+    const hasWeight = rowData.weight !== 0;
+    const isWithinPeriod = rowData.periodoPermitido;
+    const isCyclePeriod = rowData.periodoCiclo;
+
+    return ((isAuditorOrSupervisor && isWithinPeriod) || isChief && isCyclePeriod) && hasWeight ;
+
+  }
+
 }
-
-

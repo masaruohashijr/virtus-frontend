@@ -15,4 +15,18 @@ export interface EvaluatePlansTreeNode {
     grade: number;
     periodoPermitido?: boolean;
     periodoCiclo?: boolean;
+    cicloAnalisado?: boolean;
+    pilarAnalisado?: boolean;
+    componenteAnalisado?: boolean;
+    planoAnalisado?: boolean;
+    tipoNotaAnalisado?: boolean;
+    elementoAnalisado?: boolean;
+    itemAnalisado?: boolean;
+    cicloDescrito?: boolean;
+    pilarDescrito?: boolean;
+    componenteDescrito?: boolean;
+    planoDescrito?: boolean;
+    tipoNotaDescrito?: boolean;
+    elementoDescrito?: boolean;
+    itemDescrito?: boolean;
 }

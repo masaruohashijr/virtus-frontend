@@ -45,7 +45,7 @@
       <th class="method-column">Método</th>
       <th class="grade-column">Nota</th>
       <th class="actions-column">
-        <button mat-raised-button color="primary" [matTooltip]="'Back-Up'">
+        <button mat-raised-button color="primary" [matTooltip]="'Exportar Dados'">
           <mat-icon>backup</mat-icon>
         </button>
       </th>
@@ -99,7 +99,7 @@
             [disabled]="true"
             style="text-align: center; width: 50px"
           />
-            %
+          %
         </ng-container>
         <ng-container *ngIf="rowData.objectType === 'Tipo Nota'">
           <input
@@ -109,7 +109,7 @@
             [disabled]="true"
             style="text-align: center; width: 50px"
           />
-            %
+          %
         </ng-container>
         <ng-container *ngIf="rowData.objectType === 'Elemento'">
           <select
@@ -202,22 +202,180 @@
             <mat-icon>radar</mat-icon>
           </button>
           <button
-            *ngIf="rowData.objectType != 'Entidade'"
+            *ngIf="rowData.objectType == 'Ciclo'"
             mat-raised-button
-            color="primary"
+            [disabled]="!canAnalyseTier(rowData)"
+            [ngClass]="{
+              analisado: rowData.cicloAnalisado === true,
+              pendente: !rowData.cicloAnalisado
+            }"
+            (click)="onAnalysisButtonClick(rowNode)"
             [matTooltip]="'Análise'"
           >
             <mat-icon>search</mat-icon>
           </button>
           <button
-            *ngIf="rowData.objectType != 'Entidade'"
+            *ngIf="rowData.objectType == 'Pilar'"
             mat-raised-button
-            class="success-button"
+            [disabled]="!canAnalyseTier(rowData)"
+            [ngClass]="{
+              analisado: rowData.pilarAnalisado === true,
+              pendente: !rowData.pilarAnalisado
+            }"
+            (click)="onAnalysisButtonClick(rowNode)"
+            [matTooltip]="'Análise'"
+          >
+            <mat-icon>search</mat-icon>
+          </button>
+          <button
+            *ngIf="rowData.objectType == 'Componente'"
+            mat-raised-button
+            [disabled]="!canAnalyseTier(rowData)"
+            [ngClass]="{
+              analisado: rowData.componenteAnalisado === true,
+              pendente: !rowData.componenteAnalisado
+            }"
+            (click)="onAnalysisButtonClick(rowNode)"
+            [matTooltip]="'Análise'"
+          >
+            <mat-icon>search</mat-icon>
+          </button>
+          <button
+            *ngIf="rowData.objectType == 'Plano'"
+            mat-raised-button
+            [disabled]="!canAnalyseTier(rowData)"
+            [ngClass]="{
+              analisado: rowData.planoAnalisado === true,
+              pendente: !rowData.planoAnalisado
+            }"
+            (click)="onAnalysisButtonClick(rowNode)"
+            [matTooltip]="'Análise'"
+          >
+            <mat-icon>search</mat-icon>
+          </button>
+          <button
+            *ngIf="rowData.objectType == 'Tipo Nota'"
+            mat-raised-button
+            [disabled]="!canAnalyseTier(rowData)"
+            [ngClass]="{
+              analisado: rowData.tipoNotaAnalisado === true,
+              pendente: !rowData.tipoNotaAnalisado
+            }"
+            (click)="onAnalysisButtonClick(rowNode)"
+            [matTooltip]="'Análise'"
+          >
+            <mat-icon>search</mat-icon>
+          </button>
+          <button
+            *ngIf="rowData.objectType == 'Elemento'"
+            mat-raised-button
+            [disabled]="!canAnalyseTier(rowData)"
+            [ngClass]="{
+              analisado: rowData.elementoAnalisado === true,
+              pendente: !rowData.elementoAnalisado
+            }"
+            (click)="onAnalysisButtonClick(rowNode)"
+            [matTooltip]="'Análise'"
+          >
+            <mat-icon>search</mat-icon>
+          </button>
+          <button
+            *ngIf="rowData.objectType == 'Item'"
+            mat-raised-button
+            [disabled]="!canAnalyseTier(rowData)"
+            [ngClass]="{
+              analisado: rowData.itemAnalisado === true,
+              pendente: !rowData.itemAnalisado
+            }"
+            (click)="onAnalysisButtonClick(rowNode)"
+            [matTooltip]="'Análise'"
+          >
+            <mat-icon>search</mat-icon>
+          </button>
+          <button
+            *ngIf="rowData.objectType == 'Ciclo'"
+            mat-raised-button
+            [ngClass]="{
+              descrito: rowData.cicloDescrito === true,
+              pendente: !rowData.cicloDescrito
+            }"
             [matTooltip]="'Descrição'"
             (click)="onDescriptionButtonClick(rowNode)"
           >
             <mat-icon>description</mat-icon>
           </button>
+          <button
+            *ngIf="rowData.objectType == 'Pilar'"
+            mat-raised-button
+            [ngClass]="{
+              descrito: rowData.pilarDescrito === true,
+              pendente: !rowData.pilarDescrito
+            }"
+            [matTooltip]="'Descrição'"
+            (click)="onDescriptionButtonClick(rowNode)"
+          >
+            <mat-icon>description</mat-icon>
+          </button>   
+          <button
+            *ngIf="rowData.objectType == 'Componente'"
+            mat-raised-button
+            [ngClass]="{
+              descrito: rowData.componenteDescrito === true,
+              pendente: !rowData.componenteDescrito
+            }"
+            [matTooltip]="'Descrição'"
+            (click)="onDescriptionButtonClick(rowNode)"
+          >
+            <mat-icon>description</mat-icon>
+          </button>            
+          <button
+            *ngIf="rowData.objectType == 'Plano'"
+            mat-raised-button
+            [ngClass]="{
+              descrito: rowData.planoDescrito === true,
+              pendente: !rowData.planoDescrito
+            }"
+            [matTooltip]="'Descrição'"
+            (click)="onDescriptionButtonClick(rowNode)"
+          >
+            <mat-icon>description</mat-icon>
+          </button>              
+          <button
+            *ngIf="rowData.objectType == 'Tipo Nota'"
+            mat-raised-button
+            [ngClass]="{
+              descrito: rowData.tipoNotaDescrito === true,
+              pendente: !rowData.tipoNotaDescrito
+            }"
+            [matTooltip]="'Descrição'"
+            (click)="onDescriptionButtonClick(rowNode)"
+          >
+            <mat-icon>description</mat-icon>
+          </button>           
+          <button
+            *ngIf="rowData.objectType == 'Elemento'"
+            mat-raised-button
+            [ngClass]="{
+              descrito: rowData.elementoDescrito === true,
+              pendente: !rowData.elementoDescrito
+            }"
+            [matTooltip]="'Descrição'"
+            (click)="onDescriptionButtonClick(rowNode)"
+          >
+            <mat-icon>description</mat-icon>
+          </button> 
+<button
+            *ngIf="rowData.objectType == 'Item'"
+            mat-raised-button
+            [ngClass]="{
+              descrito: rowData.itemDescrito === true,
+              pendente: !rowData.itemDescrito
+            }"
+            [matTooltip]="'Descrição'"
+            (click)="onDescriptionButtonClick(rowNode)"
+          >
+            <mat-icon>description</mat-icon>
+          </button>             
           <button
             *ngIf="rowData.objectType == 'Pilar'"
             mat-raised-button

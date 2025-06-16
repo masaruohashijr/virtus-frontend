@@ -111,6 +111,7 @@ import { ElementChangeHistoryComponent } from './pages/rating/evaluate-plans-pag
 import { ElementHistoryDetailsComponent } from './pages/rating/evaluate-plans-page/element-change-history/element-history-details/element-history-details.component';
 import { JustifyAuditorReplacementComponent } from './pages/coordination/distribute-activities/distribute-activities-edit/justify-auditor-replacement/justify-auditor-replacement.component';
 import { JustifyReschedulingComponent } from './pages/coordination/distribute-activities/distribute-activities-edit/justify-rescheduling/justify-rescheduling.component';
+import { AnalyzeTierComponent } from './pages/rating/evaluate-plans-page/analyze-tier/analyze-tier.component';
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -202,7 +203,8 @@ export const MY_DATE_FORMATS = {
     ElementChangeHistoryComponent,
     ElementHistoryDetailsComponent,
     JustifyAuditorReplacementComponent,
-    JustifyReschedulingComponent
+    JustifyReschedulingComponent,
+    AnalyzeTierComponent
   ],
   imports: [
     TreeTableModule,
