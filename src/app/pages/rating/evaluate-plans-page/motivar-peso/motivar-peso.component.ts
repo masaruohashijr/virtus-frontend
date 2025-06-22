@@ -107,7 +107,7 @@ export class MotivarPesoComponent {
       })
       .subscribe({
         next: (res: any) => {
-          const mensagem = `A nota foi atualizada com sucesso de ${this.data.pesoAnterior} para ${this.data.novoPeso}.`;
+          const mensagem = `O peso foi atualizado com sucesso de ${this.data.pesoAnterior} para ${this.data.novoPeso}.`;
           this.data.pesoAnterior = this.data.novoPeso;
           this.motivarPesoForm
             .get("pesoAnterior")

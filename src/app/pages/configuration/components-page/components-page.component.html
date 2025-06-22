@@ -1,11 +1,14 @@
 <!-- Main -->
 <div class="flex-auto py-6">
   <!-- Header -->
-  <div class="flex flex-col sm:flex-row md:flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b">
-
+  <div
+    class="flex flex-col sm:flex-row md:flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b"
+  >
     <!-- Title -->
     <div>
-      <div class="text-4xl font-extrabold tracking-tight leading-none">Componentes</div>
+      <div class="text-4xl font-extrabold tracking-tight leading-none">
+        Componentes
+      </div>
     </div>
 
     <!-- Main actions -->
@@ -14,21 +17,34 @@
       <div class="flex-auto">
         <form [formGroup]="searchForm">
           <mat-form-field class="w-full mt-auto" appearance="outline">
-            <input formControlName="filterValue" matInput placeholder="Digite para pesquisar">
+            <input
+              formControlName="filterValue"
+              matInput
+              placeholder="Digite para pesquisar"
+            />
             <mat-icon matSuffix>search</mat-icon>
           </mat-form-field>
         </form>
       </div>
 
       <!-- New object button -->
-      <button class="ml-4 mb-4" mat-flat-button [color]="'primary'" (click)="newObject()">
+      <button
+        class="ml-4 mb-4"
+        mat-flat-button
+        [color]="'primary'"
+        (click)="newObject()"
+      >
         <mat-icon>add_circle</mat-icon>
         <span class="pl-2">Novo</span>
       </button>
     </div>
   </div>
   <div class="overflow-x-auto mx-6">
-    <table class="w-full bg-transparent" mat-table [dataSource]="objectDataSource">
+    <table
+      class="w-full bg-transparent"
+      mat-table
+      [dataSource]="objectDataSource"
+    >
       <!--<ng-container matColumnDef="ordination">
         <th mat-header-cell mat-sort-header *matHeaderCellDef>
           Ord.
@@ -40,52 +56,46 @@
         </td>
       </ng-container>-->
       <ng-container matColumnDef="id">
-        <th mat-header-cell mat-sort-header *matHeaderCellDef>
-          ID
-        </th>
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>ID</th>
         <td mat-cell *matCellDef="let object">
           <span>
-            {{object.id}}
+            {{ object.id }}
           </span>
         </td>
       </ng-container>
       <ng-container matColumnDef="name">
-        <th mat-header-cell mat-sort-header *matHeaderCellDef>
-          Name
-        </th>
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Name</th>
         <td mat-cell *matCellDef="let object">
           <span>
-            {{object.name}}
+            {{ object.name }}
           </span>
         </td>
       </ng-container>
       <ng-container matColumnDef="description">
-        <th mat-header-cell mat-sort-header *matHeaderCellDef>
-          Descrição
-        </th>
-        <td mat-cell class="max-w-200" *matCellDef="let object">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Descrição</th>
+        <td mat-cell class="max-w-100" *matCellDef="let object">
           <span class="break-word">
-            {{object.description}}
+            {{
+              object.description?.length > 100
+                ? (object.description | slice : 0 : 100) + "..."
+                : object.description
+            }}
           </span>
         </td>
       </ng-container>
       <ng-container matColumnDef="author">
-        <th mat-header-cell mat-sort-header *matHeaderCellDef>
-          Autor
-        </th>
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Autor</th>
         <td mat-cell *matCellDef="let object">
           <span>
-            {{object.author?.name}}
+            {{ object.author?.name }}
           </span>
         </td>
       </ng-container>
       <ng-container matColumnDef="createdAt">
-        <th mat-header-cell mat-sort-header *matHeaderCellDef>
-          Criado Em
-        </th>
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Criado Em</th>
         <td mat-cell *matCellDef="let object">
           <span>
-            {{object.createdAt| date: 'dd/MM/yyyy HH:mm'}}
+            {{ object.createdAt | date : "dd/MM/yyyy HH:mm" }}
           </span>
         </td>
       </ng-container>
@@ -105,12 +115,21 @@
 
       <tr mat-header-row *matHeaderRowDef="objectTableColumns"></tr>
       <!--Linhas-->
-      <tr class="order-row h-16" mat-row *matRowDef="let row; columns: objectTableColumns;"></tr>
+      <tr
+        class="order-row h-16"
+        mat-row
+        *matRowDef="let row; columns: objectTableColumns"
+      ></tr>
     </table>
     <!-- Footer -->
     <ng-container>
-      <mat-paginator (page)="handlePageEvent($event)" [length]="pageObjects.totalElements" [pageSize]="pageObjects.size"
-        [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Selecionar Página">
+      <mat-paginator
+        (page)="handlePageEvent($event)"
+        [length]="pageObjects.totalElements"
+        [pageSize]="pageObjects.size"
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        aria-label="Selecionar Página"
+      >
       </mat-paginator>
     </ng-container>
   </div>

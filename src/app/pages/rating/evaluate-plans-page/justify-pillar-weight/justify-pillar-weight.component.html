@@ -89,17 +89,13 @@
           "
         ></textarea>
         <div style="text-align: right; font-size: 12px; margin-top: 4px">
-          {{ justifyPillarWeightForm.get("motivation")?.value?.length || 0 }} /
-          400
+          {{ contador }} / 400
         </div>
         <div
-          *ngIf="
-            justifyPillarWeightForm.get('motivation')?.invalid &&
-            justifyPillarWeightForm.get('motivation')?.touched
-          "
-          style="color: red; font-size: 12px"
+          *ngIf="errorMessage"
+          style="color: red; font-size: 12px; margin-top: 4px"
         >
-          A motivação deve conter entre 4 e 400 caracteres.
+          {{ errorMessage }}
         </div>
       </div>
     </div>

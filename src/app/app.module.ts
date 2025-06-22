@@ -112,6 +112,11 @@ import { ElementHistoryDetailsComponent } from './pages/rating/evaluate-plans-pa
 import { JustifyAuditorReplacementComponent } from './pages/coordination/distribute-activities/distribute-activities-edit/justify-auditor-replacement/justify-auditor-replacement.component';
 import { JustifyReschedulingComponent } from './pages/coordination/distribute-activities/distribute-activities-edit/justify-rescheduling/justify-rescheduling.component';
 import { AnalyzeTierComponent } from './pages/rating/evaluate-plans-page/analyze-tier/analyze-tier.component';
+import { IndicatorScoresComponent } from './pages/administration/indicator-scores/indicator-scores.component';
+import { AutomaticScoresComponent } from './pages/administration/automatic-scores/automatic-scores.component';
+import { IndicatorsComponent } from './pages/administration/indicators/indicators.component';
+import { IndicatorsEditComponent } from './pages/administration/indicators/indicators-edit/indicators-edit.component';
+import { IndicatorScoresEditComponent } from './pages/administration/indicator-scores/indicator-scores-edit/indicator-scores-edit.component';
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -204,7 +209,12 @@ export const MY_DATE_FORMATS = {
     ElementHistoryDetailsComponent,
     JustifyAuditorReplacementComponent,
     JustifyReschedulingComponent,
-    AnalyzeTierComponent
+    AnalyzeTierComponent,
+    IndicatorScoresComponent,
+    AutomaticScoresComponent,
+    IndicatorsComponent,
+    IndicatorsEditComponent,
+    IndicatorScoresEditComponent
   ],
   imports: [
     TreeTableModule,

@@ -14,7 +14,7 @@
 <!-- Conteúdo principal -->
 <div style="padding: 16px">
   <div style="display: flex; gap: 16px">
-    <!-- COLUNA ESQUERDA: TIPO, MÉTODO -->
+    <!-- COLUNA ESQUERDA: TIPO, MÉTODO e novos campos De/Para -->
     <table
       style="flex: 1; width: 100%; font-size: 14px; border-collapse: collapse"
     >
@@ -22,27 +22,64 @@
         <td>
           <label style="color: #003f87; font-weight: normal">Tipo</label>
         </td>
-        <td>{{ data.tipoAlteracao === 'P' ? 'Peso' : 'Nota' }}</td>
+        <td>{{ data.tipoAlteracao === "P" ? "Peso" : "Nota" }}</td>
       </tr>
       <tr>
         <td>
           <label style="color: #003f87; font-weight: normal">Método</label>
         </td>
-        <td>{{ data.metodo || '-' }}</td>
+        <td>{{ data.metodo || "-" }}</td>
       </tr>
+      <!-- NOVO BLOCO: Campos De e Para -->
       <tr>
         <td colspan="2">
-          <div style="display: flex; justify-content: space-between; gap: 16px">
-            <!-- Coluna: Peso e Autor -->
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              gap: 16px;
+              margin-bottom: 16px;
+            "
+          >
+            <!-- Campo De -->
             <div style="width: 100%">
-              <label style="color: #003f87; font-weight: normal">Peso</label><br />
+              <label style="color: #003f87; font-weight: normal">Peso Anterior</label
+              ><br />
               <input
                 [value]="data.peso"
                 disabled
                 style="width: 100%; padding: 6px; border: 1px solid #ccc"
               />
+            </div>
+            <!-- Campo Para -->
+            <div style="width: 100%">
+              <label style="color: #003f87; font-weight: normal">Novo Peso</label
+              ><br />
+              <input
+                [value]="data.pesoAnterior"
+                disabled
+                style="width: 100%; padding: 6px; border: 1px solid #ccc"
+              />
+            </div>
+          </div>
+        </td>
+      </tr>
+      <!-- BLOCO ORIGINAL: Peso/Autor e Nota/Data -->
+      <tr>
+        <td colspan="2">
+          <div style="display: flex; justify-content: space-between; gap: 16px">
+            <!-- Coluna: Peso e Autor -->
+            <div style="width: 100%">
+              <label style="color: #003f87; font-weight: normal">Nota Anterior</label
+              ><br />
+              <input
+                [value]="data.notaAnterior"
+                disabled
+                style="width: 100%; padding: 6px; border: 1px solid #ccc"
+              />
               <br /><br />
-              <label style="color: #003f87; font-weight: normal">Autor</label><br />
+              <label style="color: #003f87; font-weight: normal">Autor</label
+              ><br />
               <input
                 [value]="data.authorName"
                 disabled
@@ -52,14 +89,17 @@
 
             <!-- Coluna: Nota e Data -->
             <div style="width: 100%">
-              <label style="color: #003f87; font-weight: normal">Nota</label><br />
+              <label style="color: #003f87; font-weight: normal">Nova Nota</label
+              ><br />
               <input
                 [value]="data.nota"
                 disabled
                 style="width: 100%; padding: 6px; border: 1px solid #ccc"
               />
               <br /><br />
-              <label style="color: #003f87; font-weight: normal">Data da Alteração</label><br />
+              <label style="color: #003f87; font-weight: normal"
+                >Data da Alteração</label
+              ><br />
               <input
                 [value]="data.alteradoEm"
                 disabled

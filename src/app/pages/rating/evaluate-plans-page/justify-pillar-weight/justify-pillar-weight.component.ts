@@ -25,16 +25,18 @@ interface TreeNode {
 }
 
 export interface JustifyPillarWeightData {
-  entidade: string;
-  ciclo: string;
-  pilar: string;
+  entidade: any;
+  ciclo: any;
+  pilar: { id: any; name: string; weight?: number };
   plano: string;
   componente: string;
   tipoNota: string;
   elemento: string;
-  notaAnterior: number | null;
-  novaNota: number | null;
+  pesoAnterior: number | null;
+  novoPeso: number | null;
   texto: string;
+  supervisor?: any;
+  rowNode?: TreeNode;
 }
 
 @Component({
@@ -48,6 +50,7 @@ export class JustifyPillarWeightComponent implements OnInit, OnDestroy {
   @Output() onSave = new EventEmitter<JustifyPillarWeightData>();
   @ViewChild("motivationInput") motivationInput!: ElementRef;
 
+  saved: boolean = false;
   contador = 0;
   justifyPillarWeightForm!: FormGroup;
   entidade: any;
@@ -62,18 +65,21 @@ export class JustifyPillarWeightComponent implements OnInit, OnDestroy {
 
   originalPesoAnterior: number | null = null;
   originalPilarPeso: number | null = null;
+  errorMessage: string = "";
 
   constructor(
     private formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: JustifyPillarWeightComponent,
+    @Inject(MAT_DIALOG_DATA) public data: JustifyPillarWeightData,
     private _service: EvaluatePlansService,
     private dialog: MatDialog,
-    private dialogRef: MatDialogRef<JustifyPillarWeightComponent>
-  ) {
+    private dialogRef: MatDialogRef<JustifyPillarWeightData>
+  ) {}
+
+  ngOnInit(): void {
     this.justifyPillarWeightForm = this.formBuilder.group({
-      entity: [this.data.entidade.name],
-      cycle: [this.data.ciclo.name],
-      pillar: [this.data.pilar.name],
+      entity: [{ value: this.data.entidade.name, disabled: true }],
+      cycle: [{ value: this.data.ciclo.name, disabled: true }],
+      pillar: [{ value: this.data.pilar.name, disabled: true }],
       novoPeso: [
         this.data.novoPeso,
         [Validators.required, Validators.min(0.01), Validators.max(100)],
@@ -88,21 +94,42 @@ export class JustifyPillarWeightComponent implements OnInit, OnDestroy {
         ],
       ],
     });
-    // Salva os valores originais para restaurar se cancelar
-    this.originalPesoAnterior = this.data.pesoAnterior;
-    this.originalPilarPeso = this.data.pilar.weight;    
-  }
 
-  ngOnInit(): void {
+    this.originalPesoAnterior = this.data.pesoAnterior;
+    this.originalPilarPeso = this.data.pilar.weight ?? null;
+
+    this.justifyPillarWeightForm
+      .get("motivation")
+      ?.valueChanges.subscribe((val: string) => {
+        this.contador = val?.length || 0;
+
+        if (this.contador > 400) {
+          this.errorMessage = "Limite de 400 caracteres atingido.";
+          const truncated = val.substring(0, 400);
+          this.justifyPillarWeightForm
+            .get("motivation")
+            ?.setValue(truncated, { emitEvent: false });
+          this.contador = 400;
+        } else if (this.contador < 4 && this.contador >= 0) {
+          this.errorMessage = "Limite mínimo de 4 caracteres atingido.";
+        } else {
+          this.errorMessage = "";
+        }
+      });
+
     setTimeout(() => {
       this.motivationInput?.nativeElement?.focus();
     }, 200);
+
+    this.dialogRef.afterClosed().subscribe((foiSalvo) => {
+      if (!foiSalvo) {
+        this.onClose.emit();
+      }
+    });
   }
 
   ngOnDestroy(): void {
-    // Restaura os valores originais caso o modal seja fechado sem salvar
-    this.data.pesoAnterior = this.originalPesoAnterior;
-    this.data.pilar.weight = this.originalPilarPeso;
+    this.restaurarValoresOriginais();
   }
 
   getTitle() {
@@ -110,10 +137,8 @@ export class JustifyPillarWeightComponent implements OnInit, OnDestroy {
   }
 
   fechar() {
-    // Restaura os valores originais manualmente
-    this.data.pesoAnterior = this.originalPesoAnterior;
-    this.data.pilar.weight = this.originalPilarPeso;
-    this.onClose.emit();
+    this.restaurarValoresOriginais();
+    this.dialogRef.close(false); // <-- Indica cancelamento
     this.contador = 0;
   }
 
@@ -130,13 +155,17 @@ export class JustifyPillarWeightComponent implements OnInit, OnDestroy {
         supervisorId: this.data.supervisor.id,
         novoPeso: this.data.novoPeso!,
         pesoAnterior: this.data.pesoAnterior!,
-        motivacao: this.justifyPillarWeightForm.get("motivation")?.value,
+        motivacao: motivacao,
       })
       .subscribe({
         next: (res: any) => {
+          this.saved = true;
+
           const mensagem = `O peso foi atualizado com sucesso de ${this.data.pesoAnterior} para ${this.data.novoPeso}.`;
           this.data.pesoAnterior = this.data.novoPeso;
-          this.data.pilar.weight = this.data.novoPeso;
+          this.data.pilar.weight =
+            this.data.novoPeso === null ? undefined : this.data.novoPeso;
+
           const cicloNota = this.parseDecimal(res.cicloNota);
           const cicloNode = this.data.rowNode
             ? this.subirAtePorNode(this.data.rowNode, "Ciclo")
@@ -152,11 +181,18 @@ export class JustifyPillarWeightComponent implements OnInit, OnDestroy {
             })
             .afterClosed()
             .subscribe(() => {
-              // Fecha o modal de motivação após confirmação
-              this.dialogRef.close();
+              this.dialogRef.close(true); // <-- Retorna true ao componente pai
             });
         },
-        error: (err) => console.error("Erro ao salvar nota:", err),
+        error: (err) => {
+          console.error("Erro ao salvar peso:", err);
+          this.dialog.open(PlainMessageDialogComponent, {
+            width: "400px",
+            data: {
+              message: "Ocorreu um erro ao salvar. Tente novamente mais tarde.",
+            },
+          });
+        },
       });
   }
 
@@ -165,7 +201,15 @@ export class JustifyPillarWeightComponent implements OnInit, OnDestroy {
   }
 
   parseDecimal(valor: string | null | undefined): number {
-    return parseFloat((valor || "0").replace(",", "."));
+    const v = valor?.replace(",", ".");
+    const parsed = parseFloat(v || "0");
+    return isNaN(parsed) ? 0 : parsed;
+  }
+
+  private restaurarValoresOriginais() {
+    this.data.pesoAnterior = this.originalPesoAnterior;
+    this.data.pilar.weight =
+      this.originalPilarPeso === null ? undefined : this.originalPilarPeso;
   }
 
   subirAtePorNode(node: TreeNode, tipo: string): TreeNode | null {

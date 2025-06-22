@@ -43,7 +43,6 @@ import { ElementChangeHistoryComponent } from "../element-change-history/element
   styleUrls: ["./evaluate-plans-edit.component.css"],
 })
 export class EvaluatePlansEditComponent implements OnInit {
-
   @Input() object!: EntityVirtusDTO;
   treeData: TreeNode[] = [];
   treeDataOriginal: TreeNode[] = [];
@@ -197,7 +196,7 @@ export class EvaluatePlansEditComponent implements OnInit {
             planoDescrito: node.planoDescrito,
             tipoNotaDescrito: node.tipoNotaDescrito,
             elementoDescrito: node.elementoDescrito,
-            itemDescrito: node.itemDescrito
+            itemDescrito: node.itemDescrito,
           },
           children: node.children
             ? this.transformToTreeTableFormat(node.children)
@@ -316,6 +315,21 @@ export class EvaluatePlansEditComponent implements OnInit {
         texto: "",
       },
     });
+
+    dialogRef.afterClosed().subscribe((foiSalvo: boolean) => {
+      const input = event.target as HTMLInputElement;
+      if (foiSalvo) {
+        // Atualiza o peso após o salvamento da motivação
+        rowNode.node.data.peso = novoPeso;
+        rowNode.node.data.weight = novoPeso;
+        input.value = String(novoPeso);
+      } else {
+        // Reverte ao valor anterior caso não tenha sido salvo
+        rowNode.node.data.peso = pesoAnterior;
+        input.value = String(pesoAnterior);
+        setTimeout(() => input.focus(), 100);
+      }
+    });
   }
 
   private subirAtePorNode(node: TreeNode, tipo: string): TreeNode | null {
@@ -366,7 +380,9 @@ export class EvaluatePlansEditComponent implements OnInit {
   ): void {
     const input = event.target as HTMLInputElement;
     const novoPeso = Number(input.value);
+    console.log("Novo peso:", novoPeso);
     const pesoAnterior = Number(rowData.pesoAnterior);
+    console.log("Peso anterior:", pesoAnterior);
 
     // Validação do valor inserido
     if (isNaN(novoPeso) || novoPeso <= 0 || novoPeso > 100) {
@@ -407,22 +423,15 @@ export class EvaluatePlansEditComponent implements OnInit {
     }
     if (somaTotal < 100) {
       const mensagem =
-        "A soma dos pesos dos pilares não deve ser inferior a 100%.";
-      this.dialog
-        .open(PlainMessageDialogComponent, {
-          width: "400px",
-          data: { title: "Atenção", message: mensagem },
-        })
-        .afterClosed()
-        .subscribe(() => {
-          input.value = String(pesoAnterior);
-          rowData.peso = pesoAnterior; // Reverte o peso para o anterior
-          return;
-        });
+        "A soma dos pesos dos pilares deve totalizar exatamente 100%.";
+      this.dialog.open(PlainMessageDialogComponent, {
+        width: "400px",
+        data: { title: "Atenção", message: mensagem },
+      });
     }
-    if (pesoAnterior !== novoPeso) {
+
+    if (pesoAnterior != novoPeso) {
       this.justifyPillarWeight(rowNode, pesoAnterior, event);
-      rowData.pesoAnterior = novoPeso;
     }
   }
 
@@ -568,7 +577,9 @@ export class EvaluatePlansEditComponent implements OnInit {
         ciclo: ciclo || "",
         pilar: pilar || "",
         peso: rowNode.node.data.weight || null,
+        pesoAnterior: rowNode.node.data.pesoAnterior || null,
         nota: rowNode.node.data.grade || null,
+        notaAnterior: rowNode.node.data.notaAnterior || null,
         historicoDataSource: logs,
         metodo: rowNode.node.data.idTipoPontuacao || null,
       },
@@ -870,19 +881,18 @@ export class EvaluatePlansEditComponent implements OnInit {
 
   // Quem pode realizar uma Análise?
   // A Análise de qualquer nível (Ciclo, Pilar, Componente, etc.) somente poderá ser realizada se atender a todos os critérios abaixo:
-  // 
+  //
   // 1 - Ser Auditor ou o Supervisor responsável por esse nível e o período de avaliação estiver permitido
   // OU
   // 2 - Ser Chefe e o período do ciclo estiver permitido.
   // Além disso:
-  // 
+  //
   // 3 - Sempre deve haver um peso para o item do nível que não pode ser igual a zero.
-  // 
+  //
   // Exemplo de bloqueio:
   // Mesmo que o usuário seja Auditor, não conseguirá analisar se o item tiver peso 0 ou estiver fora do período de avaliação permitido.
   // Mesmo que o usuário seja Chefe só poderá alterar a análise, se estiver dentro do período do ciclo.
   canAnalyseTier(rowData: any) {
-
     const isAuditorOrSupervisor =
       rowData.auditor?.id === this.currentUser.id ||
       rowData.supervisor?.id === this.currentUser.id;
@@ -892,8 +902,10 @@ export class EvaluatePlansEditComponent implements OnInit {
     const isWithinPeriod = rowData.periodoPermitido;
     const isCyclePeriod = rowData.periodoCiclo;
 
-    return ((isAuditorOrSupervisor && isWithinPeriod) || isChief && isCyclePeriod) && hasWeight ;
-
+    return (
+      ((isAuditorOrSupervisor && isWithinPeriod) ||
+        (isChief && isCyclePeriod)) &&
+      hasWeight
+    );
   }
-
 }

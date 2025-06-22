@@ -1,6 +1,29 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ACTIONS_ROUTE, ASSING_TEAMS_ROUTE, CICLES_ROUTE, COMPONENTS_ROUTE, DISTRIBUTE_ACTIVITIES_ROUTE, ELEMENTS_ROUTE, ENTITIES_ROUTE, EVALUATE_PLANS_ROUTE, FEATURES_ROUTE, LOGIN, OFFICES_ROUTE, PILLARS_ROUTE, ROLES_ROUTE, STATUS_ROUTE, TYPE_OF_NOTE_ROUTE, USERS_ROUTE, WORKFLOWS_ROUTE } from './common/route-constants';
+
+import {
+  ACTIONS_ROUTE,
+  ASSING_TEAMS_ROUTE,
+  CICLES_ROUTE,
+  COMPONENTS_ROUTE,
+  DISTRIBUTE_ACTIVITIES_ROUTE,
+  ELEMENTS_ROUTE,
+  ENTITIES_ROUTE,
+  EVALUATE_PLANS_ROUTE,
+  FEATURES_ROUTE,
+  LOGIN,
+  OFFICES_ROUTE,
+  PILLARS_ROUTE,
+  ROLES_ROUTE,
+  STATUS_ROUTE,
+  TYPE_OF_NOTE_ROUTE,
+  USERS_ROUTE,
+  WORKFLOWS_ROUTE,
+  INDICATORS_ROUTE,
+  INDICATOR_SCORES_ROUTE,
+  AUTOMATIC_SCORES_ROUTE
+} from './common/route-constants';
+
 import { MainLayoutPageComponent } from './pages/main-layout-page/main-layout-page.component';
 import { ComponentsPageComponent } from './pages/configuration/components-page/components-page.component';
 import { ElementsPageComponent } from './pages/configuration/elements-page/elements-page.component';
@@ -20,6 +43,11 @@ import { LoginComponent } from './pages/login/login.component';
 import { AuthGuard } from './auth/auth.guard';
 import { DistributeActivitiesComponent } from './pages/coordination/distribute-activities/distribute-activities.component';
 import { EvaluatePlansPageComponent } from './pages/rating/evaluate-plans-page/evaluate-plans-page.component';
+
+// Novos componentes de administração
+import { IndicatorsComponent } from './pages/administration/indicators/indicators.component';
+import { IndicatorScoresComponent } from './pages/administration/indicator-scores/indicator-scores.component';
+import { AutomaticScoresComponent } from './pages/administration/automatic-scores/automatic-scores.component';
 
 const routes: Routes = [
   { path: LOGIN, component: LoginComponent },
@@ -42,7 +70,12 @@ const routes: Routes = [
       { path: WORKFLOWS_ROUTE, component: WorkflowsComponent },
       { path: ASSING_TEAMS_ROUTE, component: AssingTeamsPageComponent },
       { path: DISTRIBUTE_ACTIVITIES_ROUTE, component: DistributeActivitiesComponent },
-      { path: EVALUATE_PLANS_ROUTE, component: EvaluatePlansPageComponent }
+      { path: EVALUATE_PLANS_ROUTE, component: EvaluatePlansPageComponent },
+
+      // Novas rotas adicionadas
+      { path: INDICATORS_ROUTE, component: IndicatorsComponent },
+      { path: INDICATOR_SCORES_ROUTE, component: IndicatorScoresComponent },
+      { path: AUTOMATIC_SCORES_ROUTE, component: AutomaticScoresComponent }
     ]
   }
 ];
@@ -51,7 +84,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {
-
-
-}
+export class AppRoutingModule {}
