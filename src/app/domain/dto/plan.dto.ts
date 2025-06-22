@@ -1,3 +1,4 @@
+import { EntityVirtusDTO } from './entity-virtus.dto';
 import { BaseDTO } from "../common/base.dto";
 
 export class PlanDTO extends BaseDTO {
@@ -10,5 +11,6 @@ export class PlanDTO extends BaseDTO {
     situation: string | undefined | null;
     guaranteeResource: number | undefined | null;
     modality: string | undefined | null;
+    entity: EntityVirtusDTO | undefined | null;
 
 }

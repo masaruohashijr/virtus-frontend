@@ -1,0 +1,13 @@
+mat-form-field {
+  margin-top: 1rem;
+  display: block;
+}
+
+mat-dialog-content {
+  max-height: 70vh;
+  overflow: auto;
+}
+
+mat-dialog-actions {
+  margin-top: 1rem;
+}

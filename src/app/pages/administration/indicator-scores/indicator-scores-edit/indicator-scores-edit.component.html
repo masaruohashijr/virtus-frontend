@@ -1,1 +1,80 @@
-<p>indicator-scores-edit works!</p>
+<h1 mat-dialog-title>{{ getTitle() }}</h1>
+
+<div mat-dialog-content>
+  <form [formGroup]="scoreForm">
+    <!-- ComboBox de Entidades -->
+    <!-- AutoComplete de Entidade -->
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Entidade</mat-label>
+      <input
+        type="text"
+        matInput
+        [matAutocomplete]="auto"
+        [formControl]="entityControl"
+      />
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        autoActiveFirstOption
+        [displayWith]="displayEntityFn"
+        (optionSelected)="onEntitySelected($event)"
+      >
+        <mat-option *ngFor="let entity of filteredEntities" [value]="entity">
+          {{ entity.code }} - {{ entity.acronym }} - {{ entity.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <!-- ComboBox de CNPBs (Planos) -->
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>CNPB</mat-label>
+      <mat-select formControlName="cnpb">
+        <mat-option *ngFor="let plan of filteredPlans" [value]="plan.cnpb">{{
+          plan.cnpb
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Data de Referência</mat-label>
+      <input matInput formControlName="referenceDate" placeholder="MMYYYY" />
+      <mat-error *ngIf="scoreForm.get('referenceDate')?.hasError('pattern')">
+        Formato inválido. Use MMYYYY.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Sigla do Indicador</mat-label>
+      <input formControlName="indicatorSigla" matInput />
+    </mat-form-field>
+
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Componente</mat-label>
+      <input formControlName="componentText" matInput />
+    </mat-form-field>
+
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Nota</mat-label>
+      <input formControlName="score" matInput type="number" />
+    </mat-form-field>
+
+    <mat-form-field
+      *ngIf="object.createdAt"
+      class="w-full mt-auto"
+      appearance="outline"
+    >
+      <mat-label>Criado em</mat-label>
+      <input
+        [value]="object.createdAt | date : 'dd/MM/yyyy HH:mm'"
+        readonly
+        matInput
+      />
+    </mat-form-field>
+  </form>
+</div>
+
+<div mat-dialog-actions [align]="'end'">
+  <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>
+    Salvar
+  </button>
+  <button mat-flat-button [mat-dialog-close]="object.cnpb">Cancelar</button>
+</div>
