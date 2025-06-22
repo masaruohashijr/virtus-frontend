@@ -117,6 +117,7 @@ import { AutomaticScoresComponent } from './pages/administration/automatic-score
 import { IndicatorsComponent } from './pages/administration/indicators/indicators.component';
 import { IndicatorsEditComponent } from './pages/administration/indicators/indicators-edit/indicators-edit.component';
 import { IndicatorScoresEditComponent } from './pages/administration/indicator-scores/indicator-scores-edit/indicator-scores-edit.component';
+import { SyncDialogComponent } from './pages/administration/indicator-scores/sync-dialog/sync-dialog.component';
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',
@@ -214,7 +215,8 @@ export const MY_DATE_FORMATS = {
     AutomaticScoresComponent,
     IndicatorsComponent,
     IndicatorsEditComponent,
-    IndicatorScoresEditComponent
+    IndicatorScoresEditComponent,
+    SyncDialogComponent
   ],
   imports: [
     TreeTableModule,

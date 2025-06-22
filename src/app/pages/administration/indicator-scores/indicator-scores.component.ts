@@ -11,6 +11,7 @@ import { ConfirmationDialogComponent } from "src/app/components/dialog/confirmat
 import { PageResponseDTO } from "src/app/domain/dto/response/page-response.dto";
 import { IndicatorScoresService } from "src/app/services/administration/indicator-scores.service";
 import { IndicatorScoresEditComponent } from "./indicator-scores-edit/indicator-scores-edit.component";
+import { SyncDialogComponent } from "./sync-dialog/sync-dialog.component";
 
 @Component({
   selector: "app-indicator-scores",
@@ -27,18 +28,19 @@ export class IndicatorScoresComponent implements OnInit {
     "indicatorSigla",
     "componentText",
     "score",
-    "createdAt", 
-    'actions'
+    "createdAt",
+    "actions",
   ];
 
   searchForm = this._formBuilder.group({
-    filterValue: ['']
+    filterValue: [""],
   });
 
   constructor(
     private _formBuilder: FormBuilder,
     private _service: IndicatorScoresService,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    private syncDialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -47,14 +49,13 @@ export class IndicatorScoresComponent implements OnInit {
   }
 
   private get filterControl() {
-    return this.searchForm.get('filterValue');
+    return this.searchForm.get("filterValue");
   }
 
   private initFilterListener(): void {
-    this.filterControl?.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged()
-    ).subscribe(filter => this.loadScores(filter ?? ''));
+    this.filterControl?.valueChanges
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((filter) => this.loadScores(filter ?? ""));
   }
 
   private loadScores(filter = ""): void {
@@ -126,10 +127,25 @@ export class IndicatorScoresComponent implements OnInit {
 
   newObject(): void {
     const dialogRef = this._dialog.open(IndicatorScoresEditComponent, {
-      width: '800px',
-      data: {} as IndicatorScoreDTO
+      width: "800px",
+      data: {} as IndicatorScoreDTO,
     });
 
-    dialogRef.afterClosed().subscribe(() => this.loadScores(this.filterControl?.value || ''));
+    dialogRef
+      .afterClosed()
+      .subscribe(() => this.loadScores(this.filterControl?.value || ""));
+  }
+
+  openSyncDialog(): void {
+    const dialogRef = this.syncDialog.open(SyncDialogComponent, {
+      width: "400px",
+    });
+
+    dialogRef.afterClosed().subscribe((referenceDate) => {
+      if (referenceDate) {
+        console.log("Sincronizar com competência:", referenceDate);
+        // Chame seu service para sincronizar aqui
+      }
+    });
   }
 }
