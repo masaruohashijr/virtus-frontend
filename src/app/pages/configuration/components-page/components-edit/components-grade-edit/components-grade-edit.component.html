@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>{{getTitle()}}</h1>
 <div mat-dialog-content>
-  <form [formGroup]="elementForm">
+  <form [formGroup]="gradeTypeForm">
     <mat-form-field class="w-full mt-auto" appearance="outline">
       <mat-label>Tipo de Nota</mat-label>
       <mat-select formControlName="gradeType" [compareWith]="compare">
@@ -8,7 +8,7 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field class="w-full mt-auto" appearance="outline">
-      <mat-label>Peso Padrão</mat-label>
+      <mat-label>Peso</mat-label>
       <input formControlName="standardWeight" type="number" [pattern]="'^-?[0-9]+$'" matInput>
     </mat-form-field>
   </form>

@@ -36,15 +36,22 @@
 
     <mat-form-field class="w-full mt-auto" appearance="outline">
       <mat-label>Data de Referência</mat-label>
-      <input matInput formControlName="referenceDate" placeholder="MMYYYY" />
+      <input matInput formControlName="referenceDate" placeholder="YYYYMM" />
       <mat-error *ngIf="scoreForm.get('referenceDate')?.hasError('pattern')">
-        Formato inválido. Use MMYYYY.
+        Formato inválido. Use YYYYMM.
       </mat-error>
     </mat-form-field>
 
     <mat-form-field class="w-full mt-auto" appearance="outline">
       <mat-label>Sigla do Indicador</mat-label>
-      <input formControlName="indicatorSigla" matInput />
+      <mat-select
+        formControlName="indicatorSigla"
+        (selectionChange)="onIndicatorSelected($event.value)"
+      >
+        <mat-option *ngFor="let indicator of indicators" [value]="indicator">
+          {{ indicator.indicatorAcronym }} - {{ indicator.indicatorName }}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
 
     <mat-form-field class="w-full mt-auto" appearance="outline">

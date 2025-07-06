@@ -80,22 +80,22 @@
   <a [routerLink]="['/' + componentsRoute]" mat-menu-item>Componentes</a>
   <a [routerLink]="['/' + typeOfNoteRoute]" mat-menu-item>Tipos de nota</a>
   <a [routerLink]="['/' + elementsRoute]" mat-menu-item>Elementos</a>
+  <a [routerLink]="['/' + indicatorsRoute]" mat-menu-item>Indicadores</a>
 </mat-menu>
 
 <mat-menu #administration="matMenu">
   <a [routerLink]="['/' + usersRoute]" mat-menu-item>Usuários</a>
   <a [routerLink]="['/' + officesRoute]" mat-menu-item>Escritórios</a>
+  <mat-divider></mat-divider>
   <a [routerLink]="['/' + rolesRoute]" mat-menu-item>Perfis</a>
   <a [routerLink]="['/' + featuresRoute]" mat-menu-item>Funcionalidades</a>
+  <mat-divider></mat-divider>
   <a [routerLink]="['/' + statusRoute]" mat-menu-item>Status</a>
   <a [routerLink]="['/' + actionsRoute]" mat-menu-item>Ações</a>
   <a [routerLink]="['/' + workflowsRoute]" mat-menu-item>Workflows</a>
 </mat-menu>
 
 <mat-menu #syncMenu="matMenu">
-  <a [routerLink]="['/' + indicatorsRoute]" mat-menu-item
-    >Indicadores (Conformidade)</a
-  >
   <a [routerLink]="['/' + indicatorScoresRoute]" mat-menu-item
     >Notas de Indicadores</a
   >
@@ -103,6 +103,13 @@
     >Notas Automáticas</a
   >
   <mat-divider></mat-divider>
+  <a [routerLink]="['/' + indicatorScoresRoute]" mat-menu-item
+    >Logs</a
+  >
+  <a [routerLink]="['/' + automaticScoresRoute]" mat-menu-item
+    >Cálculos</a
+  >
+  <mat-divider></mat-divider>  
   <a [routerLink]="['/sync-users']" mat-menu-item>Usuários</a>
   <a [routerLink]="['/sync-entities']" mat-menu-item>Entidades</a>
   <a [routerLink]="['/sync-executives']" mat-menu-item>Dirigentes</a>

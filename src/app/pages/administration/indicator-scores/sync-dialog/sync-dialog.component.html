@@ -3,10 +3,10 @@
 <div mat-dialog-content>
   <form [formGroup]="syncForm">
     <mat-form-field class="w-full mt-2" appearance="outline">
-      <mat-label>Competência</mat-label>
-      <input matInput formControlName="referenceDate" placeholder="MMAAAA" />
+      <mat-label>Referência</mat-label>
+      <input matInput formControlName="referenceDate" placeholder="AAAAMM" />
       <mat-error *ngIf="syncForm.get('referenceDate')?.hasError('pattern')">
-        Competência inválida. Use o formato MMAAAA.
+        Referência inválida. Use o formato AAAAMM.
       </mat-error>
     </mat-form-field>
   </form>

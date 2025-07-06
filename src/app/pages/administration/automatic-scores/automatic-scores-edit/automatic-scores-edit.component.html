@@ -1,0 +1,69 @@
+<h1 mat-dialog-title>
+  {{ object.id ? "Editar Nota Automática" : "Nova Nota Automática" }}
+</h1>
+
+<div mat-dialog-content>
+  <form [formGroup]="form">
+    <!-- Entidade -->
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Entidade</mat-label>
+      <input
+        matInput
+        [formControl]="entityControl"
+        [matAutocomplete]="auto"
+        placeholder="Digite para buscar"
+      />
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayEntityFn">
+        <mat-option *ngFor="let entity of filteredEntities" [value]="entity">
+          {{ entity.code }} - {{ entity.acronym }} - {{ entity.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <!-- CNPB -->
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>CNPB</mat-label>
+      <mat-select formControlName="cnpb">
+        <mat-option *ngFor="let plan of filteredPlans" [value]="plan.cnpb">
+          {{ plan.cnpb }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Data Referência -->
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Data de Referência</mat-label>
+      <input matInput formControlName="dataReferencia" placeholder="YYYYMM" />
+      <mat-error *ngIf="form.get('dataReferencia')?.hasError('pattern')">
+        Formato inválido. Use YYYYMM.
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Componente -->
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Componente</mat-label>
+      <mat-select formControlName="idComponente">
+        <mat-option *ngFor="let comp of components" [value]="comp.id">
+          {{ comp.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Campo Nota -->
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Nota</mat-label>
+      <input matInput type="number" formControlName="nota" />
+      <mat-error *ngIf="form.get('nota')?.hasError('required')">
+        Nota é obrigatória.
+      </mat-error>
+      <mat-error *ngIf="form.get('nota')?.hasError('min')">
+        Valor mínimo é 0.
+      </mat-error>
+    </mat-form-field>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-flat-button mat-dialog-close>Cancelar</button>
+  <button mat-raised-button color="primary" (click)="save()">Salvar</button>
+</div>

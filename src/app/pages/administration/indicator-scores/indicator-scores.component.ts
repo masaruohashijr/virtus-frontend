@@ -5,7 +5,7 @@ import { PageEvent } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
 import { throwError } from "rxjs";
 import { catchError, debounceTime, distinctUntilChanged } from "rxjs/operators";
-import { IndicatorScoreDTO } from "./../../../domain/dto/indicator-scores.dto";
+import { IndicatorScoreDTO } from "../../../domain/dto/indicator-score.dto";
 
 import { ConfirmationDialogComponent } from "src/app/components/dialog/confirmation-dialog/confirmation-dialog.component";
 import { PageResponseDTO } from "src/app/domain/dto/response/page-response.dto";
@@ -40,7 +40,6 @@ export class IndicatorScoresComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private _service: IndicatorScoresService,
     private _dialog: MatDialog,
-    private syncDialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -137,8 +136,13 @@ export class IndicatorScoresComponent implements OnInit {
   }
 
   openSyncDialog(): void {
-    const dialogRef = this.syncDialog.open(SyncDialogComponent, {
+    const referenceDatesCadastrados = this.objectDataSource.data
+      .map((item: any) => item.referenceDate)
+      .filter((date, index, self) => self.indexOf(date) === index); // remover duplicatas
+
+    const dialogRef = this._dialog.open(SyncDialogComponent, {
       width: "400px",
+      data: { referenceDatesCadastrados: referenceDatesCadastrados },
     });
 
     dialogRef.afterClosed().subscribe((referenceDate) => {
@@ -147,5 +151,13 @@ export class IndicatorScoresComponent implements OnInit {
         // Chame seu service para sincronizar aqui
       }
     });
+  }
+
+  calculateAutomaticScores() {
+    throw new Error("Method not implemented.");
+  }
+
+  openScheduleSyncDialog() {
+    throw new Error("Method not implemented.");
   }
 }

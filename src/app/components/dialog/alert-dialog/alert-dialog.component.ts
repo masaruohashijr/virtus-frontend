@@ -12,7 +12,7 @@ export class AlertDialogComponent {
     public data: { title: string; message: string }
   ) {}
 
-  onConfirm(): void {
+  onOk(): void {
     this.dialogRef.close(true);
   }
 

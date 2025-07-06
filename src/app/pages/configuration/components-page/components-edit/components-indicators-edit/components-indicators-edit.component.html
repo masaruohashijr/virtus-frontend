@@ -1,0 +1,21 @@
+<h1 mat-dialog-title>{{ getTitle() }}</h1>
+<div mat-dialog-content>
+  <form [formGroup]="indicatorForm">
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Indicador</mat-label>
+      <mat-select formControlName="indicator" [compareWith]="compare">
+        <mat-option *ngFor="let indicator of allIndicators" [value]="indicator">
+          ({{ indicator.indicatorAcronym }}) {{ indicator.indicatorName }} 
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Peso</mat-label>
+      <input formControlName="standardWeight" type="number" [pattern]="'^-?[0-9]+$'" matInput>
+    </mat-form-field>    
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>Salvar</button>
+  <button mat-flat-button [mat-dialog-close]="data.object">Cancelar</button>
+</div>

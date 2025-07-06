@@ -19,7 +19,7 @@ export class ComponentsGradeEditComponent extends BaseCrudEditComponent<Componen
 
   gradeTypes: GradeTypeDTO[] = []
 
-  elementForm = this._formBuilder.group({
+  gradeTypeForm = this._formBuilder.group({
     gradeType: [this.data.object.gradeType, [Validators.required]],
     standardWeight: [this.data.object.standardWeight]
   });
@@ -40,19 +40,19 @@ export class ComponentsGradeEditComponent extends BaseCrudEditComponent<Componen
   }
 
   save() {
-    if (this.elementForm.invalid) {
-      this.elementForm.markAllAsTouched()
+    if (this.gradeTypeForm.invalid) {
+      this.gradeTypeForm.markAllAsTouched()
       return;
     }
 
-    this.object.gradeType = this.elementForm.value.gradeType;
-    this.object.standardWeight = this.elementForm.value.standardWeight;
+    this.object.gradeType = this.gradeTypeForm.value.gradeType;
+    this.object.standardWeight = this.gradeTypeForm.value.standardWeight;
 
     this.dialogRef.close(this.object);
   }
 
   getTitle() {
-    return this.object.gradeType?.name ? "Editar Nota \"" + this.object.gradeType?.name + "\"" : "Cadastrar nova Nota";
+    return this.object.gradeType?.name ? "Reconfigurar Tipo de Nota \"" + this.object.gradeType?.name + "\"" : "Configurar novo Tipo de Nota";
   }
 
 }

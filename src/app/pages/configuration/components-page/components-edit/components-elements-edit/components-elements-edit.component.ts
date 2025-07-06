@@ -61,7 +61,7 @@ export class ComponentsElementsEditComponent extends BaseCrudEditComponent<Compo
   }
 
   getTitle() {
-    return this.object.gradeType?.name ? "Editar Elemento \"" + this.object.element?.name + "\"" : "Cadastrar novo Elemento";
+    return this.object.gradeType?.name ? "Reconfigurar Elemento \"" + this.object.element?.name + "\"" : "Configurar novo Elemento";
   }
 
 }

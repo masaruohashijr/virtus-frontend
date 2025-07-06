@@ -45,7 +45,7 @@ import { DistributeActivitiesComponent } from './pages/coordination/distribute-a
 import { EvaluatePlansPageComponent } from './pages/rating/evaluate-plans-page/evaluate-plans-page.component';
 
 // Novos componentes de administração
-import { IndicatorsComponent } from './pages/administration/indicators/indicators.component';
+import { IndicatorsPageComponent } from './pages/configuration/indicators-page/indicators-page.component';
 import { IndicatorScoresComponent } from './pages/administration/indicator-scores/indicator-scores.component';
 import { AutomaticScoresComponent } from './pages/administration/automatic-scores/automatic-scores.component';
 
@@ -73,7 +73,7 @@ const routes: Routes = [
       { path: EVALUATE_PLANS_ROUTE, component: EvaluatePlansPageComponent },
 
       // Novas rotas adicionadas
-      { path: INDICATORS_ROUTE, component: IndicatorsComponent },
+      { path: INDICATORS_ROUTE, component: IndicatorsPageComponent },
       { path: INDICATOR_SCORES_ROUTE, component: IndicatorScoresComponent },
       { path: AUTOMATIC_SCORES_ROUTE, component: AutomaticScoresComponent }
     ]

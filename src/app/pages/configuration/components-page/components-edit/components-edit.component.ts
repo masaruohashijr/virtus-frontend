@@ -12,7 +12,7 @@ import { ComponentsService } from 'src/app/services/configuration/components.ser
 })
 export class ComponentsEditComponent implements OnInit {
 
-  elementForm = this._formBuilder.group({
+  componentForm = this._formBuilder.group({
     name: [this.object.name, [Validators.required]],
     description: [this.object.description],
     reference: [this.object.reference],
@@ -29,14 +29,14 @@ export class ComponentsEditComponent implements OnInit {
   }
 
   save() {
-    if (this.elementForm.invalid) {
-      this.elementForm.markAllAsTouched()
+    if (this.componentForm.invalid) {
+      this.componentForm.markAllAsTouched()
       return;
     }
 
-    this.object.name = this.elementForm.value.name?.toString();
-    this.object.description = this.elementForm.value.description?.toString();
-    this.object.reference = this.elementForm.value.reference?.toString();
+    this.object.name = this.componentForm.value.name?.toString();
+    this.object.description = this.componentForm.value.description?.toString();
+    this.object.reference = this.componentForm.value.reference?.toString();
 
     if (!this.object.id) {
       this.service.create(this.object).pipe(

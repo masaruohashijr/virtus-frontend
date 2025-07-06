@@ -1,7 +1,7 @@
 import { BaseDTO } from "../common/base.dto";
 import { ComponentElementDTO } from "./component-element.dto";
-import { ComponentGradeType } from "./component-grade-type.dto";
-import { UserDTO } from "./user.dto";
+import { ComponentGradeType as ComponentGradeTypeDTO } from "./component-grade-type.dto";
+import { ComponentIndicatorDTO } from "./component-indicator.dto";
 
 export class ComponentDTO extends BaseDTO {
 
@@ -10,5 +10,6 @@ export class ComponentDTO extends BaseDTO {
   description!: string | undefined;
   reference!: string | undefined;
   componentElements: ComponentElementDTO[] = [];
-  componentGradeTypes: ComponentGradeType[] = [];
+  componentGradeTypes: ComponentGradeTypeDTO[] = [];
+  componentIndicators?: ComponentIndicatorDTO[];
 }

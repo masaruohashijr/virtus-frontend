@@ -1,8 +1,16 @@
-<h1 mat-dialog-title>Confirmar Exclusão</h1>
+<h1 mat-dialog-title>{{ title }}</h1>
+
 <div mat-dialog-content>
-  Deseja realmente excluir este item?
+  <p style="white-space: pre-line; margin-bottom: 24px">
+    {{ message }}
+  </p>
 </div>
+
 <div mat-dialog-actions>
-  <button mat-flat-button color="warn" (click)="confirmar()">Exluir</button>
-  <button mat-button (click)="cancelar()">Cancelar</button>
+  <button mat-flat-button color="warn" (click)="confirmar()">
+    {{ confirmLabel }}
+  </button>
+  <button mat-button (click)="cancelar()">
+    {{ cancelLabel }}
+  </button>
 </div>

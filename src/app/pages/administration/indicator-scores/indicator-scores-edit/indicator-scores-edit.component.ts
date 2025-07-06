@@ -1,18 +1,24 @@
 import { Component, Inject, OnInit } from "@angular/core";
-import { FormBuilder, Validators, FormControl } from "@angular/forms";
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { catchError, tap, throwError } from "rxjs";
+import { debounceTime, map, startWith } from "rxjs/operators";
+import { MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
 
-import { IndicatorScoreDTO } from "src/app/domain/dto/indicator-scores.dto";
+import { IndicatorScoreDTO } from "src/app/domain/dto/indicator-score.dto";
+import { PlanDTO } from "src/app/domain/dto/plan.dto";
+import { IndicatorDTO } from "src/app/domain/dto/indicator.dto";
+import { PageResponseDTO } from "src/app/domain/dto/response/page-response.dto";
+
 import { IndicatorScoresService } from "src/app/services/administration/indicator-scores.service";
 import { PlansService } from "src/app/services/administration/plans.service";
 import { EntityVirtusService } from "src/app/services/rating/entity-virtus.service";
-import { PlanDTO } from "src/app/domain/dto/plan.dto";
-import { MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
-
-import { debounceTime, map, startWith } from "rxjs/operators";
-import { Observable, of } from "rxjs";
-import { EntityVirtusDTO } from "src/app/domain/dto/entity-virtus.dto";
+import { IndicatorsService } from "src/app/services/administration/indicators.service";
 
 @Component({
   selector: "app-indicator-scores-edit",
@@ -22,30 +28,14 @@ import { EntityVirtusDTO } from "src/app/domain/dto/entity-virtus.dto";
 export class IndicatorScoresEditComponent implements OnInit {
   entityControl = new FormControl();
   filteredEntities: any[] = [];
+  indicators: IndicatorDTO[] = [];
 
-  scoreForm = this._formBuilder.group({
-    cnpb: [this.object.cnpb, [Validators.required]],
-    referenceDate: [
-      this.object.referenceDate,
-      [
-        Validators.required,
-        Validators.pattern(/^(0[1-9]|1[0-2])[0-9]{4}$/), // MMYYYY
-      ],
-    ],
-
-    indicatorSigla: [this.object.indicatorSigla, [Validators.required]],
-    componentText: [this.object.componentText, [Validators.required]],
-    score: [this.object.score, [Validators.required, Validators.min(0)]],
-    createdAt: [this.object.createdAt],
-  });
+  scoreForm!: FormGroup;
 
   entities: { id: number; name: string; code?: string; acronym?: string }[] =
     [];
-  entityPlans: { cnpb: string; description: string }[] = [];
-  selectedEntityId: number | null = null;
   filteredPlans: PlanDTO[] = [];
-  plans: PlanDTO[] = [];
-  loadingPlans: boolean = false;
+  selectedEntityId: number | null = null;
 
   constructor(
     public dialogRef: MatDialogRef<IndicatorScoresEditComponent>,
@@ -53,11 +43,14 @@ export class IndicatorScoresEditComponent implements OnInit {
     private service: IndicatorScoresService,
     private entityService: EntityVirtusService,
     private planService: PlansService,
+    private indicatorService: IndicatorsService,
     @Inject(MAT_DIALOG_DATA) public object: IndicatorScoreDTO
   ) {}
 
   ngOnInit(): void {
+    this.buildForm();
     this.loadEntities();
+    this.loadIndicators();
 
     this.entityControl.valueChanges
       .pipe(
@@ -70,41 +63,95 @@ export class IndicatorScoresEditComponent implements OnInit {
       });
 
     if (this.object?.cnpb) {
-      this.planService.getByCnpb(this.object.cnpb).subscribe({
-        next: (plan: PlanDTO) => {
-          if (plan?.entity?.id) {
-            const entity = {
-              id: plan.entity.id,
-              name: plan.entity.name ?? "",
-              acronym: plan.entity.acronym ?? "",
-              code: plan.entity.code ?? "",
-            };
-            this.selectedEntityId = entity.id;
-            this.entityControl.setValue(entity); // exibe entidade no campo
-
-            this.planService.getByEntityId(entity.id).subscribe({
-              next: (plans) => {
-                this.filteredPlans = plans || [];
-
-                // Garante que o CNPB estará entre os planos disponíveis
-                if (
-                  !this.filteredPlans.find((p) => p.cnpb === this.object.cnpb)
-                ) {
-                  this.filteredPlans.unshift(plan); // adiciona manualmente se necessário
-                }
-              },
-              error: (err) => {
-                console.error("Erro ao carregar planos da entidade", err);
-                this.filteredPlans = [];
-              },
-            });
-          }
-        },
-        error: (err: any) => {
-          console.error("Erro ao buscar plano por CNPB:", err);
-        },
-      });
+      this.loadPlanAndEntityFromCnpb(this.object.cnpb);
     }
+  }
+
+  private buildForm(): void {
+    const normalized = {
+      cnpb: this.object.cnpb ?? null,
+      referenceDate: this.object.referenceDate ?? null,
+      indicatorId: this.object.indicatorId ?? null,
+      indicatorSigla: this.object.indicatorSigla ?? null,
+      score: this.object.score ?? null,
+      componentText: this.object.componentText ?? null,
+      createdAt: this.object.createdAt ?? null,
+    };
+
+    this.scoreForm = this._formBuilder.group({
+      cnpb: [normalized.cnpb, [Validators.required]],
+      referenceDate: [
+        normalized.referenceDate,
+        [Validators.required, Validators.pattern(/^[0-9]{4}(0[1-9]|1[0-2])$/)],
+      ],
+      indicatorId: [normalized.indicatorId, [Validators.required]],
+      indicatorSigla: [normalized.indicatorSigla, [Validators.required]],
+      componentText: [normalized.componentText, [Validators.required]],
+      score: [normalized.score, [Validators.required, Validators.min(0)]],
+      createdAt: [normalized.createdAt],
+    });
+  }
+
+  private loadEntities(): void {
+    this.entityService.getAll("", 0, 1000).subscribe({
+      next: (response) => {
+        this.entities = (response.content || []).map((e: any) => ({
+          id: e.id,
+          name: e.name ?? "",
+          acronym: e.acronym ?? "",
+          code: e.code ?? "",
+        }));
+        this.filteredEntities = [...this.entities];
+      },
+      error: (err) => console.error("Erro ao carregar entidades", err),
+    });
+  }
+
+  private loadIndicators(): void {
+    this.indicatorService.getAll("", 0, 100).subscribe({
+      next: (response: PageResponseDTO<IndicatorDTO>) => {
+        this.indicators = (response?.content || []).sort((a, b) =>
+          (a.indicatorAcronym ?? "").localeCompare(b.indicatorAcronym ?? "")
+        );
+      },
+      error: (err: any) => {
+        console.error("Erro ao carregar indicadores", err);
+        this.indicators = [];
+      },
+    });
+  }
+
+  private loadPlanAndEntityFromCnpb(cnpb: string): void {
+    this.planService.getByCnpb(cnpb).subscribe({
+      next: (plan: PlanDTO) => {
+        if (plan?.entity?.id) {
+          const entity = {
+            id: plan.entity.id,
+            name: plan.entity.name ?? "",
+            acronym: plan.entity.acronym ?? "",
+            code: plan.entity.code ?? "",
+          };
+          this.selectedEntityId = entity.id;
+          this.entityControl.setValue(entity);
+
+          this.planService.getByEntityId(entity.id).subscribe({
+            next: (plans) => {
+              this.filteredPlans = plans || [];
+              if (!this.filteredPlans.find((p) => p.cnpb === cnpb)) {
+                this.filteredPlans.unshift(plan);
+              }
+            },
+            error: (err) => {
+              console.error("Erro ao carregar planos da entidade", err);
+              this.filteredPlans = [];
+            },
+          });
+        }
+      },
+      error: (err: any) => {
+        console.error("Erro ao buscar plano por CNPB:", err);
+      },
+    });
   }
 
   save(): void {
@@ -115,6 +162,7 @@ export class IndicatorScoresEditComponent implements OnInit {
 
     this.object.cnpb = this.scoreForm.value.cnpb?.toString();
     this.object.referenceDate = this.scoreForm.value.referenceDate?.toString();
+    this.object.indicatorId = Number(this.scoreForm.value.indicatorId);
     this.object.indicatorSigla =
       this.scoreForm.value.indicatorSigla?.toString();
     this.object.componentText = this.scoreForm.value.componentText?.toString();
@@ -137,32 +185,16 @@ export class IndicatorScoresEditComponent implements OnInit {
 
   getTitle(): string {
     return this.object.indicatorSigla
-      ? `Editar Nota "${this.object.indicatorSigla}" `
+      ? `Editar Nota "${this.object.indicatorSigla}"`
       : "Cadastrar nova Nota";
-  }
-
-  private loadEntities(): void {
-    this.entityService.getAll("", 0, 1000).subscribe({
-      next: (response) => {
-        this.entities = (response.content || []).map((e: any) => ({
-          id: e.id,
-          name: e.name ?? "",
-          acronym: e.acronym ?? "",
-          code: e.code ?? "", // ajuste conforme backend
-        }));
-        this.filteredEntities = [...this.entities];
-      },
-      error: (err) => console.error("Erro ao carregar entidades", err),
-    });
   }
 
   onEntitySelected(event: MatAutocompleteSelectedEvent): void {
     const entity = event.option.value;
-
     if (!entity?.id) return;
 
     this.selectedEntityId = entity.id;
-    this.entityControl.setValue(entity); // mantém o objeto visível
+    this.entityControl.setValue(entity);
 
     this.planService.getByEntityId(entity.id).subscribe({
       next: (plans) => {
@@ -175,11 +207,8 @@ export class IndicatorScoresEditComponent implements OnInit {
     });
   }
 
-  private filterEntities(
-    value: string
-  ): { id: number; name: string; code?: string; acronym?: string }[] {
+  private filterEntities(value: string): any[] {
     const filterValue = typeof value === "string" ? value.toLowerCase() : "";
-
     return this.entities.filter((entity) =>
       `${entity.code ?? ""} ${entity.acronym ?? ""} ${entity.name ?? ""}`
         .toLowerCase()
@@ -189,5 +218,12 @@ export class IndicatorScoresEditComponent implements OnInit {
 
   displayEntityFn(entity: any): string {
     return entity ? `${entity.code} - ${entity.acronym} - ${entity.name}` : "";
+  }
+
+  onIndicatorSelected(indicator: IndicatorDTO) {
+    this.scoreForm.patchValue({
+      indicatorId: indicator.id,
+      indicatorSigla: indicator.indicatorAcronym,
+    });
   }
 }
