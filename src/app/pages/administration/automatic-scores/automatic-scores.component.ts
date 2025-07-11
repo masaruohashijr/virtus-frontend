@@ -11,6 +11,8 @@ import { PageResponseDTO } from "src/app/domain/dto/response/page-response.dto";
 import { AutomaticScoresService } from "src/app/services/administration/automatic-scores.service";
 import { ConfirmationDialogComponent } from "src/app/components/dialog/confirmation-dialog/confirmation-dialog.component";
 import { AutomaticScoresEditComponent } from "./automatic-scores-edit/automatic-scores-edit.component";
+import { ComponentsService } from "src/app/services/configuration/components.service";
+import { ComponentDTO } from "src/app/domain/dto/components.dto";
 
 @Component({
   selector: "app-automatic-scores",
@@ -29,6 +31,7 @@ export class AutomaticScoresComponent implements OnInit {
     "criadoEm",
     "actions",
   ];
+  components: ComponentDTO[] = [];
 
   searchForm = this._formBuilder.group({
     filterValue: [""],
@@ -37,11 +40,13 @@ export class AutomaticScoresComponent implements OnInit {
   constructor(
     private _formBuilder: FormBuilder,
     private _service: AutomaticScoresService,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    private _componentsService: ComponentsService
   ) {}
 
   ngOnInit(): void {
     this.initFilterListener();
+    this.loadComponents();
     this.loadScores();
   }
 
@@ -53,6 +58,15 @@ export class AutomaticScoresComponent implements OnInit {
     this.filterControl?.valueChanges
       .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe((filter) => this.loadScores(filter ?? ""));
+  }
+
+  private loadComponents(): void {
+    this._componentsService.getAll("", 0, 1000).subscribe({
+      next: (res) => {
+        this.components = res?.content ?? [];
+      },
+      error: (err) => console.error("Erro ao carregar componentes", err),
+    });
   }
 
   private loadScores(filter = ""): void {
@@ -141,5 +155,10 @@ export class AutomaticScoresComponent implements OnInit {
   openScheduleSyncDialog(): void {
     // Placeholder para uma futura funcionalidade
     console.log("Agendamento de sincronização ainda não implementado.");
+  }
+
+  getComponentNameById(id: number | null): string {
+    const comp = this.components.find((c) => c.id === id);
+    return comp?.name ?? id?.toString() ?? "";
   }
 }

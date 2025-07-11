@@ -12,6 +12,7 @@ import { PageResponseDTO } from "src/app/domain/dto/response/page-response.dto";
 import { IndicatorScoresService } from "src/app/services/administration/indicator-scores.service";
 import { IndicatorScoresEditComponent } from "./indicator-scores-edit/indicator-scores-edit.component";
 import { SyncDialogComponent } from "./sync-dialog/sync-dialog.component";
+import { PlainMessageDialogComponent } from "../plain-message/plain-message-dialog.component";
 
 @Component({
   selector: "app-indicator-scores",
@@ -39,7 +40,7 @@ export class IndicatorScoresComponent implements OnInit {
   constructor(
     private _formBuilder: FormBuilder,
     private _service: IndicatorScoresService,
-    private _dialog: MatDialog,
+    private _dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -136,28 +137,31 @@ export class IndicatorScoresComponent implements OnInit {
   }
 
   openSyncDialog(): void {
-    const referenceDatesCadastrados = this.objectDataSource.data
-      .map((item: any) => item.referenceDate)
-      .filter((date, index, self) => self.indexOf(date) === index); // remover duplicatas
+    this._service.fetchLastReference().subscribe({
+      next: (result: any) => {
+        const ultimaReferencia = result.referenceDate || null;
+        const dialogRef = this._dialog.open(SyncDialogComponent, {
+          width: "400px",
+          data: { ultimaReferencia },
+        });
 
-    const dialogRef = this._dialog.open(SyncDialogComponent, {
-      width: "400px",
-      data: { referenceDatesCadastrados: referenceDatesCadastrados },
+        dialogRef.afterClosed().subscribe((referenceDate) => {
+          if (referenceDate) {
+            console.log("Sincronizar com competência:", referenceDate);
+            // Chame seu service de sincronização aqui se necessário
+          }
+        });
+      },
+      error: (err) => {
+        console.error("Erro ao buscar última referência:", err);
+        this._dialog.open(PlainMessageDialogComponent, {
+          width: "350px",
+          data: {
+            title: "Erro",
+            message: "Erro ao buscar última referência. Verifique o console.",
+          },
+        });
+      },
     });
-
-    dialogRef.afterClosed().subscribe((referenceDate) => {
-      if (referenceDate) {
-        console.log("Sincronizar com competência:", referenceDate);
-        // Chame seu service para sincronizar aqui
-      }
-    });
-  }
-
-  calculateAutomaticScores() {
-    throw new Error("Method not implemented.");
-  }
-
-  openScheduleSyncDialog() {
-    throw new Error("Method not implemented.");
   }
 }

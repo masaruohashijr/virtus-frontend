@@ -4,37 +4,47 @@
 
 <div mat-dialog-content>
   <form [formGroup]="form">
-    <!-- Entidade -->
-    <mat-form-field class="w-full" appearance="outline">
+    <mat-form-field
+      class="w-full mt-auto"
+      appearance="outline"
+    >
       <mat-label>Entidade</mat-label>
       <input
+        type="text"
         matInput
-        [formControl]="entityControl"
         [matAutocomplete]="auto"
-        placeholder="Digite para buscar"
+        formControlName="entityControl"
+        autocomplete="off"
+        (focus)="onEntityFieldFocused()"
       />
-      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayEntityFn">
+
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        autoActiveFirstOption
+        [displayWith]="displayEntityFn"
+        (optionSelected)="onEntitySelected($event)"
+      >
         <mat-option *ngFor="let entity of filteredEntities" [value]="entity">
           {{ entity.code }} - {{ entity.acronym }} - {{ entity.name }}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
 
-    <!-- CNPB -->
-    <mat-form-field class="w-full" appearance="outline">
+    <!-- ComboBox de CNPBs (Planos) -->
+    <mat-form-field class="w-full mt-auto" appearance="outline">
       <mat-label>CNPB</mat-label>
       <mat-select formControlName="cnpb">
-        <mat-option *ngFor="let plan of filteredPlans" [value]="plan.cnpb">
-          {{ plan.cnpb }}
-        </mat-option>
+        <mat-option *ngFor="let plan of filteredPlans" [value]="plan.cnpb">{{
+          plan.cnpb
+        }}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <!-- Data Referência -->
     <mat-form-field class="w-full" appearance="outline">
       <mat-label>Data de Referência</mat-label>
-      <input matInput formControlName="dataReferencia" placeholder="YYYYMM" />
-      <mat-error *ngIf="form.get('dataReferencia')?.hasError('pattern')">
+      <input matInput formControlName="referenceDate" placeholder="YYYYMM" />
+      <mat-error *ngIf="form.get('referenceDate')?.hasError('pattern')">
         Formato inválido. Use YYYYMM.
       </mat-error>
     </mat-form-field>
@@ -42,7 +52,7 @@
     <!-- Componente -->
     <mat-form-field class="w-full" appearance="outline">
       <mat-label>Componente</mat-label>
-      <mat-select formControlName="idComponente">
+      <mat-select formControlName="componentId">
         <mat-option *ngFor="let comp of components" [value]="comp.id">
           {{ comp.name }}
         </mat-option>

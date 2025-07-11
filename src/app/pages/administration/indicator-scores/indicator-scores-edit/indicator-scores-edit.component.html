@@ -11,6 +11,7 @@
         matInput
         [matAutocomplete]="auto"
         [formControl]="entityControl"
+        autocomplete="off"
       />
       <mat-autocomplete
         #auto="matAutocomplete"
@@ -48,7 +49,10 @@
         formControlName="indicatorSigla"
         (selectionChange)="onIndicatorSelected($event.value)"
       >
-        <mat-option *ngFor="let indicator of indicators" [value]="indicator">
+        <mat-option
+          *ngFor="let indicator of indicators"
+          [value]="indicator.indicatorAcronym"
+        >
           {{ indicator.indicatorAcronym }} - {{ indicator.indicatorName }}
         </mat-option>
       </mat-select>

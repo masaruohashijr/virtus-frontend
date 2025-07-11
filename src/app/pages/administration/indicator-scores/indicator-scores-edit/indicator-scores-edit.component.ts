@@ -18,7 +18,7 @@ import { PageResponseDTO } from "src/app/domain/dto/response/page-response.dto";
 import { IndicatorScoresService } from "src/app/services/administration/indicator-scores.service";
 import { PlansService } from "src/app/services/administration/plans.service";
 import { EntityVirtusService } from "src/app/services/rating/entity-virtus.service";
-import { IndicatorsService } from "src/app/services/administration/indicators.service";
+import { IndicatorsService } from "src/app/services/configuration/indicators.service";
 
 @Component({
   selector: "app-indicator-scores-edit",
@@ -220,10 +220,15 @@ export class IndicatorScoresEditComponent implements OnInit {
     return entity ? `${entity.code} - ${entity.acronym} - ${entity.name}` : "";
   }
 
-  onIndicatorSelected(indicator: IndicatorDTO) {
-    this.scoreForm.patchValue({
-      indicatorId: indicator.id,
-      indicatorSigla: indicator.indicatorAcronym,
-    });
+  onIndicatorSelected(acronym: string): void {
+    const indicator = this.indicators.find(
+      (i) => i.indicatorAcronym === acronym
+    );
+    if (indicator) {
+      this.scoreForm.patchValue({
+        indicatorId: indicator.id,
+        indicatorSigla: indicator.indicatorAcronym,
+      });
+    }
   }
 }

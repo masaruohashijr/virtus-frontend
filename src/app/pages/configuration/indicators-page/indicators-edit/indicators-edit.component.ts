@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { catchError, tap, throwError } from 'rxjs';
 import { IndicatorDTO } from 'src/app/domain/dto/indicator.dto';
-import { IndicatorsService } from 'src/app/services/administration/indicators.service';
+import { IndicatorsService } from 'src/app/services/configuration/indicators.service';
 
 @Component({
   selector: 'app-indicators-edit',
@@ -21,7 +21,7 @@ export class IndicatorsEditComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<IndicatorsEditComponent>,
     private _formBuilder: FormBuilder,
-    private _service: IndicatorsService,
+    @Inject(IndicatorsService) private _service: IndicatorsService,
     @Inject(MAT_DIALOG_DATA) public object: IndicatorDTO
   ) {}
 

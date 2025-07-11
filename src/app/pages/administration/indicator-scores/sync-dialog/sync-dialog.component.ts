@@ -19,7 +19,7 @@ export class SyncDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<SyncDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: { referenceDatesCadastrados: string[] },
+    public data: { ultimaReferencia: string },
     private fb: FormBuilder,
     private _service: IndicatorScoresService,
     private dialog: MatDialog
@@ -28,7 +28,7 @@ export class SyncDialogComponent implements OnInit {
   ngOnInit(): void {
     this.syncForm = this.fb.group({
       referenceDate: [
-        this.getDefaultReferenceDate(),
+        this.data.ultimaReferencia || "",
         [Validators.required, Validators.pattern(/^[0-9]{4}(0[1-9]|1[0-2])$/)],
       ],
     });
@@ -61,7 +61,7 @@ export class SyncDialogComponent implements OnInit {
     }
 
     const refDate: string = value;
-    const jaExiste = this.data.referenceDatesCadastrados?.includes(refDate);
+    const jaExiste = this.data.ultimaReferencia?.includes(refDate);
 
     const continuar = () => {
       this._service.syncScores(refDate);
@@ -98,10 +98,4 @@ export class SyncDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  getDefaultReferenceDate(): string {
-    const now = new Date();
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    const year = now.getFullYear();
-    return `${year}${month}`;
-  }
 }

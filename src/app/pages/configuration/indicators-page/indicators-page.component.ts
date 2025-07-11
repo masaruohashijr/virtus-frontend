@@ -3,14 +3,15 @@ import { FormBuilder } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { PageEvent } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
-import { debounceTime, distinctUntilChanged, catchError } from "rxjs/operators";
 import { throwError } from "rxjs";
+import { catchError, debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import { ConfirmationDialogComponent } from "src/app/components/dialog/confirmation-dialog/confirmation-dialog.component";
-import { PageResponseDTO } from "src/app/domain/dto/response/page-response.dto";
-import { IndicatorsService } from "src/app/services/administration/indicators.service";
 import { IndicatorDTO } from "src/app/domain/dto/indicator.dto";
+import { PageResponseDTO } from "src/app/domain/dto/response/page-response.dto";
+import { IndicatorsService } from "src/app/services/configuration/indicators.service";
 import { IndicatorsEditComponent } from "./indicators-edit/indicators-edit.component";
+import { PlainMessageDialogComponent } from "../../administration/plain-message/plain-message-dialog.component";
 
 @Component({
   selector: "app-indicators",
@@ -24,7 +25,6 @@ export class IndicatorsPageComponent implements OnInit {
     "id",
     "indicatorAcronym",
     "indicatorName",
-    "indicatorDescription",
     "actions",
   ];
 
@@ -128,6 +128,31 @@ export class IndicatorsPageComponent implements OnInit {
             this.loadIndicators(this.filterControl?.value || "")
           );
       }
+    });
+  }
+
+  syncIndicators(): void {
+    this._service.syncIndicators().subscribe({
+      next: () => {
+        this._dialog.open(PlainMessageDialogComponent, {
+          width: "350px",
+          data: {
+            title: "Sincronização",
+            message: "Sincronização realizada com sucesso!",
+          },
+        });
+        this.loadIndicators(this.filterControl?.value || "");
+      },
+      error: (err) => {
+        console.error("Erro ao sincronizar indicadores:", err);
+        this._dialog.open(PlainMessageDialogComponent, {
+          width: "350px",
+          data: {
+            title: "Erro",
+            message: "Erro ao sincronizar. Verifique o console.",
+          },
+        });
+      },
     });
   }
 }

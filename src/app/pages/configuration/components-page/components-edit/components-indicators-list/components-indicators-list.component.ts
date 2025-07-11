@@ -102,17 +102,20 @@ export class ComponentsIndicatorsListComponent implements OnInit {
     });
   }
 
-  deleteObject(object: IndicatorDTO) {
+  deleteObject(object: ComponentIndicatorDTO) {
     const dialogRef = this.deleteDialog.open(ConfirmationDialogComponent, {
       width: "270px",
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
+        console.log("Exclusão confirmada");
+        console.log(this.component.componentIndicators?.length);
         this.component.componentIndicators = (
           this.component.componentIndicators ?? []
-        ).filter((comInd) => comInd.indicator.id !== object.id);
+        ).filter((comInd) => comInd.id !== object.id);
         this.objectDataSource.data = this.component.componentIndicators;
+        console.log(this.component.componentIndicators?.length);
       }
     });
   }

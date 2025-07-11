@@ -12,7 +12,6 @@ import { IndicatorsService } from "src/app/services/configuration/indicators.ser
   styleUrls: ["./components-indicators-edit.component.css"],
 })
 export class ComponentsIndicatorsEditComponent implements OnInit {
-
   father: ComponentDTO;
   object: ComponentIndicatorDTO;
   allIndicators: IndicatorDTO[] = [];
@@ -36,7 +35,7 @@ export class ComponentsIndicatorsEditComponent implements OnInit {
     if (this.object.indicator) {
       this.indicatorForm.patchValue({
         indicator: this.object.indicator,
-        standardWeight: this.object.standardWeight ?? 1
+        standardWeight: this.object.standardWeight ?? 1,
       });
     }
   }
@@ -45,7 +44,9 @@ export class ComponentsIndicatorsEditComponent implements OnInit {
     this._indicatorService
       .getAll("", 0, 100)
       .subscribe((resp: { content: IndicatorDTO[] }) => {
-        this.allIndicators = resp.content;
+        this.allIndicators = resp.content.sort((a, b) =>
+          (a.indicatorAcronym ?? '').localeCompare(b.indicatorAcronym ?? '')
+        );
       });
   }
 
@@ -55,7 +56,8 @@ export class ComponentsIndicatorsEditComponent implements OnInit {
       return;
     }
 
-    const selectedIndicator = this.indicatorForm.value.indicator ?? new IndicatorDTO();
+    const selectedIndicator =
+      this.indicatorForm.value.indicator ?? new IndicatorDTO();
     const weight = this.indicatorForm.value.standardWeight ?? 1;
 
     this.object.indicator = selectedIndicator;
@@ -70,7 +72,5 @@ export class ComponentsIndicatorsEditComponent implements OnInit {
       : "Configurar novo Indicador";
   }
 
-  compare = (a: IndicatorDTO, b: IndicatorDTO) =>
-    a && b && a.id === b.id;
-
+  compare = (a: IndicatorDTO, b: IndicatorDTO) => a && b && a.id === b.id;
 }
