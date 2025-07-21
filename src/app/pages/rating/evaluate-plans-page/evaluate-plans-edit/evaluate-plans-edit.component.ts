@@ -273,7 +273,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     const componente = rowNode
       ? this.subirAtePorNode(rowNode, "Componente")
       : null;
-    const elemento = rowNode?.node;
+    const elemento = rowNode;
 
     const dialogRef = this.dialog.open(MotivarNotaComponent, {
       width: "1000px",
@@ -301,7 +301,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     const novoPeso = (event.target as HTMLInputElement).value;
     const entidade = this.subirAtePorNode(rowNode, "Entidade");
     const ciclo = this.subirAtePorNode(rowNode, "Ciclo");
-    const pilar = rowNode.node;
+    const pilar = rowNode;
     const dialogRef = this.dialog.open(JustifyPillarWeightComponent, {
       width: "1000px",
       data: {
@@ -320,12 +320,12 @@ export class EvaluatePlansEditComponent implements OnInit {
       const input = event.target as HTMLInputElement;
       if (foiSalvo) {
         // Atualiza o peso após o salvamento da motivação
-        rowNode.node.data.peso = novoPeso;
-        rowNode.node.data.weight = novoPeso;
+        rowNode.data.peso = novoPeso;
+        rowNode.data.weight = novoPeso;
         input.value = String(novoPeso);
       } else {
         // Reverte ao valor anterior caso não tenha sido salvo
-        rowNode.node.data.peso = pesoAnterior;
+        rowNode.data.peso = pesoAnterior;
         input.value = String(pesoAnterior);
         setTimeout(() => input.focus(), 100);
       }
@@ -472,7 +472,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     const componente = rowNode
       ? this.subirAtePorNode(rowNode, "Componente")
       : null;
-    const elemento = rowNode?.node;
+    const elemento = rowNode;
 
     const dialogRef = this.dialog.open(MotivarPesoComponent, {
       width: "1000px",
