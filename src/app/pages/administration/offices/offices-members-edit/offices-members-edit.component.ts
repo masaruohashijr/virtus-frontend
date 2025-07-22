@@ -7,7 +7,6 @@ import { UserDTO } from 'src/app/domain/dto/user.dto';
 import { BaseCrudEditComponent } from 'src/app/pages/common/base-crud-page/base-crud-edit/base-crud-edit.component';
 import { OfficesService } from 'src/app/services/administration/offices.service';
 import { UsersService } from 'src/app/services/administration/users.service';
-import { MembersEditComponent } from '../members-edit/members-edit.component';
 
 @Component({
   selector: 'app-offices-members-edit',
@@ -34,8 +33,8 @@ export class OfficesMembersEditComponent extends BaseCrudEditComponent<OfficeDTO
   }
 
   ngOnInit(): void {
-    this._usersService.getAll('', 0, 1000).subscribe(resp => {
-      this.users = resp.content;
+    this._usersService.getAllByRole(2).subscribe(resp => {
+      this.users = resp;
     })
   }
 
