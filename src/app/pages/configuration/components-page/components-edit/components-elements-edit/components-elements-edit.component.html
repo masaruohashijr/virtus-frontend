@@ -13,10 +13,6 @@
         <mat-option *ngFor="let gradeType of gradeTypes" [value]="gradeType">{{gradeType.name}}</mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field class="w-full mt-auto" appearance="outline">
-      <mat-label>Peso</mat-label>
-      <input formControlName="standardWeight" type="number" [pattern]="'^-?[0-9]+$'" matInput>
-    </mat-form-field>
   </form>
 </div>
 <div mat-dialog-actions [align]="'end'">

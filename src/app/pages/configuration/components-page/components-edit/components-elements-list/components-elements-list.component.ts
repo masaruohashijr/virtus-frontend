@@ -16,7 +16,7 @@ import { ConfirmationDialogComponent } from 'src/app/components/dialog/confirmat
 export class ComponentsElementsListComponent implements OnInit {
 
   objectDataSource: MatTableDataSource<ComponentElementDTO> = new MatTableDataSource();
-  objectTableColumns: string[] = ['elementName', 'gradeType', 'standardWeight', 'createdAt', "actions"];
+  objectTableColumns: string[] = ['elementName', 'gradeType', 'createdAt', "actions"];
 
 
   @Input() component!: ComponentDTO
