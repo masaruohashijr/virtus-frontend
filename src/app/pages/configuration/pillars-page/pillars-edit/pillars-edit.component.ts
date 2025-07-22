@@ -67,7 +67,7 @@ export class PillarsEditComponent extends BaseCrudEditComponent<PillarDTO> imple
   }
 
   getTitle() {
-    return this.object.name ? "Editar Pillar \"" + this.object.name + "\"" : "Cadastrar novo Pillar";
+    return this.object.name ? "Editar Pilar \"" + this.object.name + "\"" : "Cadastrar novo Pilar";
   }
 
 }
