@@ -46,10 +46,10 @@
                     {{ selected?.name }}
                     <mat-icon matChipRemove>cancel</mat-icon>
                 </mat-chip>
-                <input placeholder="Adicionar uma Entidade ao Cliclo" matInput [matAutocomplete]="auto"
+                <input #entityInputEl placeholder="Adicionar uma Entidade ao Cliclo" matInput [matAutocomplete]="auto"
                     [formControl]="entityInput">
             </mat-chip-list>
-        </mat-form-field>
+        </mat-form-field>q
     </form>
 </div>
 <div mat-dialog-actions [align]="'end'">

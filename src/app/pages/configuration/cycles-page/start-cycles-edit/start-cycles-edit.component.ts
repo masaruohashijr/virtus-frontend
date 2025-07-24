@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from "@angular/core";
+import { Component, ElementRef, Inject, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
 import {
@@ -25,6 +25,8 @@ export class StartCyclesEditComponent
   extends BaseCrudEditComponent<StartCycleDTO>
   implements OnInit
 {
+  @ViewChild("entityInputEl") entityInputEl!: ElementRef<HTMLInputElement>;
+
   private object: StartCycleDTO;
 
   entityInput = new FormControl();
@@ -38,7 +40,7 @@ export class StartCyclesEditComponent
     description: [this.data.object.cycle.description],
     startsAt: [this.data.object.startsAt, [Validators.required]],
     endsAt: [this.data.object.endsAt, [Validators.required]],
-    author: [this.data.object.cycle.author?.name || '', []],
+    author: [this.data.object.cycle.author?.name || "", []],
     createdAt: [this.data.object.cycle.createdAt],
     entities: [this.selectedEntities],
   });
@@ -143,6 +145,10 @@ export class StartCyclesEditComponent
 
   clearFilter(): void {
     this.entityInput.setValue("");
+    if (this.entityInputEl) {
+      this.entityInputEl.nativeElement.value = "";
+    }
+
     this.entities = this.allEntities.filter(
       (item) =>
         !this.selectedEntities.some((selected) => selected.id === item.id)
