@@ -1,41 +1,38 @@
-import { AnalyzeTierComponent } from "./../analyze-tier/analyze-tier.component";
-import { ProductPillarHistoryService } from "src/app/services/coordination/product-pillar-history.service";
-import { HttpClient } from "@angular/common/http";
 import { Component, Input, OnInit } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { TreeNode } from "primeng/api";
+import { ProductPillarHistoryService } from "src/app/services/coordination/product-pillar-history.service";
 import { JustifyPillarWeightComponent } from "../justify-pillar-weight/justify-pillar-weight.component";
+import { AnalyzeTierComponent } from "./../analyze-tier/analyze-tier.component";
 
 import { AuditorDTO } from "src/app/domain/dto/auditor.dto";
 import { CurrentUser } from "src/app/domain/dto/current-user.dto";
 import { EntityVirtusDTO } from "src/app/domain/dto/entity-virtus.dto";
 import { EvaluatePlansTreeNode } from "src/app/domain/dto/eveluate-plans-tree-node";
+import { ProductComponentHistoryDTO } from "src/app/domain/dto/product-component-history.dto";
 import { ProductComponentDTO } from "src/app/domain/dto/product-component.dto";
+import { ProductElementHistoryDTO } from "src/app/domain/dto/product-element-history.dto";
+import { ProductPillarHistoryDTO } from "src/app/domain/dto/product-pillar-history.dto";
 import { UserDTO } from "src/app/domain/dto/user.dto";
 import { UsersService } from "src/app/services/administration/users.service";
+import { ProductComponentHistoryService } from "src/app/services/coordination/product-component-history.service";
+import { ProductElementHistoryService } from "src/app/services/coordination/product-element-history.service";
 import { EvaluatePlansService } from "src/app/services/rating/evaluate-plans.service";
+import { PlainMessageDialogComponent } from "../../../administration/plain-message/plain-message-dialog.component";
+import { ComponentChangeHistoryComponent } from "../component-change-history/component-change-history.component";
+import { ElementChangeHistoryComponent } from "../element-change-history/element-change-history.component";
+import { ShowDescriptionComponent } from "../show-description/show-description.component";
 import {
   MotivarNotaComponent,
   MotivarNotaData,
 } from "./../motivar-nota/motivar-nota.component";
 import {
-  MotivarPesoComponent,
-  MotivarPesoData,
+  MotivarPesoComponent
 } from "./../motivar-peso/motivar-peso.component";
 import {
-  PillarChangeHistoryComponent,
-  PillarChangeHistoryData,
+  PillarChangeHistoryComponent
 } from "./../pillar-change-history/pillar-change-history.component";
-import { PlainMessageDialogComponent } from "../../../administration/plain-message/plain-message-dialog.component";
-import { ProductPillarHistoryDTO } from "src/app/domain/dto/product-pillar-history.dto";
-import { ShowDescriptionComponent } from "../show-description/show-description.component";
-import { ProductComponentHistoryService } from "src/app/services/coordination/product-component-history.service";
-import { ProductComponentHistoryDTO } from "src/app/domain/dto/product-component-history.dto";
-import { ComponentChangeHistoryComponent } from "../component-change-history/component-change-history.component";
-import { ProductElementHistoryService } from "src/app/services/coordination/product-element-history.service";
-import { ProductElementHistoryDTO } from "src/app/domain/dto/product-element-history.dto";
-import { ElementChangeHistoryComponent } from "../element-change-history/element-change-history.component";
 
 @Component({
   selector: "app-evaluate-plans-edit",

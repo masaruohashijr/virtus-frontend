@@ -1,24 +1,31 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { catchError } from 'rxjs/internal/operators/catchError';
-import { tap } from 'rxjs/internal/operators/tap';
-import { CycleDTO } from 'src/app/domain/dto/cycle.dto';
-import { EntityVirtusDTO } from 'src/app/domain/dto/entity-virtus.dto';
-import { StartCycleDTO } from 'src/app/domain/dto/start-cycle.dto';
-import { BaseCrudEditComponent } from 'src/app/pages/common/base-crud-page/base-crud-edit/base-crud-edit.component';
-import { CyclesService } from 'src/app/services/configuration/cycles.service';
-import { EntityVirtusService } from 'src/app/services/rating/entity-virtus.service';
+import { Component, Inject, OnInit } from "@angular/core";
+import { FormBuilder, FormControl, Validators } from "@angular/forms";
+import { MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from "@angular/material/dialog";
+import { catchError } from "rxjs/internal/operators/catchError";
+import { tap } from "rxjs/internal/operators/tap";
+import { EntityVirtusDTO } from "src/app/domain/dto/entity-virtus.dto";
+import { StartCycleDTO } from "src/app/domain/dto/start-cycle.dto";
+import { BaseCrudEditComponent } from "src/app/pages/common/base-crud-page/base-crud-edit/base-crud-edit.component";
+import { UsersService } from "src/app/services/administration/users.service";
+import { CyclesService } from "src/app/services/configuration/cycles.service";
+import { EntityVirtusService } from "src/app/services/rating/entity-virtus.service";
+import { CurrentUser } from "src/app/domain/dto/current-user.dto";
 
 @Component({
-  selector: 'app-start-cycles-edit',
-  templateUrl: './start-cycles-edit.component.html',
-  styleUrls: ['./start-cycles-edit.component.css']
+  selector: "app-start-cycles-edit",
+  templateUrl: "./start-cycles-edit.component.html",
+  styleUrls: ["./start-cycles-edit.component.css"],
 })
-export class StartCyclesEditComponent extends BaseCrudEditComponent<StartCycleDTO> implements OnInit {
-
-  private object: StartCycleDTO
+export class StartCyclesEditComponent
+  extends BaseCrudEditComponent<StartCycleDTO>
+  implements OnInit
+{
+  private object: StartCycleDTO;
 
   entityInput = new FormControl();
 
@@ -31,34 +38,43 @@ export class StartCyclesEditComponent extends BaseCrudEditComponent<StartCycleDT
     description: [this.data.object.cycle.description],
     startsAt: [this.data.object.startsAt, [Validators.required]],
     endsAt: [this.data.object.endsAt, [Validators.required]],
-    author: [this.data.object.cycle.author],
+    author: [this.data.object.cycle.author?.name || '', []],
     createdAt: [this.data.object.cycle.createdAt],
-    entities: [this.selectedEntities]
+    entities: [this.selectedEntities],
   });
 
-  constructor(public dialogRef: MatDialogRef<StartCyclesEditComponent>,
+  constructor(
+    public dialogRef: MatDialogRef<StartCyclesEditComponent>,
     private _service: CyclesService,
     private _entityService: EntityVirtusService,
+    private _usersService: UsersService,
     private _formBuilder: FormBuilder,
     private errorDialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: { object: StartCycleDTO }) {
+    @Inject(MAT_DIALOG_DATA) public data: { object: StartCycleDTO }
+  ) {
     super();
     this.object = data.object;
     this.object.entities = data.object.cycle.entities;
     console.log(this.object);
   }
-
+  currentUser: CurrentUser = this._usersService.getCurrentUser();
+  curUserRole: string = this.currentUser?.role || "";
   ngOnInit(): void {
-    this._entityService.getAll('', 0, 1000).subscribe((resp) => {
+    this._entityService.getAll("", 0, 1000).subscribe((resp) => {
       this.allEntities = resp.content;
       this.entities = this.allEntities;
-      this.selectedEntities = this.allEntities.filter(item => this.object.entities?.some(r => r.id === item.id))
-      this.elementForm.get('entities')?.setValue(this.selectedEntities);
-      this.entities = this.allEntities.filter(item => !this.selectedEntities?.some(selected => selected.id === item.id))
+      this.selectedEntities = this.allEntities.filter((item) =>
+        this.object.entities?.some((r) => r.id === item.id)
+      );
+      this.elementForm.get("entities")?.setValue(this.selectedEntities);
+      this.entities = this.allEntities.filter(
+        (item) =>
+          !this.selectedEntities?.some((selected) => selected.id === item.id)
+      );
     });
-    this.elementForm.get('author')?.disable();
-    this.elementForm.get('createdAt')?.disable();
-    this.entityInput.valueChanges.subscribe(value => {
+    this.elementForm.get("author")?.disable();
+    this.elementForm.get("createdAt")?.disable();
+    this.entityInput.valueChanges.subscribe((value) => {
       this.filterEntities(value);
     });
   }
@@ -67,13 +83,15 @@ export class StartCyclesEditComponent extends BaseCrudEditComponent<StartCycleDT
     const selectedEntity = event.option.value;
 
     if (selectedEntity) {
-      this.selectedEntities = this.elementForm.get('entities')?.value as EntityVirtusDTO[] || [];
+      this.selectedEntities =
+        (this.elementForm.get("entities")?.value as EntityVirtusDTO[]) || [];
       this.selectedEntities.push(selectedEntity);
-      this.elementForm.get('entities')?.setValue(this.selectedEntities);
+      this.elementForm.get("entities")?.setValue(this.selectedEntities);
 
       // Atualiza a lista de entidades removendo as já selecionadas
-      this.entities = this.allEntities.filter(item =>
-        !this.selectedEntities.some(selected => selected.id === item.id)
+      this.entities = this.allEntities.filter(
+        (item) =>
+          !this.selectedEntities.some((selected) => selected.id === item.id)
       );
 
       this.object.entities?.push(selectedEntity);
@@ -84,19 +102,23 @@ export class StartCyclesEditComponent extends BaseCrudEditComponent<StartCycleDT
   }
 
   removeEntity(chip: EntityVirtusDTO): void {
-    this.selectedEntities = this.elementForm.get('entities')?.value as EntityVirtusDTO[];
+    this.selectedEntities = this.elementForm.get("entities")
+      ?.value as EntityVirtusDTO[];
     const index = this.selectedEntities.indexOf(chip);
 
     if (index >= 0) {
       this.selectedEntities.splice(index, 1);
-      this.elementForm.get('entities')?.setValue(this.selectedEntities);
+      this.elementForm.get("entities")?.setValue(this.selectedEntities);
 
       // Atualiza a lista de opções disponíveis
-      this.entities = this.allEntities.filter(item =>
-        !this.selectedEntities.some(selected => selected.id === item.id)
+      this.entities = this.allEntities.filter(
+        (item) =>
+          !this.selectedEntities.some((selected) => selected.id === item.id)
       );
 
-      this.object.entities = this.object.entities?.filter(item => item?.id !== chip.id);
+      this.object.entities = this.object.entities?.filter(
+        (item) => item?.id !== chip.id
+      );
       this.clearFilter();
     }
   }
@@ -104,29 +126,32 @@ export class StartCyclesEditComponent extends BaseCrudEditComponent<StartCycleDT
   // Método para filtrar as entidades no autocomplete
   filterEntities(value: string): void {
     try {
-      const filterValue = value ? value.toLowerCase() : '';
-      this.entities = this.allEntities.filter(entity =>
-        entity?.name?.toLowerCase().includes(filterValue) ||
-        entity?.acronym?.toLowerCase().includes(filterValue) ||
-        entity?.code?.toString().includes(filterValue)
+      const filterValue = value ? value.toLowerCase() : "";
+      this.entities = this.allEntities.filter(
+        (entity) =>
+          entity?.name?.toLowerCase().includes(filterValue) ||
+          entity?.acronym?.toLowerCase().includes(filterValue) ||
+          entity?.code?.toString().includes(filterValue)
       );
     } catch {
-      this.entities = this.allEntities.filter(item =>
-        !this.selectedEntities.some(selected => selected.id === item.id)
+      this.entities = this.allEntities.filter(
+        (item) =>
+          !this.selectedEntities.some((selected) => selected.id === item.id)
       );
     }
   }
 
   clearFilter(): void {
-    this.entityInput.setValue('');
-    this.entities = this.allEntities.filter(item =>
-      !this.selectedEntities.some(selected => selected.id === item.id)
+    this.entityInput.setValue("");
+    this.entities = this.allEntities.filter(
+      (item) =>
+        !this.selectedEntities.some((selected) => selected.id === item.id)
     );
   }
 
   save() {
     if (this.elementForm.invalid) {
-      this.elementForm.markAllAsTouched()
+      this.elementForm.markAllAsTouched();
       return;
     }
 
@@ -135,25 +160,25 @@ export class StartCyclesEditComponent extends BaseCrudEditComponent<StartCycleDT
     this.object.startsAt = this.elementForm.value.startsAt;
     this.object.endsAt = this.elementForm.value.endsAt;
 
-    this._service.startCycle(this.object).pipe(
-      tap(resp => {
-        this.dialogRef.close(resp);
-      }),
-      catchError(error => {
-        this.mostrarErro(error, this.errorDialog);
-        console.error(error);
-        return throwError(error);
-      })
-    ).subscribe();
-
+    this._service
+      .startCycle(this.object)
+      .pipe(
+        tap((resp) => {
+          this.dialogRef.close(resp);
+        }),
+        catchError((error) => {
+          this.mostrarErro(error, this.errorDialog);
+          console.error(error);
+          return throwError(error);
+        })
+      )
+      .subscribe();
   }
 
   getTitle() {
     return "Iniciar Ciclo";
   }
-
 }
 function throwError(error: any): any {
-  throw new Error('Function not implemented.');
+  throw new Error("Function not implemented.");
 }
-

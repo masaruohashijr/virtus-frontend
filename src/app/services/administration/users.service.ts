@@ -1,18 +1,17 @@
-import { Injectable } from '@angular/core';
-import { UserDTO } from 'src/app/domain/dto/user.dto';
-import { BaseService } from '../common/base.service';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { UserUpdatePasswordDTO } from 'src/app/domain/dto/user-update-password.dto';
-import { URL_API } from 'src/app/common/service-constants';
-import { Observable } from 'rxjs';
-import { PageResponseDTO } from 'src/app/domain/dto/response/page-response.dto';
-import { CurrentUser } from 'src/app/domain/dto/current-user.dto';
+import { Injectable } from "@angular/core";
+import { UserDTO } from "src/app/domain/dto/user.dto";
+import { BaseService } from "../common/base.service";
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { UserUpdatePasswordDTO } from "src/app/domain/dto/user-update-password.dto";
+import { URL_API } from "src/app/common/service-constants";
+import { Observable } from "rxjs";
+import { PageResponseDTO } from "src/app/domain/dto/response/page-response.dto";
+import { CurrentUser } from "src/app/domain/dto/current-user.dto";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
-export class UsersService extends BaseService<UserDTO>{
-
+export class UsersService extends BaseService<UserDTO> {
   currentUser!: CurrentUser;
 
   constructor(private _httpClient: HttpClient) {
@@ -28,7 +27,7 @@ export class UsersService extends BaseService<UserDTO>{
   }
 
   override rootEndpoint(): string {
-    return '/users';
+    return "/users";
   }
 
   override getHttpClient(): HttpClient {
@@ -36,19 +35,37 @@ export class UsersService extends BaseService<UserDTO>{
   }
 
   updatePassword(body: UserUpdatePasswordDTO) {
-    return this._httpClient.put(URL_API + this.rootEndpoint() + '/update-password', body);
+    return this._httpClient.put(
+      URL_API + this.rootEndpoint() + "/update-password",
+      body
+    );
   }
 
-  getAllNotMember(page: number, size: number): Observable<PageResponseDTO<UserDTO>> {
+  getAllNotMember(
+    page: number,
+    size: number
+  ): Observable<PageResponseDTO<UserDTO>> {
     let queryParams = new HttpParams();
     queryParams = queryParams.append("page", page);
     queryParams = queryParams.append("size", size);
-    return this.getHttpClient().get<PageResponseDTO<UserDTO>>(URL_API + this.rootEndpoint() + '/not-member', { params: queryParams });
+    return this.getHttpClient().get<PageResponseDTO<UserDTO>>(
+      URL_API + this.rootEndpoint() + "/not-member",
+      { params: queryParams }
+    );
   }
 
   getAllByRole(roleId: number): Observable<UserDTO[]> {
     let queryParams = new HttpParams();
     queryParams = queryParams.append("roleId", roleId);
-    return this.getHttpClient().get<UserDTO[]>(URL_API + this.rootEndpoint() + '/by-role', { params: queryParams });
+    return this.getHttpClient().get<UserDTO[]>(
+      URL_API + this.rootEndpoint() + "/by-role",
+      { params: queryParams }
+    );
+  }
+
+  getUserDTOFromCurrentUser(): Observable<UserDTO> {
+    return this.getHttpClient().get<UserDTO>(
+      `${URL_API}${this.rootEndpoint()}/${this.currentUser.id}`
+    );
   }
 }
