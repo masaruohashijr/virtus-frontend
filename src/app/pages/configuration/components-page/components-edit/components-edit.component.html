@@ -13,6 +13,15 @@
           <mat-form-field class="w-full mt-auto" appearance="outline">
             <mat-label>Descrição</mat-label>
             <textarea formControlName="description" matInput></textarea>
+            <div style="text-align: right; font-size: 12px; margin-top: 4px">
+              {{ contador }} / 8000
+            </div>
+            <div
+              *ngIf="errorMessage"
+              style="color: red; font-size: 12px; margin-top: 4px"
+            >
+              {{ errorMessage }}
+            </div>
           </mat-form-field>
 
           <mat-form-field class="w-full mt-auto" appearance="outline">
@@ -43,15 +52,21 @@
       <!-- Aba: Manual -->
       <mat-tab label="Manual">
         <div class="p-4">
-          <app-components-grade-list [component]="object"></app-components-grade-list>
-          <app-components-elements-list [component]="object"></app-components-elements-list>
+          <app-components-grade-list
+            [component]="object"
+          ></app-components-grade-list>
+          <app-components-elements-list
+            [component]="object"
+          ></app-components-elements-list>
         </div>
       </mat-tab>
 
       <!-- Aba: Automático -->
       <mat-tab label="Automático">
         <div class="p-4">
-          <app-components-indicators-list [component]="object"></app-components-indicators-list>
+          <app-components-indicators-list
+            [component]="object"
+          ></app-components-indicators-list>
         </div>
       </mat-tab>
     </mat-tab-group>
@@ -60,6 +75,8 @@
 
 <!-- Botões abaixo das abas -->
 <div mat-dialog-actions align="end">
-  <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>Salvar</button>
+  <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>
+    Salvar
+  </button>
   <button mat-flat-button [mat-dialog-close]="object.name">Cancelar</button>
 </div>

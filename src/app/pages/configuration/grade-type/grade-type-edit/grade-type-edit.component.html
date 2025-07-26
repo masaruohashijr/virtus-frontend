@@ -1,21 +1,30 @@
-<h1 mat-dialog-title>{{getTitle()}}</h1>
+<h1 mat-dialog-title>{{ getTitle() }}</h1>
 <div mat-dialog-content>
   <form [formGroup]="gradeTypeForm">
     <mat-form-field class="w-full mt-auto" appearance="outline">
       <mat-label>Nome</mat-label>
-      <input formControlName="name" matInput>
+      <input formControlName="name" matInput />
     </mat-form-field>
     <mat-form-field class="w-full mt-auto" appearance="outline">
       <mat-label>Descrição</mat-label>
       <textarea formControlName="description" matInput></textarea>
+      <div style="text-align: right; font-size: 12px; margin-top: 4px">
+        {{ contador }} / 8000
+      </div>
+      <div
+        *ngIf="errorMessage"
+        style="color: red; font-size: 12px; margin-top: 4px"
+      >
+        {{ errorMessage }}
+      </div>
     </mat-form-field>
     <mat-form-field class="w-full mt-auto" appearance="outline">
       <mat-label>Link de Referência</mat-label>
-      <input formControlName="reference" matInput>
+      <input formControlName="reference" matInput />
     </mat-form-field>
     <mat-form-field class="w-full mt-auto" appearance="outline">
       <mat-label>Letra na Matriz</mat-label>
-      <input formControlName="letter" [maxlength]="1" matInput>
+      <input formControlName="letter" [maxlength]="1" matInput />
     </mat-form-field>
     <mat-form-field class="w-full mt-auto" appearance="outline">
       <mat-label>Cor da Letra na Matriz</mat-label>
@@ -38,6 +47,8 @@
   </form>
 </div>
 <div mat-dialog-actions [align]="'end'">
-  <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>Salvar</button>
+  <button mat-raised-button color="primary" (click)="save()" cdkFocusInitial>
+    Salvar
+  </button>
   <button mat-flat-button [mat-dialog-close]="object.name">Cancelar</button>
 </div>

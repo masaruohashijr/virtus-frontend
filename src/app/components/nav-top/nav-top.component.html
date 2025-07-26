@@ -16,7 +16,7 @@
     Coordenação
   </button>
   <button mat-button [matMenuTriggerFor]="evaluation">Avaliação</button>
-  <button mat-button [matMenuTriggerFor]="configuration">Configuração</button>
+  <button mat-button [matMenuTriggerFor]="configuration" *ngIf="loggedUser?.role?.toLowerCase() == 'admin'">Configuração</button>
   <button
     mat-button
     [matMenuTriggerFor]="administration"

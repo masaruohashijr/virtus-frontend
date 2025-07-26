@@ -12,7 +12,8 @@ import { PillarsService } from 'src/app/services/configuration/pillars.service';
   styleUrls: ['./pillars-edit.component.css']
 })
 export class PillarsEditComponent extends BaseCrudEditComponent<PillarDTO> implements OnInit {
-
+  contador = 0;
+  errorMessage: string = "";
   pillarForm = this._formBuilder.group({
     name: [this.object.name, [Validators.required]],
     description: [this.object.description],
@@ -27,7 +28,32 @@ export class PillarsEditComponent extends BaseCrudEditComponent<PillarDTO> imple
     super();
   }
 
-  ngOnInit(): void {
+ngOnInit(): void {
+    this.atualizarContador();
+    this.pillarForm
+      .get("description")
+      ?.valueChanges.subscribe((val: string | null | undefined) => {
+        this.contador = val?.length || 0;
+
+        if (this.contador > 8000) {
+          this.errorMessage = "Limite de 8000 caracteres atingido.";
+          const truncated = (val ?? "").substring(0, 8000);
+          this.pillarForm
+            .get("description")
+            ?.setValue(truncated, { emitEvent: false });
+          this.contador = 8000;
+        } else if (this.contador < 4 && this.contador >= 0) {
+          this.errorMessage =
+            "A descrição deve conter entre 4 e 8000 caracteres.";
+        } else {
+          this.errorMessage = "";
+        }
+      });
+  }
+
+  atualizarContador() {
+    const descValue = this.pillarForm.get("description")?.value ?? "";
+    this.contador = descValue.length;
   }
 
   save() {
