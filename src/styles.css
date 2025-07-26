@@ -122,6 +122,23 @@
     !important;
 }
 
+.max-w-300 {
+  max-width: 18.75rem
+    /* 300px */
+    !important;
+}
+
+.max-w-300 {
+  max-width: 18.75rem
+    /* 300px */
+    !important;
+}
+
+.max-w-400 {
+  max-width: 25rem
+    /* 400px */
+    !important;
+}
 .whitespace-nowrap {
   white-space: nowrap !important;
 }
