@@ -18,7 +18,7 @@ export class CyclesPillarsListComponent implements OnInit {
   @Input() cycle!: CycleDTO;
 
   objectDataSource: MatTableDataSource<CyclePillarDTO> = new MatTableDataSource();
-  objectTableColumns: string[] = ['name', 'averageType', 'standardWeight', 'author', 'createdAt', "actions"];
+  objectTableColumns: string[] = ['name', 'author', 'createdAt', "actions"];
 
   constructor(
     public dialog: MatDialog,

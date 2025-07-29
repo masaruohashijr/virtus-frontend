@@ -75,7 +75,7 @@ export class MotivarPesoComponent {
           Validators.maxLength(400),
         ],
       ],
-    });
+    });    
   }
 
   getTitle() {

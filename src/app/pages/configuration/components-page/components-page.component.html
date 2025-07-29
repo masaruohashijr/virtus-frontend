@@ -64,8 +64,8 @@
         </td>
       </ng-container>
       <ng-container matColumnDef="name">
-        <th mat-header-cell mat-sort-header *matHeaderCellDef>Name</th>
-        <td mat-cell *matCellDef="let object">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Nome</th>
+        <td mat-cell style="width: 20%;" *matCellDef="let object">
           <span>
             {{ object.name }}
           </span>
@@ -73,7 +73,7 @@
       </ng-container>
       <ng-container matColumnDef="description">
         <th mat-header-cell mat-sort-header *matHeaderCellDef>Descrição</th>
-        <td mat-cell class="max-w-100" *matCellDef="let object">
+        <td mat-cell  style="width: 50%;" *matCellDef="let object">
           <span class="break-word">
             {{
               object.description?.length > 100
@@ -85,7 +85,7 @@
       </ng-container>
       <ng-container matColumnDef="author">
         <th mat-header-cell mat-sort-header *matHeaderCellDef>Autor</th>
-        <td mat-cell *matCellDef="let object">
+        <td mat-cell  style="width: 10%;" *matCellDef="let object">
           <span>
             {{ object.author?.name }}
           </span>
@@ -93,7 +93,7 @@
       </ng-container>
       <ng-container matColumnDef="createdAt">
         <th mat-header-cell mat-sort-header *matHeaderCellDef>Criado Em</th>
-        <td mat-cell *matCellDef="let object">
+        <td mat-cell  style="width: 10%;" *matCellDef="let object">
           <span>
             {{ object.createdAt | date : "dd/MM/yyyy HH:mm" }}
           </span>
@@ -103,7 +103,7 @@
       <!-- Buttons -->
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let object">
+        <td mat-cell  style="width: 10%;" *matCellDef="let object">
           <button mat-icon-button color="primary" (click)="editObject(object)">
             <mat-icon>edit</mat-icon>
           </button>

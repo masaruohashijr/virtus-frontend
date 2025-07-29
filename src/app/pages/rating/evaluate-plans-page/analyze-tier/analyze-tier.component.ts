@@ -85,7 +85,7 @@ export class AnalyzeTierComponent implements OnInit, OnDestroy {
             ?.setValue(truncated, { emitEvent: false });
           this.contador = 8000;
         } else if (this.contador < 4 && this.contador >= 0) {
-          this.errorMessage = "Limite mínimo de 4 caracteres atingido.";
+          this.errorMessage = "A análise deve conter entre 4 e 8000 caracteres.";
         } else {
           this.errorMessage = "";
         }

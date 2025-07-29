@@ -27,12 +27,8 @@ import {
   MotivarNotaComponent,
   MotivarNotaData,
 } from "./../motivar-nota/motivar-nota.component";
-import {
-  MotivarPesoComponent
-} from "./../motivar-peso/motivar-peso.component";
-import {
-  PillarChangeHistoryComponent
-} from "./../pillar-change-history/pillar-change-history.component";
+import { MotivarPesoComponent } from "./../motivar-peso/motivar-peso.component";
+import { PillarChangeHistoryComponent } from "./../pillar-change-history/pillar-change-history.component";
 
 @Component({
   selector: "app-evaluate-plans-edit",
@@ -45,6 +41,7 @@ export class EvaluatePlansEditComponent implements OnInit {
   treeDataOriginal: TreeNode[] = [];
   allUsers: UserDTO[] = [];
   modalMotivarNotaVisivel: boolean = false;
+  pilarPesoAnteriorMap = new Map<number, number>();
 
   motivarNotaData: MotivarNotaData = {
     entidade: "",
@@ -290,15 +287,12 @@ export class EvaluatePlansEditComponent implements OnInit {
     });
   }
 
-  private justifyPillarWeight(
-    rowNode: TreeNode,
-    pesoAnterior: number,
-    event: Event
-  ): void {
+  private justifyPillarWeight(rowNode: TreeNode, event: Event): void {
     const novoPeso = (event.target as HTMLInputElement).value;
     const entidade = this.subirAtePorNode(rowNode, "Entidade");
     const ciclo = this.subirAtePorNode(rowNode, "Ciclo");
-    const pilar = rowNode;
+    const pilar = rowNode.node;
+    const pesoAnterior = pilar.data.weight;
     const dialogRef = this.dialog.open(JustifyPillarWeightComponent, {
       width: "1000px",
       data: {
@@ -306,25 +300,18 @@ export class EvaluatePlansEditComponent implements OnInit {
         entidade: entidade?.data || "",
         ciclo: ciclo?.data || "",
         pilar: pilar?.data || "",
-        supervisor: pilar?.data.supervisor || "",
         pesoAnterior: pesoAnterior,
         novoPeso: novoPeso,
         texto: "",
       },
     });
-
     dialogRef.afterClosed().subscribe((foiSalvo: boolean) => {
-      const input = event.target as HTMLInputElement;
       if (foiSalvo) {
-        // Atualiza o peso após o salvamento da motivação
         rowNode.data.peso = novoPeso;
         rowNode.data.weight = novoPeso;
-        input.value = String(novoPeso);
+        (event.target as HTMLInputElement).value = String(novoPeso);
       } else {
-        // Reverte ao valor anterior caso não tenha sido salvo
-        rowNode.data.peso = pesoAnterior;
-        input.value = String(pesoAnterior);
-        setTimeout(() => input.focus(), 100);
+        (event.target as HTMLInputElement).value = String(rowNode.data.weight);
       }
     });
   }
@@ -358,10 +345,6 @@ export class EvaluatePlansEditComponent implements OnInit {
     }
   }
 
-  public storePreviousPillarWeight(rowData: any) {
-    rowData.pesoAnterior = rowData.weight;
-  }
-
   public canEditPillarWeight(rowData: any): boolean {
     const isSupervisor = rowData.supervisor?.id === this.currentUser?.id;
     const isChefe = this.curUserRole === "Chefe";
@@ -377,10 +360,7 @@ export class EvaluatePlansEditComponent implements OnInit {
   ): void {
     const input = event.target as HTMLInputElement;
     const novoPeso = Number(input.value);
-    console.log("Novo peso:", novoPeso);
-    const pesoAnterior = Number(rowData.pesoAnterior);
-    console.log("Peso anterior:", pesoAnterior);
-
+    const pesoAnterior = rowData.pesoAnterior || 0;
     // Validação do valor inserido
     if (isNaN(novoPeso) || novoPeso <= 0 || novoPeso > 100) {
       const mensagem = "O peso deve ser um número entre 1 e 100.";
@@ -395,7 +375,6 @@ export class EvaluatePlansEditComponent implements OnInit {
           input.focus();
         });
 
-      input.value = String(pesoAnterior);
       return;
     }
 
@@ -413,8 +392,6 @@ export class EvaluatePlansEditComponent implements OnInit {
         })
         .afterClosed()
         .subscribe(() => {
-          input.value = String(pesoAnterior);
-          rowData.peso = pesoAnterior; // Reverte o peso para o anterior
           return;
         });
     }
@@ -426,10 +403,7 @@ export class EvaluatePlansEditComponent implements OnInit {
         data: { title: "Atenção", message: mensagem },
       });
     }
-
-    if (pesoAnterior != novoPeso) {
-      this.justifyPillarWeight(rowNode, pesoAnterior, event);
-    }
+    this.justifyPillarWeight(rowNode, event);
   }
 
   public canEditElementGrade(rowData: any): boolean {
@@ -496,6 +470,7 @@ export class EvaluatePlansEditComponent implements OnInit {
       const data = node.data;
 
       if (data?.objectType === "Pilar") {
+        this.pilarPesoAnteriorMap.set(data.id, data.weight);
         const peso = Number(data.peso) || 0;
         soma += peso;
       }
@@ -569,6 +544,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     const pilar = rowNode?.node;
     const dialogRef = this.dialog.open(PillarChangeHistoryComponent, {
       width: "1000px",
+      height: "90%",
       data: {
         entidade: entidade || "",
         ciclo: ciclo || "",
@@ -898,11 +874,10 @@ export class EvaluatePlansEditComponent implements OnInit {
     const hasWeight = rowData.weight !== 0;
     const isWithinPeriod = rowData.periodoPermitido;
     const isCyclePeriod = rowData.periodoCiclo;
-
-    return (
+    const resultado =
       ((isAuditorOrSupervisor && isWithinPeriod) ||
         (isChief && isCyclePeriod)) &&
-      hasWeight
-    );
+      hasWeight;
+    return resultado;
   }
 }

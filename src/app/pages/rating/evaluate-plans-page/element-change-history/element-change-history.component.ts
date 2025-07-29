@@ -1,22 +1,17 @@
-import { Component, EventEmitter, Inject, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogRef,
-} from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialog } from "@angular/material/dialog";
 import { MatTableDataSource } from "@angular/material/table";
 import { ProductElementHistoryDTO } from "src/app/domain/dto/product-element-history.dto";
 import { ElementHistoryDetailsComponent } from "./element-history-details/element-history-details.component";
 
-// Define TreeNode interface if not imported from elsewhere
 interface TreeNode {
   data: any;
   parent?: TreeNode;
 }
 
 export interface ElementChangeHistoryData {
-  entidade: { data: { name: string } }; // <- Agora você pode acessar entidade.name
+  entidade: { data: { name: string } };
   ciclo: { data: { name: string } };
   pilar: { data: { name: string } };
   componente: { data: { name: string } };
@@ -25,47 +20,41 @@ export interface ElementChangeHistoryData {
   elemento: { data: { name: string } };
   historicoDataSource: ProductElementHistoryDTO[];
   motivacao?: string;
-  metodo?:  string;
   peso?: number;
   nota?: number;
 }
 
 @Component({
-  selector: "app-element-change-history.component",
+  selector: "app-element-change-history",
   templateUrl: "./element-change-history.component.html",
   styleUrls: ["./element-change-history.component.css"],
 })
-export class ElementChangeHistoryComponent {
-  texto: string = "";
-
+export class ElementChangeHistoryComponent implements OnInit {
   @Input() visible: boolean = false;
   @Output() onClose = new EventEmitter<void>();
   @Output() onSave = new EventEmitter<ElementChangeHistoryData>();
+
   displayedColumns: string[] = [
-    "Autor",
     "Alteracao",
-    "Em",
-    "Peso",
-    "Método",
-    "Nota",    
+    "ValorDe",
+    "ValorPara",
+    "Autor",
+    "Data",
     "Acoes",
   ];
 
   historicos = new MatTableDataSource<ProductElementHistoryDTO>([]);
-  contador = 0;
   elementChangeHistoryForm!: FormGroup;
-
-  ngOnInit(): void {
-  }
+  contador = 0;
 
   constructor(
     private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA)
-    public data: ElementChangeHistoryData & {
-      historico: ProductElementHistoryDTO[];
-    },
+    public data: ElementChangeHistoryData & { historico: ProductElementHistoryDTO[] },
     private dialog: MatDialog
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.elementChangeHistoryForm = this.formBuilder.group({
       entity: [this.data.entidade.data.name],
       cycle: [this.data.ciclo.data.name],
@@ -74,40 +63,46 @@ export class ElementChangeHistoryComponent {
       plan: [this.data.plano.data.name],
       gradeType: [this.data.tipoNota.data.name],
       element: [this.data.elemento.data.name],
-      metodo: [this.data.metodo],
-      weight: [this.data.peso],
-      grade: [this.data.nota],
-      motivation: [this.data.motivacao],
+      weight: [this.data.peso ?? null],
+      grade: [this.data.nota ?? null],
+      motivation: [this.data.motivacao ?? ""],
     });
-    this.historicos.data = this.data.historicoDataSource || [];
-  }
 
-  getTitle() {
-    return "Histórico do Elemento";
+    this.historicos.data = this.formatarHistorico(this.data.historicoDataSource || []);
   }
 
   fechar() {
     this.onClose.emit();
-    this.contador = 0;
   }
 
-  subirAtePorNode(node: TreeNode, tipo: string): TreeNode | null {
-    let current: TreeNode | undefined = node.parent;
-    while (current) {
-      if (current.data.objectType === tipo) {
-        return current;
-      }
-      current = current.parent;
-    }
-    return null;
-  }
-
-  showHistoryDetails(row: any) {
+  showHistoryDetails(row: ProductElementHistoryDTO) {
     this.dialog.open(ElementHistoryDetailsComponent, {
       width: "800px",
       data: row,
     });
   }
 
-}
+  private formatarHistorico(historico: ProductElementHistoryDTO[]): ProductElementHistoryDTO[] {
+    return historico.map((h) => {
+      const dto = Object.assign(
+        Object.create(Object.getPrototypeOf(h)),
+        h
+      );
+      dto.alteracaoLabel = h.tipoAlteracao === "P" ? "Peso" : "Nota";
+      dto.valorDe = h.tipoAlteracao === "P" ? h.pesoAnterior : h.notaAnterior;
+      dto.valorPara = h.tipoAlteracao === "P" ? h.peso : h.nota;
+      dto.alteradoEm = h.alteradoEm ? this.stringToDate(h.alteradoEm) : null;
+      return dto;
+    });
+  }
 
+  private stringToDate(dateStr: string): Date | null {
+    const [datePart, timePart] = dateStr.split(" ");
+    if (!datePart || !timePart) return null;
+
+    const [day, month, year] = datePart.split("/");
+    const [hour, minute, second] = timePart.split(":");
+
+    return new Date(+year, +month - 1, +day, +hour, +minute, +second);
+  }
+}

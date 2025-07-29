@@ -20,7 +20,7 @@ export class JurisdictionsEditComponent extends BaseCrudEditComponent<Jurisdicti
 
   entities: EntityVirtusDTO[] = []
 
-  elementForm = this._formBuilder.group({
+  jurisdictionForm = this._formBuilder.group({
     entity: [this.data?.object?.entity, [Validators.required]],
     startsAt: [this.data?.object?.startsAt],
     endsAt: [this.data?.object?.endsAt]
@@ -36,20 +36,20 @@ export class JurisdictionsEditComponent extends BaseCrudEditComponent<Jurisdicti
   }
 
   ngOnInit(): void {
-    this._entityService.getAll('', 0, 200).subscribe(resp => {
-      this.entities = resp.content;
+    this._entityService.getAllAvailable().subscribe(resp => {
+      this.entities = resp;
     })
   }
 
   save() {
-    if (this.elementForm.invalid) {
-      this.elementForm.markAllAsTouched()
+    if (this.jurisdictionForm.invalid) {
+      this.jurisdictionForm.markAllAsTouched()
       return;
     }
 
-    this.object.entity = this.elementForm.value.entity;
-    this.object.startsAt = this.elementForm.value.startsAt;
-    this.object.endsAt = this.elementForm.value.endsAt;
+    this.object.entity = this.jurisdictionForm.value.entity;
+    this.object.startsAt = this.jurisdictionForm.value.startsAt;
+    this.object.endsAt = this.jurisdictionForm.value.endsAt;
     this.dialogRef.close(this.object);
   }
 

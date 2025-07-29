@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>{{getTitle()}}</h1>
 <div mat-dialog-content>
-  <form [formGroup]="elementForm">
+  <form [formGroup]="jurisdictionForm">
     <mat-form-field class="w-full mt-auto" appearance="outline">
       <mat-label>Jurisdição</mat-label>
       <mat-select formControlName="entity" [compareWith]="compare">

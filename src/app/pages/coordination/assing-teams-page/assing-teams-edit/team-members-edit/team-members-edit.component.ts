@@ -66,14 +66,7 @@ export class TeamMembersEditComponent extends BaseCrudEditComponent<TeamMemberDT
           return;
     }
     this.object.member = this.principalForm.value.member;
-    this.teamService.validateTeamMember(this.father.cycle?.id, this.object.member?.id, this.father.supervisor.id ? this.father.supervisor.id: this.father.supervisor.userId).subscribe(() => {
-      this.dialogRef.close(this.object);
-    }, (error) => {
-      this.object.member = null;
-      this.mostrarErro(error, this.errorDialog);
-
-      return throwError(error);
-    })
+    this.dialogRef.close(this.object);
   }
 
   getTitle() {

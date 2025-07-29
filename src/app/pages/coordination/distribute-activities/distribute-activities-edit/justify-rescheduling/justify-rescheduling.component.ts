@@ -35,10 +35,10 @@ export interface JustifyReschedulingData {
   cicloNome: string;
   pilarNome: string;
   componenteNome: string;
-  iniciaEmAnterior: Date | null;
   iniciaEm: Date | null;
-  terminaEmAnterior: Date | null;
   terminaEm: Date | null;
+  iniciaEmAnterior?: Date | null;
+  terminaEmAnterior?: Date | null;
   texto: string;
   tipoData: TipoData;
 }
@@ -52,7 +52,7 @@ export class JustifyReschedulingComponent implements OnInit {
   @Input() visible: boolean = false;
   @Output() onClose = new EventEmitter<void>();
   @Output() onSave = new EventEmitter<void>();
-  
+
   @ViewChild("motivationInput") motivationInput!: ElementRef;
   contador = 0;
   JustifyReschedulingForm!: FormGroup;
@@ -63,6 +63,8 @@ export class JustifyReschedulingComponent implements OnInit {
   texto: any;
   tipoData: any;
   rowNode: TreeNode | undefined;
+  dataAnterior: string | undefined;
+  novaData: string | undefined;
 
   ngOnInit(): void {
     this.JustifyReschedulingForm = this.formBuilder.group({
@@ -73,15 +75,32 @@ export class JustifyReschedulingComponent implements OnInit {
       entidadeNome: [{ value: this.data.entidade.data.name, disabled: true }],
       cicloNome: [{ value: this.data.ciclo.data.name, disabled: true }],
       pilarNome: [{ value: this.data.pilar.data.name, disabled: true }],
-      tipoData: [{ value: this.data.tipoData, disabled: true }],
       componenteNome: [
         { value: this.data.componente.data.name, disabled: true },
       ],
+      tipoData: [{ value: this.data.tipoData, disabled: true }],
       iniciaEmAnterior: [
         {
           value: this.data.iniciaEmAnterior
-            ? new Date(this.data.iniciaEmAnterior).toLocaleDateString(
-                "pt-BR"
+            ? new Date(this.data.iniciaEmAnterior).toLocaleDateString("pt-BR", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+              })
+            : "",
+          disabled: true,
+        },
+      ],
+      terminaEmAnterior: [
+        {
+          value: this.data.terminaEmAnterior
+            ? new Date(this.data.terminaEmAnterior).toLocaleDateString(
+                "pt-BR",
+                {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                }
               )
             : "",
           disabled: true,
@@ -90,15 +109,11 @@ export class JustifyReschedulingComponent implements OnInit {
       iniciaEm: [
         {
           value: this.data.iniciaEm
-            ? new Date(this.data.iniciaEm).toLocaleDateString("pt-BR")
-            : "",
-          disabled: true,
-        },
-      ],
-      terminaEmAnterior: [
-        {
-          value: this.data.terminaEmAnterior
-            ? new Date(this.data.terminaEmAnterior).toLocaleDateString("pt-BR")
+            ? new Date(this.data.iniciaEm).toLocaleDateString("pt-BR", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+              })
             : "",
           disabled: true,
         },
@@ -106,7 +121,11 @@ export class JustifyReschedulingComponent implements OnInit {
       terminaEm: [
         {
           value: this.data.terminaEm
-            ? new Date(this.data.terminaEm).toLocaleDateString("pt-BR")
+            ? new Date(this.data.terminaEm).toLocaleDateString("pt-BR", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+              })
             : "",
           disabled: true,
         },
@@ -121,7 +140,41 @@ export class JustifyReschedulingComponent implements OnInit {
       ],
     });
 
-    // ESC listener
+    if (this.data.tipoData === TipoData.INICIA_EM) {
+      this.dataAnterior = this.data.iniciaEmAnterior
+        ? new Date(this.data.iniciaEmAnterior).toLocaleDateString("pt-BR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          })
+        : "N/A";
+
+      this.novaData = this.data.iniciaEm
+        ? new Date(this.data.iniciaEm).toLocaleDateString("pt-BR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          })
+        : "N/A";
+    } else {
+      this.dataAnterior = this.data.terminaEmAnterior
+        ? new Date(this.data.terminaEmAnterior).toLocaleDateString("pt-BR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          })
+        : "N/A";
+
+      this.novaData = this.data.terminaEm
+        ? new Date(this.data.terminaEm).toLocaleDateString("pt-BR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          })
+        : "N/A";
+    }
+
+    // ESC
     this.dialogRef.keydownEvents().subscribe((event: KeyboardEvent) => {
       if (event.key === "Escape" || event.key === "Esc") {
         this.fechar();
@@ -146,18 +199,18 @@ export class JustifyReschedulingComponent implements OnInit {
       tipo = "Inicial";
       dataAnterior = this.data.iniciaEmAnterior
         ? new Date(this.data.iniciaEmAnterior).toLocaleDateString("pt-BR")
-        : "";
+        : "N/A";
       novaData = this.data.iniciaEm
         ? new Date(this.data.iniciaEm).toLocaleDateString("pt-BR")
-        : "";
+        : "N/A";
     } else {
       tipo = "Final";
       dataAnterior = this.data.terminaEmAnterior
         ? new Date(this.data.terminaEmAnterior).toLocaleDateString("pt-BR")
-        : "";
+        : "N/A";
       novaData = this.data.terminaEm
         ? new Date(this.data.terminaEm).toLocaleDateString("pt-BR")
-        : "";
+        : "N/A";
     }
     return `Motivar a Reprogramação da Data ${tipo} de ${dataAnterior} para ${novaData}.`;
   }
@@ -188,15 +241,19 @@ export class JustifyReschedulingComponent implements OnInit {
       next: (res: any) => {
         const tipo = this.data.tipoData === "T" ? "Final" : "Inicial";
 
-        const dataAnterior = this.data.iniciaEmAnterior
-          ? new Date(this.data.iniciaEmAnterior).toLocaleDateString("pt-BR")
-          : "N/A";
+        let novaData: string = "N/A";
 
-        const novaData = this.data.iniciaEm
-          ? new Date(this.data.iniciaEm).toLocaleDateString("pt-BR")
-          : "N/A";
+        if (this.data.tipoData === "T") {
+          novaData = this.data.terminaEm
+            ? new Date(this.data.terminaEm).toLocaleDateString("pt-BR")
+            : "N/A";
+        } else if (this.data.tipoData === "I") {
+          novaData = this.data.iniciaEm
+            ? new Date(this.data.iniciaEm).toLocaleDateString("pt-BR")
+            : "N/A";
+        }
 
-        const mensagem = `A Data ${tipo} foi atualizada com sucesso de ${dataAnterior} para ${novaData}.`;
+        const mensagem = `A Data ${tipo} foi atualizada com sucesso de ${this.dataAnterior} para ${novaData}.`;
 
         this.dialog
           .open(PlainMessageDialogComponent, {

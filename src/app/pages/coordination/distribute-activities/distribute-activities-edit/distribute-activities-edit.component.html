@@ -20,13 +20,13 @@
     <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
       <tr [ttRow]="rowNode">
         <!-- Nível -->
-        <td style="width: 140px; box-sizing: border-box">
+        <td style="width: 120px; box-sizing: border-box">
           <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
           {{ rowData.objectType }}
         </td>
 
         <!-- Sumário -->
-        <td style="width: 200px; box-sizing: border-box">
+        <td style="width: 190px; box-sizing: border-box">
           {{ rowData.name }}
         </td>
 
@@ -48,7 +48,7 @@
         </td>
 
         <!-- Equipe -->
-        <td style="width: 180px; box-sizing: border-box">
+        <td style="width: 160px; box-sizing: border-box">
           <ng-container [ngSwitch]="rowData.objectType">
             <span *ngSwitchCase="'Ciclo'" style="font-size: 13px">
               {{ rowData.object.supervisor?.name }}
@@ -85,7 +85,7 @@
             <ng-container *ngIf="rowData.objectType === 'Componente'">
               <mat-form-field
                 appearance="outline"
-                style="width: 140px; margin: 0"
+                style="width: 130px; margin: 0"
               >
                 <mat-label>Inicia</mat-label>
                 <input
@@ -123,7 +123,7 @@
               <!-- Termina em -->
               <mat-form-field
                 appearance="outline"
-                style="width: 140px; margin: 0"
+                style="width: 130px; margin: 0"
               >
                 <mat-label>Termina</mat-label>
                 <input
@@ -162,7 +162,7 @@
         </td>
 
         <!-- Histórico -->
-        <td style="width: 100px; box-sizing: border-box; text-align: left">
+        <td style="width: 80px; box-sizing: border-box; text-align: left">
           <ng-container *ngIf="rowData.objectType === 'Componente'">
             <button
               mat-raised-button

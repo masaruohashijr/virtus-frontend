@@ -52,7 +52,7 @@
                 </th>
                 <td mat-cell class="max-w-200" *matCellDef="let object">
                     <span class="break-word">
-                        {{object.startsAt| date: 'dd/MM/yyyy HH:mm'}}
+                        {{object.startsAt| date: 'dd/MM/yyyy'}}
                     </span>
                 </td>
             </ng-container>
@@ -62,7 +62,7 @@
                 </th>
                 <td mat-cell class="max-w-200" *matCellDef="let object">
                     <span class="break-word">
-                        {{object.endsAt| date: 'dd/MM/yyyy HH:mm'}}
+                        {{object.endsAt| date: 'dd/MM/yyyy'}}
                     </span>
                 </td>
             </ng-container>

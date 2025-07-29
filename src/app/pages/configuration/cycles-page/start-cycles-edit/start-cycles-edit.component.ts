@@ -1,4 +1,10 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild } from "@angular/core";
+import {
+  Component,
+  ElementRef,
+  Inject,
+  OnInit,
+  ViewChild,
+} from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
 import {
@@ -38,8 +44,14 @@ export class StartCyclesEditComponent
   elementForm = this._formBuilder.group({
     name: [this.data.object.cycle.name, [Validators.required]],
     description: [this.data.object.cycle.description],
-    startsAt: [this.data.object.startsAt, [Validators.required]],
-    endsAt: [this.data.object.endsAt, [Validators.required]],
+    startsAt: [
+      this.data.object.startsAt || new Date(new Date().getFullYear(), 0, 1),
+      [Validators.required],
+    ],
+    endsAt: [
+      this.data.object.endsAt || new Date(new Date().getFullYear(), 11, 31),
+      [Validators.required],
+    ],
     author: [this.data.object.cycle.author?.name || "", []],
     createdAt: [this.data.object.cycle.createdAt],
     entities: [this.selectedEntities],

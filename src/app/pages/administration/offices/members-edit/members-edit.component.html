@@ -1,6 +1,12 @@
 <h1 mat-dialog-title>{{getTitle()}}</h1>
 <div mat-dialog-content>
-  <form [formGroup]="elementForm">
+  <form [formGroup]="memberForm">
+    <mat-form-field class="w-full mt-auto" appearance="outline">
+      <mat-label>Escritório</mat-label>
+      <mat-select formControlName="office" [compareWith]="compare">
+        <mat-option *ngFor="let office of offices" [value]="office">{{office.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
     <mat-form-field class="w-full mt-auto" appearance="outline">
       <mat-label>Membro</mat-label>
       <mat-select formControlName="user" [compareWith]="compare">

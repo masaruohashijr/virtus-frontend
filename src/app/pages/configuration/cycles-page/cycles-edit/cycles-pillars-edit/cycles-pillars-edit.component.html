@@ -7,18 +7,6 @@
         <mat-option *ngFor="let pillar of pillars" [value]="pillar">{{pillar.name}}</mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field class="w-full mt-auto" appearance="outline">
-      <mat-label>Peso</mat-label>
-      <input formControlName="standardWeight" type="number" [pattern]="'^-?[0-9]+$'" matInput>
-    </mat-form-field>
-    <mat-form-field class="w-full mt-auto" appearance="outline">
-      <mat-label>Tipo de Média</mat-label>
-      <mat-select formControlName="averageType">
-        <mat-option [value]="'ARITHMETIC'">Aritmética</mat-option>
-        <mat-option [value]="'GEOMETRIC'">Geométrica</mat-option>
-        <mat-option [value]="'HARMONICA'">Harmônica</mat-option>
-      </mat-select>
-    </mat-form-field>
   </form>
 </div>
 <div mat-dialog-actions [align]="'end'">

@@ -40,9 +40,7 @@
       </th>
       <th class="user-component-column">Supervisor</th>
       <th class="user-component-column">Auditor</th>
-      <th class="grade-type-column">Tipo de Nota</th>
       <th class="weight-column">Peso (%)</th>
-      <th class="method-column">Método</th>
       <th class="grade-column">Nota</th>
       <th class="actions-column">
         <button mat-raised-button color="primary" [matTooltip]="'Exportar Dados'">
@@ -68,13 +66,11 @@
         {{ rowData.supervisor?.name || "" }}
       </td>
       <td class="user-component-column">{{ rowData.auditor?.name || "" }}</td>
-      <td class="grade-type-column">{{ rowData.gradeTypeId || "" }}</td>
       <td class="weight-column">
         <ng-container *ngIf="rowData.objectType === 'Pilar'">
           <input
             type="decimal"
             class="pillar-weight"
-            (focus)="storePreviousPillarWeight(rowData)"
             (blur)="onPillarWeightBlur($event, rowNode, rowData)"
             (change)="highlightChange($event)"
             [ngModel]="rowData.weight"
@@ -128,7 +124,6 @@
           </select>
         </ng-container>
       </td>
-      <td class="method-column">{{ rowData.letter || "" }}</td>
       <td class="grade-column">
         <ng-container *ngIf="rowData.objectType === 'Ciclo'">
           <input

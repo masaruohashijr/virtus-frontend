@@ -100,6 +100,7 @@ export class JurisdictionsListComponent implements OnInit {
         this.objectDataSource.data = this.office.jurisdictions;
       }
     });
+    
   }
 
 }

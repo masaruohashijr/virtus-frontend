@@ -1,4 +1,4 @@
-<!-- Cabeçalho com faixa azul -->
+<!-- Cabeçalho -->
 <div
   style="
     background-color: #003f87;
@@ -14,163 +14,94 @@
 <!-- Conteúdo principal -->
 <div style="padding: 16px">
   <form *ngIf="analyzeTierForm" [formGroup]="analyzeTierForm">
-    <!-- CAMPO EFPC EM LINHA PRÓPRIA -->
-    <div
-      *ngIf="analyzeTierForm.get('entity')?.value"
-      style="margin-bottom: 16px"
-    >
-      <label style="color: #003f87">EFPC</label><br />
-      <input
-        [value]="analyzeTierForm.get('entity')?.value"
-        disabled
-        style="
-          width: 100%;
-          border: none;
-          background: transparent;
-          font-size: 14px;
-        "
-      />
-    </div>
     <div style="display: flex; gap: 16px; align-items: flex-start">
-      <!-- COLUNA ESQUERDA: DADOS -->
-      <table
-        style="
-          flex: 1;
-          max-width: 33%;
-          font-size: 14px;
-          border-collapse: collapse;
-        "
-      >
-        <tr *ngIf="analyzeTierForm.get('cycle')?.value">
-          <td><label style="color: #003f87">Ciclo</label></td>
-          <td>
-            <input
-              [value]="analyzeTierForm.get('cycle')?.value"
-              disabled
-              style="width: 100%; border: none; background: transparent"
-            />
-          </td>
-        </tr>
-        <tr *ngIf="analyzeTierForm.get('pillar')?.value">
-          <td><label style="color: #003f87">Pilar</label></td>
-          <td>
-            <input
-              [value]="analyzeTierForm.get('pillar')?.value"
-              disabled
-              readonly
-              style="width: 100%; border: none; background: transparent"
-            />
-          </td>
-        </tr>
-        <tr *ngIf="analyzeTierForm.get('component')?.value">
-          <td><label style="color: #003f87">Componente</label></td>
-          <td>
-            <input
-              [value]="analyzeTierForm.get('component')?.value"
-              disabled
-              readonly
-              style="width: 100%; border: none; background: transparent"
-            />
-          </td>
-        </tr>
-        <tr *ngIf="analyzeTierForm.get('plan')?.value">
-          <td><label style="color: #003f87">Plano</label></td>
-          <td>
-            <input
-              [value]="analyzeTierForm.get('plan')?.value"
-              disabled
-              readonly
-              style="width: 100%; border: none; background: transparent"
-            />
-          </td>
-        </tr>
-        <tr *ngIf="analyzeTierForm.get('gradeType')?.value">
-          <td><label style="color: #003f87">Tipo Nota</label></td>
-          <td>
-            <input
-              [value]="analyzeTierForm.get('gradeType')?.value"
-              disabled
-              readonly
-              style="width: 100%; border: none; background: transparent"
-            />
-          </td>
-        </tr>
-        <tr *ngIf="analyzeTierForm.get('element')?.value">
-          <td><label style="color: #003f87">Elemento</label></td>
-          <td>
-            <input
-              [value]="analyzeTierForm.get('element')?.value"
-              disabled
-              readonly
-              style="width: 100%; border: none; background: transparent"
-            />
-          </td>
-        </tr>
-        <tr *ngIf="analyzeTierForm.get('item')?.value">
-          <td><label style="color: #003f87">Item</label></td>
-          <td>
-            <textarea
-              formControlName="item"
-              [disabled]="true"
-              [readOnly]="true"
-              rows="2"
-              style="
-                width: 100%;
-                height: 50px;
-                border: 1px solid #ccc;
-                padding: 8px;
-                font-family: inherit;
-                font-size: 14px;
-                box-sizing: border-box;
-                resize: none;
-                background-color: #f9f9f9;
-              "
-            ></textarea>
-          </td>
-        </tr>
+      <!-- COLUNA ESQUERDA: Todos os dados -->
+      <div style="flex: 1; max-width: 40%;">
+        <!-- EFPC -->
+        <div *ngIf="analyzeTierForm.get('entity')?.value" style="margin-bottom: 12px;">
+          <label style="color: #003f87">EFPC</label><br />
+          <input
+            [value]="analyzeTierForm.get('entity')?.value"
+            [disabled] = true
+            style="width: 80%; border: none; background: transparent; font-size: 14px;"
+          />
+        </div>
 
-        <!-- Peso e Nota SOMENTE SE EXISTIREM -->
-        <tr
-          *ngIf="
-            analyzeTierForm.get('weight')?.value ||
-            analyzeTierForm.get('grade')?.value
-          "
-        >
-          <td colspan="2">
-            <div
-              style="display: flex; justify-content: space-between; gap: 16px"
-            >
-              <div
-                style="width: 100%"
-                *ngIf="analyzeTierForm.get('weight')?.value"
-              >
-                <label style="color: #003f87">Peso</label><br />
+        <!-- Tabela com os demais campos -->
+        <table style="width: 100%; font-size: 14px; border-collapse: collapse;">
+          <ng-container *ngFor="let field of [
+            { key: 'cycle', label: 'Ciclo' },
+            { key: 'pillar', label: 'Pilar' },
+            { key: 'component', label: 'Componente' },
+            { key: 'plan', label: 'Plano' },
+            { key: 'gradeType', label: 'Tipo Nota' },
+            { key: 'element', label: 'Elemento' }
+          ]">
+            <tr *ngIf="analyzeTierForm.get(field.key)?.value">
+              <td><label style="color: #003f87">{{ field.label }}</label></td>
+              <td>
                 <input
-                  formControlName="weight"
-                  [disabled]="true"
-                  [readOnly]="true"
-                  style="width: 100%; padding: 6px; border: 1px solid #ccc"
+                  [value]="analyzeTierForm.get(field.key)?.value"
+                  [disabled] = true
+                  readonly
+                  style="width: 80%; border: none; background: transparent"
                 />
-              </div>
-              <div
-                style="width: 100%"
-                *ngIf="analyzeTierForm.get('grade')?.value"
-              >
-                <label style="color: #003f87">Nota</label><br />
-                <input
-                  formControlName="grade"
-                  [disabled]="true"
-                  [readOnly]="true"
-                  style="width: 100%; padding: 6px; border: 1px solid #ccc"
-                />
-              </div>
-            </div>
-          </td>
-        </tr>
-      </table>
+              </td>
+            </tr>
+          </ng-container>
 
-      <!-- COLUNA DIREITA: ANÁLISE -->
-      <div style="flex: 2; max-width: 66%">
+          <!-- Item -->
+          <tr *ngIf="analyzeTierForm.get('item')?.value">
+            <td><label style="color: #003f87">Item</label></td>
+            <td>
+              <textarea
+                formControlName="item"
+                rows="2"
+                [disabled] = true
+                readonly
+                style="
+                  width: 100%;
+                  border: 1px solid #ccc;
+                  padding: 8px;
+                  font-family: inherit;
+                  font-size: 14px;
+                  background-color: #f9f9f9;
+                  resize: none;
+                "
+              ></textarea>
+            </td>
+          </tr>
+
+          <!-- Peso e Nota -->
+          <tr *ngIf="analyzeTierForm.get('weight')?.value || analyzeTierForm.get('grade')?.value">
+            <td colspan="2">
+              <div style="display: flex; justify-content: space-between; gap: 16px">
+                <div *ngIf="analyzeTierForm.get('weight')?.value" style="width: 100%">
+                  <label style="color: #003f87">Peso</label><br />
+                  <input
+                    formControlName="weight"
+                    [disabled] = true
+                    readonly
+                    style="width: 100%; padding: 6px; border: 1px solid #ccc"
+                  />
+                </div>
+                <div *ngIf="analyzeTierForm.get('grade')?.value" style="width: 100%">
+                  <label style="color: #003f87">Nota</label><br />
+                  <input
+                    formControlName="grade"
+                    [disabled] = true
+                    readonly
+                    style="width: 100%; padding: 6px; border: 1px solid #ccc"
+                  />
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- COLUNA DIREITA: Análise -->
+      <div style="flex: 2; max-width: 60%;">
         <label style="color: #003f87">Análise</label><br />
         <textarea
           formControlName="analysis"
@@ -190,10 +121,7 @@
         <div style="text-align: right; font-size: 12px; margin-top: 4px">
           {{ contador }} / 8000
         </div>
-        <div
-          *ngIf="errorMessage"
-          style="color: red; font-size: 12px; margin-top: 4px"
-        >
+        <div *ngIf="errorMessage" style="color: red; font-size: 12px; margin-top: 4px">
           {{ errorMessage }}
         </div>
       </div>
@@ -202,14 +130,7 @@
 </div>
 
 <!-- Rodapé com ações -->
-<div
-  style="
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 16px;
-  "
->
+<div style="display: flex; justify-content: flex-end; align-items: center; padding: 16px;">
   <button
     mat-raised-button
     color="primary"
@@ -220,8 +141,8 @@
   </button>
   <button
     mat-button
-    [mat-dialog-close]=""
     style="margin-left: 8px"
+    [mat-dialog-close]=""
     (click)="fechar()"
   >
     Cancelar

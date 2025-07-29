@@ -36,26 +36,6 @@
           </span>
         </td>
       </ng-container>
-      <ng-container matColumnDef="averageType">
-        <th mat-header-cell mat-sort-header *matHeaderCellDef>
-          Tipo Média
-        </th>
-        <td mat-cell class="max-w-200" *matCellDef="let object">
-          <span class="break-word">
-            {{object.averageType?.description ? object.averageType.description : object.averageType.value}}
-          </span>
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="standardWeight">
-        <th mat-header-cell mat-sort-header *matHeaderCellDef>
-          Peso
-        </th>
-        <td mat-cell class="max-w-200" *matCellDef="let object">
-          <span class="break-word">
-            {{object.standardWeight}}
-          </span>
-        </td>
-      </ng-container>
       <ng-container matColumnDef="author">
         <th mat-header-cell mat-sort-header *matHeaderCellDef>
           Autor

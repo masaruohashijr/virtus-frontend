@@ -81,7 +81,7 @@
       </td>
       <td style="padding: 4px">
         <input
-          [value]="data.alteradoEm"
+          [value]="data.alteradoEm | date : 'dd/MM/yyyy HH:mm'"
           disabled
           style="width: 75%; border: none; background-color: #f7f7f7; padding: 6px"
         />

@@ -14,14 +14,14 @@ import { ProductComponentHistoryDTO } from "src/app/domain/dto/product-component
 import { ProductComponentDTO } from "src/app/domain/dto/product-component.dto";
 import { BaseCrudEditComponent } from "src/app/pages/common/base-crud-page/base-crud-edit/base-crud-edit.component";
 import { ComponentChangeHistoryComponent } from "src/app/pages/rating/evaluate-plans-page/component-change-history/component-change-history.component";
+import { UsersService } from 'src/app/services/administration/users.service';
 import { DistributeActivitiesService } from "src/app/services/coordination/distribute-activities.service";
 import { ProductComponentHistoryService } from "src/app/services/coordination/product-component-history.service";
-import { ProductComponentService } from "src/app/services/coordination/product-component.service";
 import { ConfigPlansComponent } from "../config-plans-edit/config-plans-edit.component";
 import { JustifyAuditorReplacementComponent } from "./justify-auditor-replacement/justify-auditor-replacement.component";
 import {
-  TipoData,
   JustifyReschedulingComponent,
+  TipoData,
 } from "./justify-rescheduling/justify-rescheduling.component";
 
 @Component({
@@ -35,11 +35,13 @@ export class DistributeActivitiesEditComponent
 {
   distributeActivitiesTree!: DistributeActivitiesTreeDTO;
   treeData!: TreeNode[];
-  previousAuditor: AuditorDTO = { userId: 0, name: "" };
+  previousAuditor: AuditorDTO = { userId: 0, name: "", roleName: "" };
   previousStartsAt: Date | undefined;
   previousEndsAt: Date | undefined;
   products: ProductComponentDTO[] = [];
   previousDatesMap = new Map<string, { startsAt: Date; endsAt: Date }>();
+  currentUser: import("c:/javaworkspace/virtus-frontend/src/app/domain/dto/current-user.dto").CurrentUser;
+  curUserRole: string;
 
   constructor(
     public dialog: MatDialog,
@@ -49,9 +51,13 @@ export class DistributeActivitiesEditComponent
     public distributeActivities: DistributeActivitiesDTO,
     private _service: DistributeActivitiesService,
     private _productComponentHistoryService: ProductComponentHistoryService,
+    private _usersService: UsersService,
     private errorDialog: MatDialog
   ) {
     super();
+    this.currentUser = this._usersService.getCurrentUser();
+    this.curUserRole = this.currentUser?.role || "";
+
   }
 
   ngOnInit(): void {
@@ -64,7 +70,13 @@ export class DistributeActivitiesEditComponent
       .subscribe((resp) => {
         this.distributeActivitiesTree = resp;
         this.products = resp.products;
-        console.log(resp);
+        const isSupervisor = this.curUserRole === 'Supervisor';
+
+      if (isSupervisor && resp?.auditors?.length) {
+        this.distributeActivitiesTree.auditors = resp.auditors.filter(
+          (auditor) => auditor.roleName !== 'Chefe'
+        );
+      }
         this.treeData = this.buildTree(resp);
       });
   }

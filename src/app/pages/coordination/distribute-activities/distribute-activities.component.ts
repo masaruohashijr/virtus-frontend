@@ -105,7 +105,6 @@ export class DistributeActivitiesComponent implements OnInit {
 
   distributeActivities(object: any) {
     const dialogRef = this.dialog.open(DistributeActivitiesEditComponent, {
-      width: '100%',
       data: object,
     });
 

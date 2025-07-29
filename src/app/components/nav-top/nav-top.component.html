@@ -71,7 +71,6 @@
   <mat-divider></mat-divider>
   <a [routerLink]="['/' + entitiesRoute]" mat-menu-item>Anotações</a>
   <a [routerLink]="['/' + entitiesRoute]" mat-menu-item>Radares</a>
-  <a [routerLink]="['/' + entitiesRoute]" mat-menu-item>Entidades</a>
 </mat-menu>
 
 <mat-menu #configuration="matMenu">
@@ -87,6 +86,7 @@
 <mat-menu #administration="matMenu">
   <a [routerLink]="['/' + usersRoute]" mat-menu-item>Usuários</a>
   <a [routerLink]="['/' + officesRoute]" mat-menu-item>Escritórios</a>
+  <a [routerLink]="['/' + entitiesRoute]" mat-menu-item>Entidades</a>
   <a [routerLink]="['/sync-executives']" mat-menu-item>Dirigentes</a>
   <mat-divider></mat-divider>
   <a [routerLink]="['/' + rolesRoute]" mat-menu-item>Perfis</a>

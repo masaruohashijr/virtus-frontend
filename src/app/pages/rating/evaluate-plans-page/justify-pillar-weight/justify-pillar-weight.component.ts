@@ -94,10 +94,8 @@ export class JustifyPillarWeightComponent implements OnInit, OnDestroy {
         ],
       ],
     });
-
     this.originalPesoAnterior = this.data.pesoAnterior;
     this.originalPilarPeso = this.data.pilar.weight ?? null;
-
     this.justifyPillarWeightForm
       .get("motivation")
       ?.valueChanges.subscribe((val: string) => {
@@ -111,7 +109,7 @@ export class JustifyPillarWeightComponent implements OnInit, OnDestroy {
             ?.setValue(truncated, { emitEvent: false });
           this.contador = 400;
         } else if (this.contador < 4 && this.contador >= 0) {
-          this.errorMessage = "Limite mínimo de 4 caracteres atingido.";
+          this.errorMessage = "A motivação deve conter entre 4 e 400 caracteres.";
         } else {
           this.errorMessage = "";
         }
@@ -129,7 +127,7 @@ export class JustifyPillarWeightComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.restaurarValoresOriginais();
+    //this.restaurarValoresOriginais();
   }
 
   getTitle() {
@@ -152,7 +150,7 @@ export class JustifyPillarWeightComponent implements OnInit, OnDestroy {
         entidadeId: this.data.entidade.id,
         cicloId: this.data.ciclo.id,
         pilarId: this.data.pilar.id,
-        supervisorId: this.data.supervisor.id,
+        supervisorId: this.data.rowNode?.data?.supervisor?.id,
         novoPeso: this.data.novoPeso!,
         pesoAnterior: this.data.pesoAnterior!,
         motivacao: motivacao,

@@ -5,14 +5,29 @@ export interface ProductPillarHistoryDTO extends BaseDTO {
   idEntidade: number;
   idCiclo: number;
   idPilar: number;
+
   peso: number;
-  idTipoPontuacao: number;
+  pesoAnterior?: number;
+
   nota: number;
-  tipoAlteracao: "P" | "N";
-  idAuditor: number;
-  auditorAnteriorId: number;
+  notaAnterior?: number;
+
+  idTipoPontuacao: number;
+  metodo: string;
+
+  tipoAlteracao: "P" | "N"; // Peso ou Nota
+
+  idAuditor?: number;
+  auditorAnteriorId?: number;
+
   idAuthor: number;
   authorName: string;
   alteradoEm: string;
-  motivacao: string;
+
+  motivacaoPeso?: string;
+
+  // Campos derivados para uso no HTML
+  alteracaoLabel?: string; // "Peso" ou "Nota"
+  valorDe?: number;        // pesoAnterior ou notaAnterior
+  valorPara?: number;      // peso ou nota
 }

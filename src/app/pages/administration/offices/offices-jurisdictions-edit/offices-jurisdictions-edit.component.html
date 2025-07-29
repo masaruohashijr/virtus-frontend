@@ -17,8 +17,8 @@
       <mat-label>Chefe do Escritório</mat-label>
       <mat-select formControlName="boss" [compareWith]="compare">
         <mat-option *ngFor="let user of users" [value]="user">
-          {{ user.name }}</mat-option
-        >
+          {{ user.name }}
+        </mat-option>
       </mat-select>
     </mat-form-field>
   </form>
