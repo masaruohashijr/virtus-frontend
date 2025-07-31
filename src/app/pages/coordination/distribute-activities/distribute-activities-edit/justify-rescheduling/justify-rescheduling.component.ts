@@ -226,7 +226,7 @@ export class JustifyReschedulingComponent implements OnInit {
 
     const body = {
       entidadeId: this.data.entidade?.data?.object?.id,
-      cicloId: this.data.ciclo?.data?.object?.id,
+      cicloId: this.data.ciclo?.data?.object?.cycle?.id,
       pilarId: this.data.pilar?.data?.object?.id,
       componenteId: this.data.componente?.data?.object?.component?.id,
       iniciaEm: this.data.iniciaEm,

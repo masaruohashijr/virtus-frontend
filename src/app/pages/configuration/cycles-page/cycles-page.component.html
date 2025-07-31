@@ -94,6 +94,9 @@
           <button *ngIf="canStart()" mat-icon-button color="warn" (click)="deleteObject(object)">
             <mat-icon>delete</mat-icon>
           </button>
+          <button *ngIf="canStart()" mat-icon-button color="warn" (click)="startCycle(object)">
+            <mat-icon>remove_circle_outline</mat-icon>
+          </button>
         </td>
       </ng-container>
 

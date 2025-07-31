@@ -242,7 +242,7 @@ export class DistributeActivitiesEditComponent
     this.previousEndsAt = parsedEndsAt;
 
     // Extract IDs safely or use fallback
-    const cicloId = cicloNode?.data?.object?.id;
+    const cicloId = cicloNode?.data?.object?.cycle?.id;
     const pilarId = pilarNode?.data?.object?.id;
     const componenteId = componentNode.id;
 
@@ -280,10 +280,10 @@ export class DistributeActivitiesEditComponent
     if (index !== -1) {
       this.products[index].startsAt = newStart;
 
-      const previousDates = this.getPreviousDates(
-        dto.cycle?.id,
-        dto.pillar?.id,
-        dto.component?.id
+        const previousDates = this.getPreviousDates(
+        dto.cycle?.cycle?.id ?? '',
+        dto.pillar?.id ?? '',
+        dto.component?.id ?? ''
       );
 
       const currentEndsAt = this.products[index].endsAt;
@@ -331,9 +331,9 @@ export class DistributeActivitiesEditComponent
       this.products[index].endsAt = newEnd;
 
       const previousDates = this.getPreviousDates(
-        dto.cycle?.id,
-        dto.pillar?.id,
-        dto.component?.id
+        dto.cycle?.cycle?.id ?? '',
+        dto.pillar?.id ?? '',
+        dto.component?.id ?? ''
       );
 
       const currentStartsAt = this.products[index].startsAt;
@@ -409,7 +409,7 @@ export class DistributeActivitiesEditComponent
     });
 
     dialogRef.componentInstance.onSave.subscribe(() => {
-      const cicloId = cicloNode?.data?.object?.id;
+      const cicloId = cicloNode?.data?.object?.cycle?.id;
       const pilarId = pilarNode?.data?.object?.id;
       const componenteId = componentNode?.data?.object?.component?.id;
 
@@ -462,7 +462,7 @@ export class DistributeActivitiesEditComponent
     const componentNode = rowNode.node;
 
     const entidadeId = entidadeNode?.data?.object?.id;
-    const cicloId = cicloNode?.data?.object?.id;
+    const cicloId = cicloNode?.data?.object?.cycle?.id;
     const pilarId = pilarNode?.data?.object?.id;
     const componentId = componentNode?.data?.object?.component.id;
     this._productComponentHistoryService

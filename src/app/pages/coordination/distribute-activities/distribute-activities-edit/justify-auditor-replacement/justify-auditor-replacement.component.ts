@@ -115,7 +115,7 @@ export class JustifyAuditorReplacementComponent {
     }
     const body = {
       entidadeId: this.data.entidade.object.id,
-      cicloId: this.data.ciclo.object.id,
+      cicloId: this.data.ciclo.object.cycle.id,
       pilarId: this.data.pilar.object.id,
       componenteId: componenteObject.id,
       novoAuditorId: this.data.novoAuditor.userId,

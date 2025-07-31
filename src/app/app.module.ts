@@ -129,6 +129,7 @@ import { ComponentsIndicatorsListComponent } from './pages/configuration/compone
 import { ComponentsIndicatorsEditComponent } from './pages/configuration/components-page/components-edit/components-indicators-edit/components-indicators-edit.component';
 import { IndicatorsEditComponent } from './pages/configuration/indicators-page/indicators-edit/indicators-edit.component';
 import { AutomaticScoresEditComponent } from './pages/administration/automatic-scores/automatic-scores-edit/automatic-scores-edit.component';
+import { CycleStartedDialogComponent } from './pages/configuration/cycles-page/start-cycles-edit/cycle-started-dialog/cycle-started-dialog.component';
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: "DD/MM/YYYY",
@@ -231,6 +232,7 @@ export const MY_DATE_FORMATS = {
     ComponentsIndicatorsEditComponent,
     IndicatorsEditComponent,
     AutomaticScoresEditComponent,
+    CycleStartedDialogComponent,
   ],
   imports: [
     TreeTableModule,

@@ -1,0 +1,7 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+<mat-dialog-content>
+  <pre style="white-space: pre-wrap;">{{ data.message }}</pre>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="dialogRef.close()">Fechar</button>
+</mat-dialog-actions>

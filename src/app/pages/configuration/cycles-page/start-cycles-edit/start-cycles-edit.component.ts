@@ -21,6 +21,7 @@ import { UsersService } from "src/app/services/administration/users.service";
 import { CyclesService } from "src/app/services/configuration/cycles.service";
 import { EntityVirtusService } from "src/app/services/rating/entity-virtus.service";
 import { CurrentUser } from "src/app/domain/dto/current-user.dto";
+import { CycleStartedDialogComponent } from "./cycle-started-dialog/cycle-started-dialog.component";
 
 @Component({
   selector: "app-start-cycles-edit",
@@ -63,7 +64,7 @@ export class StartCyclesEditComponent
     private _entityService: EntityVirtusService,
     private _usersService: UsersService,
     private _formBuilder: FormBuilder,
-    private errorDialog: MatDialog,
+    private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: { object: StartCycleDTO }
   ) {
     super();
@@ -183,11 +184,29 @@ export class StartCyclesEditComponent
       .pipe(
         tap((resp) => {
           this.dialogRef.close(resp);
-        }),
-        catchError((error) => {
-          this.mostrarErro(error, this.errorDialog);
-          console.error(error);
-          return throwError(error);
+
+          const nomeCiclo = this.object.cycle.name;
+          const dataInicio = this.object.startsAt
+            ? new Date(this.object.startsAt).toLocaleDateString("pt-BR")
+            : "";
+          const dataFim = this.object.endsAt
+            ? new Date(this.object.endsAt).toLocaleDateString("pt-BR")
+            : "";
+          const entidadesFormatadas = this.selectedEntities
+            .map((e) => `${e.code} - ${e.name}`)
+            .join("\n");
+
+          const mensagem = `O ${nomeCiclo} foi iniciado para o período de:\n${dataInicio} a ${dataFim}\n\nPara as entidades abaixo:\n${entidadesFormatadas}`;
+
+          if (this.dialog) {
+            this.dialog.open(CycleStartedDialogComponent, {
+              width: "500px",
+              data: {
+                title: "Ciclo Iniciado",
+                message: mensagem,
+              },
+            });
+          }
         })
       )
       .subscribe();
@@ -196,7 +215,4 @@ export class StartCyclesEditComponent
   getTitle() {
     return "Iniciar Ciclo";
   }
-}
-function throwError(error: any): any {
-  throw new Error("Function not implemented.");
 }

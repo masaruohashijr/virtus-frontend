@@ -91,7 +91,6 @@ export class MotivarNotaComponent {
     if (this.motivarNotaForm.invalid) return;
 
     const motivacao = this.motivarNotaForm.get("motivation")?.value;
-
     this.evaluatePlansService
       .salvarNotaElemento({
         entidadeId: this.data.entidade.id,
