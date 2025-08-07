@@ -6,6 +6,5 @@ export class IndicatorScoreDTO extends BaseDTO {
   indicatorId: number | null = null;
   indicatorSigla: string | null = null;
   score: number | null = null;
-  componentText: string | null = null;
 }
 

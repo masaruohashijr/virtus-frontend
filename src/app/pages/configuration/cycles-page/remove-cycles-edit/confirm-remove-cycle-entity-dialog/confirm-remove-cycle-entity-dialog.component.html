@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Remover Entidade?</h2>
+
+<mat-dialog-content>
+  Há produtos criados ao ciclo iniciado para a entidade:<br />
+  <strong>{{ data.entity.code }} - {{ data.entity.name }}</strong>.<br /><br />
+  Deseja removê-los mesmo assim?
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Não</button>
+  <button mat-raised-button color="warn" (click)="confirm()">Sim</button>
+</mat-dialog-actions>

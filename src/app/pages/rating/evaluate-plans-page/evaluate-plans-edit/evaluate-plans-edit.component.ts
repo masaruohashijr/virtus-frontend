@@ -191,6 +191,8 @@ export class EvaluatePlansEditComponent implements OnInit {
             tipoNotaDescrito: node.tipoNotaDescrito,
             elementoDescrito: node.elementoDescrito,
             itemDescrito: node.itemDescrito,
+            iniciaEm: node.iniciaEm,
+            terminaEm: node.terminaEm,
           },
           children: node.children
             ? this.transformToTreeTableFormat(node.children)

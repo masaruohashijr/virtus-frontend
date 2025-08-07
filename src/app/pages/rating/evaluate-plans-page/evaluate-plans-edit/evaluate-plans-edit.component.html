@@ -43,7 +43,11 @@
       <th class="weight-column">Peso (%)</th>
       <th class="grade-column">Nota</th>
       <th class="actions-column">
-        <button mat-raised-button color="primary" [matTooltip]="'Exportar Dados'">
+        <button
+          mat-raised-button
+          color="primary"
+          [matTooltip]="'Exportar Dados'"
+        >
           <mat-icon>backup</mat-icon>
         </button>
       </th>
@@ -311,7 +315,7 @@
             (click)="onDescriptionButtonClick(rowNode)"
           >
             <mat-icon>description</mat-icon>
-          </button>   
+          </button>
           <button
             *ngIf="rowData.objectType == 'Componente'"
             mat-raised-button
@@ -323,7 +327,7 @@
             (click)="onDescriptionButtonClick(rowNode)"
           >
             <mat-icon>description</mat-icon>
-          </button>            
+          </button>
           <button
             *ngIf="rowData.objectType == 'Plano'"
             mat-raised-button
@@ -335,7 +339,7 @@
             (click)="onDescriptionButtonClick(rowNode)"
           >
             <mat-icon>description</mat-icon>
-          </button>              
+          </button>
           <button
             *ngIf="rowData.objectType == 'Tipo Nota'"
             mat-raised-button
@@ -347,7 +351,7 @@
             (click)="onDescriptionButtonClick(rowNode)"
           >
             <mat-icon>description</mat-icon>
-          </button>           
+          </button>
           <button
             *ngIf="rowData.objectType == 'Elemento'"
             mat-raised-button
@@ -359,8 +363,8 @@
             (click)="onDescriptionButtonClick(rowNode)"
           >
             <mat-icon>description</mat-icon>
-          </button> 
-<button
+          </button>
+          <button
             *ngIf="rowData.objectType == 'Item'"
             mat-raised-button
             [ngClass]="{
@@ -371,7 +375,7 @@
             (click)="onDescriptionButtonClick(rowNode)"
           >
             <mat-icon>description</mat-icon>
-          </button>             
+          </button>
           <button
             *ngIf="rowData.objectType == 'Pilar'"
             mat-raised-button
@@ -397,6 +401,23 @@
             <mat-icon>history</mat-icon>
           </button>
         </div>
+        <ng-container
+          *ngIf="rowData.objectType === 'Componente' && !rowData.periodoPermitido"
+        >
+          <div
+            *ngIf="!rowData.iniciaEm || !rowData.terminaEm"
+            style="font-size: 0.8em; color: red"
+          >
+            Faltando programação.
+          </div>
+          <div
+            *ngIf="rowData.iniciaEm && rowData.terminaEm"
+            style="font-size: 0.8em; color: red"
+          >
+            Inicia em {{ rowData.iniciaEm }} e termina em
+            {{ rowData.terminaEm }}.
+          </div>
+        </ng-container>
       </td>
     </tr>
   </ng-template>

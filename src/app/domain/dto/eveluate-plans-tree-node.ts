@@ -15,6 +15,8 @@ export interface EvaluatePlansTreeNode {
     grade: number;
     periodoPermitido?: boolean;
     periodoCiclo?: boolean;
+    terminaEm: Date;
+    iniciaEm: Date;
     cicloAnalisado?: boolean;
     pilarAnalisado?: boolean;
     componenteAnalisado?: boolean;

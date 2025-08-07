@@ -12,6 +12,7 @@ import { ConfirmationDialogComponent } from 'src/app/components/dialog/confirmat
 import { StartCyclesEditComponent } from './start-cycles-edit/start-cycles-edit.component';
 import { StartCycleDTO } from 'src/app/domain/dto/start-cycle.dto';
 import { UsersService } from 'src/app/services/administration/users.service';
+import { RemoveCyclesEditComponent } from './remove-cycles-edit/remove-cycles-edit.component';
 
 @Component({
   selector: 'app-cycles-page',
@@ -103,6 +104,22 @@ export class CyclesPageComponent implements OnInit {
       let startCycle = new StartCycleDTO();
       startCycle.cycle = object; 
       const dialogRef = this.dialog.open(StartCyclesEditComponent, {
+        width: '800px',
+        data: {object: startCycle},
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        this.loadContent(this.filterControl?.value);
+      });
+    });
+  }
+
+  removeCycleProducts(object: CycleDTO) {
+    this._service.getById(object.id).subscribe(resp => {
+      object = resp;
+      let startCycle = new StartCycleDTO();
+      startCycle.cycle = object; 
+      const dialogRef = this.dialog.open(RemoveCyclesEditComponent, {
         width: '800px',
         data: {object: startCycle},
       });

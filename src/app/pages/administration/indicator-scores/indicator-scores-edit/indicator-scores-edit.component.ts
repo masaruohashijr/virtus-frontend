@@ -74,7 +74,6 @@ export class IndicatorScoresEditComponent implements OnInit {
       indicatorId: this.object.indicatorId ?? null,
       indicatorSigla: this.object.indicatorSigla ?? null,
       score: this.object.score ?? null,
-      componentText: this.object.componentText ?? null,
       createdAt: this.object.createdAt ?? null,
     };
 
@@ -86,7 +85,6 @@ export class IndicatorScoresEditComponent implements OnInit {
       ],
       indicatorId: [normalized.indicatorId, [Validators.required]],
       indicatorSigla: [normalized.indicatorSigla, [Validators.required]],
-      componentText: [normalized.componentText, [Validators.required]],
       score: [normalized.score, [Validators.required, Validators.min(0)]],
       createdAt: [normalized.createdAt],
     });
@@ -165,7 +163,6 @@ export class IndicatorScoresEditComponent implements OnInit {
     this.object.indicatorId = Number(this.scoreForm.value.indicatorId);
     this.object.indicatorSigla =
       this.scoreForm.value.indicatorSigla?.toString();
-    this.object.componentText = this.scoreForm.value.componentText?.toString();
     this.object.score = Number(this.scoreForm.value.score);
 
     const request$ = this.object.id

@@ -1,3 +1,4 @@
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
@@ -27,7 +28,6 @@ export class IndicatorScoresComponent implements OnInit {
     "cnpb",
     "referenceDate",
     "indicatorSigla",
-    "componentText",
     "score",
     "createdAt",
     "actions",
@@ -40,12 +40,13 @@ export class IndicatorScoresComponent implements OnInit {
   constructor(
     private _formBuilder: FormBuilder,
     private _service: IndicatorScoresService,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.initFilterListener();
-    this.loadScores();
+    this.loadScores("");
   }
 
   private get filterControl() {
@@ -60,7 +61,6 @@ export class IndicatorScoresComponent implements OnInit {
 
   private loadScores(filter = ""): void {
     const { page = 0, size = 10 } = this.pageObjects;
-
     this._service
       .getAll(filter, page, size)
       .pipe(
@@ -147,8 +147,15 @@ export class IndicatorScoresComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe((referenceDate) => {
           if (referenceDate) {
-            console.log("Sincronizar com competência:", referenceDate);
-            // Chame seu service de sincronização aqui se necessário
+            this.loadScores(this.filterControl?.value || "");
+
+            this._snackBar.open(
+              `Notas da Referência ${referenceDate} foram sincronizadas com sucesso.`,
+              "Fechar",
+              {
+                duration: 3000,
+              }
+            );
           }
         });
       },

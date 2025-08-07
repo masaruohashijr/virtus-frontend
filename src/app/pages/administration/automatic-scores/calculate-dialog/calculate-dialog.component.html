@@ -1,11 +1,11 @@
-<h1 mat-dialog-title>Sincronizar Indicadores</h1>
+<h1 mat-dialog-title>Calcular Notas Automáticas</h1>
 
 <div mat-dialog-content>
-  <form [formGroup]="syncForm">
+  <form [formGroup]="calculateForm">
     <mat-form-field class="w-full mt-2" appearance="outline">
       <mat-label>Referência</mat-label>
       <input matInput formControlName="referenceDate" placeholder="AAAAMM" />
-      <mat-error *ngIf="syncForm.get('referenceDate')?.hasError('pattern')">
+      <mat-error *ngIf="calculateForm.get('referenceDate')?.hasError('pattern')">
         Referência inválida. Use o formato AAAAMM.
       </mat-error>
     </mat-form-field>
@@ -14,12 +14,7 @@
 
 <div mat-dialog-actions align="end">
   <button mat-button (click)="close()" [disabled]="isLoading">Cancelar</button>
-  <button
-    mat-raised-button
-    color="primary"
-    (click)="sync()"
-    [disabled]="isLoading"
-  >
-    Sincronizar
+  <button mat-raised-button color="primary" (click)="calculate()" [disabled]="isLoading">
+    Calcular
   </button>
 </div>

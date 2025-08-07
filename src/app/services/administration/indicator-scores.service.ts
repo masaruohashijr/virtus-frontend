@@ -9,7 +9,6 @@ import { URL_API } from "src/app/common/service-constants";
   providedIn: "root",
 })
 export class IndicatorScoresService extends BaseService<IndicatorScoreDTO> {
-
   constructor(private _httpClient: HttpClient) {
     super();
   }
@@ -23,17 +22,20 @@ export class IndicatorScoresService extends BaseService<IndicatorScoreDTO> {
   }
 
   fetchLastReference(): Observable<any> {
-    const endpoint = `${URL_API}`+this.rootEndpoint()+`/last-reference`.replace(
-      /([^:]\/)\/+/g,
-      "$1"
-    );
+    const endpoint =
+      `${URL_API}` +
+      this.rootEndpoint() +
+      `/last-reference`.replace(/([^:]\/)\/+/g, "$1");
     console.log("URL final para buscar última referência:", endpoint);
     return this.getHttpClient().get<String>(endpoint);
   }
 
-  syncScores(refDate: string | null | undefined) {
-    if (!refDate) return;
-    return this._httpClient.post(`${this.rootEndpoint()}/syncScores`, {
+  syncScores(refDate: string | null | undefined): Observable<Object> {
+    if (!refDate) {
+      throw new Error("referenceDate não pode ser nulo ou indefinido");
+    }
+
+    return this._httpClient.post(`${URL_API}` +`${this.rootEndpoint()}/syncScores`, {
       referenceDate: refDate,
     });
   }

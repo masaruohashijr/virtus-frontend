@@ -1,34 +1,32 @@
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { Component, Inject, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogRef,
-} from "@angular/material/dialog";
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
+
 import { AlertDialogComponent } from "src/app/components/dialog/alert-dialog/alert-dialog.component";
-import { ConfirmationDialogComponent } from "src/app/components/dialog/confirmation-dialog/confirmation-dialog.component";
+import { AutomaticScoresService } from "src/app/services/administration/automatic-scores.service";
 import { IndicatorScoresService } from "src/app/services/administration/indicator-scores.service";
 
 @Component({
-  selector: "app-sync-dialog",
-  templateUrl: "./sync-dialog.component.html",
+  selector: "app-calculate-dialog",
+  templateUrl: "./calculate-dialog.component.html",
 })
-export class SyncDialogComponent implements OnInit {
-  syncForm!: FormGroup;
+export class CalculateDialogComponent implements OnInit {
+  calculateForm!: FormGroup;
   isLoading = false;
+
   constructor(
-    public dialogRef: MatDialogRef<SyncDialogComponent>,
+    public dialogRef: MatDialogRef<CalculateDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: { ultimaReferencia: string },
     private fb: FormBuilder,
-    private _service: IndicatorScoresService,
+    private _service: AutomaticScoresService,
     private dialog: MatDialog,
     private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
-    this.syncForm = this.fb.group({
+    this.calculateForm = this.fb.group({
       referenceDate: [
         this.data.ultimaReferencia || "",
         [Validators.required, Validators.pattern(/^[0-9]{4}(0[1-9]|1[0-2])$/)],
@@ -36,8 +34,8 @@ export class SyncDialogComponent implements OnInit {
     });
   }
 
-  sync(): void {
-    const refDateControl = this.syncForm.get("referenceDate");
+  calculate(): void {
+    const refDateControl = this.calculateForm.get("referenceDate");
 
     if (!refDateControl || refDateControl.invalid) {
       this.dialog.open(AlertDialogComponent, {
@@ -49,9 +47,8 @@ export class SyncDialogComponent implements OnInit {
       return;
     }
 
-    const referenceDate = refDateControl?.value;
+    const referenceDate = refDateControl.value;
 
-    // Verifica se o valor realmente é uma string antes de prosseguir
     if (typeof referenceDate !== "string") {
       this.dialog.open(AlertDialogComponent, {
         data: {
@@ -61,17 +58,20 @@ export class SyncDialogComponent implements OnInit {
       });
       return;
     }
+
     this.isLoading = true;
-    this._service!.syncScores(referenceDate).subscribe({
+
+    this._service.calculateScores(referenceDate).subscribe({
       next: () => {
         this.dialog.open(AlertDialogComponent, {
           data: {
             title: "Sucesso",
-            message: `Notas da Referência ${referenceDate} foram sincronizadas com sucesso.`,
+            message: `Notas da Referência ${referenceDate} foram calculadas com sucesso.`,
           },
         });
+
         this._snackBar.open(
-          `Notas da Referência ${referenceDate} foram sincronizadas com sucesso.`,
+          `Notas da Referência ${referenceDate} foram calculadas com sucesso.`,
           "Fechar",
           { duration: 3000 }
         );
@@ -79,11 +79,11 @@ export class SyncDialogComponent implements OnInit {
         this.close();
       },
       error: (err) => {
-        console.error("Erro na sincronização:", err);
+        console.error("Erro no cálculo:", err);
         this.dialog.open(AlertDialogComponent, {
           data: {
             title: "Erro",
-            message: "Falha ao sincronizar as notas. Tente novamente.",
+            message: "Falha ao calcular as notas. Tente novamente.",
           },
         });
       },
@@ -94,6 +94,6 @@ export class SyncDialogComponent implements OnInit {
   }
 
   close(): void {
-    this.dialogRef.close(this.syncForm.get("referenceDate")?.value);
+    this.dialogRef.close(this.calculateForm.get("referenceDate")?.value);
   }
 }

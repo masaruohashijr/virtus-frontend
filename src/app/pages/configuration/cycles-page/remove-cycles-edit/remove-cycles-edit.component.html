@@ -1,0 +1,45 @@
+<h1 mat-dialog-title>{{ getTitle() }}</h1>
+<div mat-dialog-content>
+  <form [formGroup]="elementForm">
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Nome</mat-label>
+      <input formControlName="name" matInput [disabled]="true" />
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Descrição</mat-label>
+      <textarea
+        formControlName="description"
+        matInput
+        [disabled]="true"
+      ></textarea>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Autor</mat-label>
+      <input formControlName="author" matInput [disabled]="true" />
+    </mat-form-field>
+
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Criado Em</mat-label>
+      <input matInput [value]="createdAtFormatted" disabled />
+    </mat-form-field>
+
+    <mat-label>Entidades Vinculadas</mat-label>
+    <mat-chip-list #chipList>
+      <mat-chip
+        *ngFor="let selected of elementForm.controls.entities.value"
+        [removable]="true"
+        (removed)="removeEntity(selected)"
+      >
+        {{ selected?.name }}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+    </mat-chip-list>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" (click)="save()">Salvar</button>
+  <button mat-flat-button (click)="cancel()">Cancelar</button>
+</div>

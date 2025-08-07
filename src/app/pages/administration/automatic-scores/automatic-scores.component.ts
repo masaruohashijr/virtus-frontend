@@ -13,6 +13,8 @@ import { ConfirmationDialogComponent } from "src/app/components/dialog/confirmat
 import { AutomaticScoresEditComponent } from "./automatic-scores-edit/automatic-scores-edit.component";
 import { ComponentsService } from "src/app/services/configuration/components.service";
 import { ComponentDTO } from "src/app/domain/dto/components.dto";
+import { CalculateDialogComponent } from "./calculate-dialog/calculate-dialog.component";
+import { PlainMessageDialogComponent } from "../plain-message/plain-message-dialog.component";
 
 @Component({
   selector: "app-automatic-scores",
@@ -147,9 +149,34 @@ export class AutomaticScoresComponent implements OnInit {
       .subscribe(() => this.loadScores(this.filterControl?.value || ""));
   }
 
-  calculateAutomaticScores(): void {
-    // Aqui pode chamar um endpoint do backend que recalcula as notas automáticas
-    console.log("Função de cálculo automático ainda não implementada.");
+  openCalculateDialog(): void {
+    this._service.fetchLastReferenceFromIndicatorsScores().subscribe({
+      next: (result: any) => {
+        const ultimaReferencia = result.referenceDate || null;
+
+        const dialogRef = this._dialog.open(CalculateDialogComponent, {
+          width: "400px",
+          data: { ultimaReferencia },
+        });
+
+        dialogRef.afterClosed().subscribe((referenceDate) => {
+          if (referenceDate) {
+            this.loadScores(this.filterControl?.value || "");
+            // Snackbar será exibido dentro do próprio diálogo em caso de sucesso
+          }
+        });
+      },
+      error: (err: any) => {
+        console.error("Erro ao buscar última referência:", err);
+        this._dialog.open(PlainMessageDialogComponent, {
+          width: "350px",
+          data: {
+            title: "Erro",
+            message: "Erro ao buscar última referência. Verifique o console.",
+          },
+        });
+      },
+    });
   }
 
   openScheduleSyncDialog(): void {
