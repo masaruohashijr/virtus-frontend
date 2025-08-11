@@ -134,6 +134,9 @@ import { PillarHistoryDetailsComponent } from "./pages/rating/evaluate-plans-pag
 import { ShowDescriptionComponent } from "./pages/rating/evaluate-plans-page/show-description/show-description.component";
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CalculateDialogComponent } from './pages/administration/automatic-scores/calculate-dialog/calculate-dialog.component';
+import { EvaluateAutomaticScoreComponent } from './pages/rating/evaluate-plans-page/evaluate-automatic-score/evaluate-automatic-score.component';
+import { PlanChangeHistoryComponent } from './pages/rating/evaluate-plans-page/plan-change-history/plan-change-history.component';
+import { PlanHistoryDetailsComponent } from './pages/rating/evaluate-plans-page/plan-change-history/plan-history-details/plan-history-details.component';
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: "DD/MM/YYYY",
@@ -240,7 +243,10 @@ export const MY_DATE_FORMATS = {
     RemoveCyclesEditComponent,
     CycleRemovedDialogComponent,
     ConfirmRemoveCycleEntityDialogComponent,
-    CalculateDialogComponent,      
+    CalculateDialogComponent,
+    EvaluateAutomaticScoreComponent,
+    PlanChangeHistoryComponent,
+    PlanHistoryDetailsComponent,      
   ],
   imports: [
     TreeTableModule,

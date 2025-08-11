@@ -1,0 +1,132 @@
+<!-- Cabeçalho -->
+<div
+  style="background-color: #003f87; color: white; padding: 12px; font-size: 18px; font-weight: normal;"
+>
+  {{ getTitle() }}
+</div>
+
+<!-- Conteúdo principal -->
+<div style="padding: 16px">
+  <form *ngIf="evaluateAutomaticScoreForm" [formGroup]="evaluateAutomaticScoreForm">
+    <!-- Tabela com os dados -->
+    <div style="display: flex; gap: 16px; align-items: flex-start">
+      <!-- COLUNA ESQUERDA: EFPC, Ciclo, Pilar, Componente, Plano -->
+      <div style="flex: 1; max-width: 50%">
+        <table style="width: 100%; font-size: 14px; border-collapse: collapse">
+          <ng-container
+            *ngFor="let field of [
+              { key: 'entity', label: 'EFPC' },
+              { key: 'cycle', label: 'Ciclo' },
+              { key: 'pillar', label: 'Pilar' },
+              { key: 'component', label: 'Componente' },
+              { key: 'plan', label: 'Plano' },
+              { key: 'weight', label: 'Peso' },
+              { key: 'grade', label: 'Nota' }
+            ]"
+          >
+            <tr *ngIf="evaluateAutomaticScoreForm.get(field.key)?.value">
+              <td style="width: 30%">
+                <label style="color: #003f87">{{ field.label }}</label>
+              </td>
+              <td style="width: 70%">
+                <input
+                  [value]="evaluateAutomaticScoreForm.get(field.key)?.value"
+                  [disabled]="true"
+                  readonly
+                  style="width: 100%; border: none; background: transparent"
+                />
+              </td>
+            </tr>
+          </ng-container>
+        </table>
+
+        <!-- Exibição das notas -->
+        <div style="margin-top: 20px; display: flex; justify-content: space-between;">
+          <div style="flex: 1; text-align: center">
+            <label style="color: #003f87">Nota Original</label><br />
+            <span>{{ originalGrade }}</span>
+          </div>
+          <div style="flex: 1; text-align: center">
+            <label style="color: #003f87">Nova Nota</label><br />
+            <span>{{ newGrade }}</span>
+          </div>
+        </div>
+
+        <!-- Botões Up e Down abaixo de Nova Nota -->
+        <div style="text-align: center; margin-top: 20px; margin-left: 50%">
+          <button
+            mat-icon-button
+            (click)="moveUp()"
+            [disabled]="newGrade >= 4"
+            style="width: 45%; height: 40px; border: 1px solid #003f87; border-radius: 4px; margin-right: 10px; background-color: #003f87;"
+          >
+            <mat-icon style="color: white">arrow_upward</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            (click)="moveDown()"
+            [disabled]="newGrade <= 1"
+            style="width: 45%; height: 40px; border: 1px solid #003f87; border-radius: 4px; background-color: #003f87;"
+          >
+            <mat-icon style="color: white">arrow_downward</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- COLUNA DIREITA: Motivação Peso -->
+      <div style="flex: 1; max-width: 50%">
+        <label style="color: #003f87; font-weight: normal">Motivação Nota</label><br />
+        <textarea
+          #motivationInput
+          formControlName="motivation"
+          rows="14"
+          style="
+            width: 100%;
+            height: 95%;
+            border: 1px solid #ccc;
+            padding: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            box-sizing: border-box;
+            resize: vertical;
+          "
+        ></textarea>
+        <div style="text-align: right; font-size: 12px; margin-top: 4px">
+          {{ evaluateAutomaticScoreForm.get("motivation")?.value?.length || 0 }} / 400
+        </div>
+        <div *ngIf="errorMessage" style="color: red; font-size: 12px; margin-top: 4px">
+          {{ errorMessage }}
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div style="display: flex; justify-content: flex-end; align-items: center; padding: 16px;">
+  <button
+    mat-raised-button
+    color="accent"
+    (click)="rectifyNote()"
+    [disabled]="isRatifyEnabled"
+  >
+    Retificar
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="ratifyNote()"
+    style="margin-left: 8px"
+    [disabled]="!isRatifyEnabled"
+  >
+    Ratificar
+  </button>
+  <button
+    mat-button
+    style="margin-left: 8px"
+    [mat-dialog-close]=""
+    (click)="fechar()"
+  >
+    Cancelar
+  </button>
+</div>
+<!-- Fim do Rodapé -->

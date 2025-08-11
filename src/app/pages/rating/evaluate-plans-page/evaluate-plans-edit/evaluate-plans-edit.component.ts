@@ -1,4 +1,11 @@
-import { Component, Input, OnInit } from "@angular/core";
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  OnInit,
+  ViewChild,
+} from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { TreeNode } from "primeng/api";
@@ -29,6 +36,10 @@ import {
 } from "./../motivar-nota/motivar-nota.component";
 import { MotivarPesoComponent } from "./../motivar-peso/motivar-peso.component";
 import { PillarChangeHistoryComponent } from "./../pillar-change-history/pillar-change-history.component";
+import { EvaluateAutomaticScoreComponent } from "../evaluate-automatic-score/evaluate-automatic-score.component";
+import { ProductPlanHistoryService } from "src/app/services/coordination/product-plan-history.service";
+import { ProductPlanHistoryDTO } from "src/app/domain/dto/product-plan-history.dto";
+import { PlanChangeHistoryComponent } from "../plan-change-history/plan-change-history.component";
 
 @Component({
   selector: "app-evaluate-plans-edit",
@@ -36,6 +47,8 @@ import { PillarChangeHistoryComponent } from "./../pillar-change-history/pillar-
   styleUrls: ["./evaluate-plans-edit.component.css"],
 })
 export class EvaluatePlansEditComponent implements OnInit {
+  @ViewChild("gradeField", { static: true }) gradeField!: ElementRef; // Garantir que seja ElementRef
+
   @Input() object!: EntityVirtusDTO;
   treeData: TreeNode[] = [];
   treeDataOriginal: TreeNode[] = [];
@@ -63,6 +76,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     private _service: EvaluatePlansService,
     private _productPillarHistoryService: ProductPillarHistoryService,
     private _productComponentHistoryService: ProductComponentHistoryService,
+    private _productPlanHistoryService: ProductPlanHistoryService,
     private _productElementHistoryService: ProductElementHistoryService,
     private _usersService: UsersService,
     private dialog: MatDialog,
@@ -74,7 +88,9 @@ export class EvaluatePlansEditComponent implements OnInit {
   searchForm = this._formBuilder.group({
     filterValue: [""],
   });
+
   filterControl = this.searchForm.get("filterValue");
+
   ngOnInit(): void {
     this.carregarDados().then(() => {
       this.dadosCarregando = false;
@@ -294,7 +310,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     const entidade = this.subirAtePorNode(rowNode, "Entidade");
     const ciclo = this.subirAtePorNode(rowNode, "Ciclo");
     const pilar = rowNode.node;
-    const pesoAnterior = pilar.data.weight;
+    const pesoAnterior = pilar?.data.weight;
     const dialogRef = this.dialog.open(JustifyPillarWeightComponent, {
       width: "1000px",
       data: {
@@ -362,7 +378,7 @@ export class EvaluatePlansEditComponent implements OnInit {
   ): void {
     const input = event.target as HTMLInputElement;
     const novoPeso = Number(input.value);
-    const pesoAnterior = rowData.pesoAnterior || 0;
+    const pesoAnterior = rowData.peso || 0;
     // Validação do valor inserido
     if (isNaN(novoPeso) || novoPeso <= 0 || novoPeso > 100) {
       const mensagem = "O peso deve ser um número entre 1 e 100.";
@@ -405,7 +421,9 @@ export class EvaluatePlansEditComponent implements OnInit {
         data: { title: "Atenção", message: mensagem },
       });
     }
-    this.justifyPillarWeight(rowNode, event);
+    if (pesoAnterior != novoPeso) {
+      this.justifyPillarWeight(rowNode, event);
+    }
   }
 
   public canEditElementGrade(rowData: any): boolean {
@@ -793,7 +811,6 @@ export class EvaluatePlansEditComponent implements OnInit {
   }
 
   onProductElementHistoryClick(rowNode: any): void {
-    // Retrieve required IDs from the node hierarchy
     const entidadeNode = this.subirAtePorNode(rowNode, "Entidade");
     const cicloNode = this.subirAtePorNode(rowNode, "Ciclo");
     const pilarNode = this.subirAtePorNode(rowNode, "Pilar");
@@ -881,5 +898,87 @@ export class EvaluatePlansEditComponent implements OnInit {
         (isChief && isCyclePeriod)) &&
       hasWeight;
     return resultado;
+  }
+
+  onEvaluateAutomaticScoreButtonClick(rowNode: any) {
+    // Retrieve required IDs from the node hierarchy
+    const entidadeNode = this.subirAtePorNode(rowNode, "Entidade");
+    const cicloNode = this.subirAtePorNode(rowNode, "Ciclo");
+    const pilarNode = this.subirAtePorNode(rowNode, "Pilar");
+    const componentNode = this.subirAtePorNode(rowNode, "Componente");
+    const planNode = rowNode.node;
+
+    const dialogRef = this.dialog.open(EvaluateAutomaticScoreComponent, {
+      width: "1000px", // Largura do diálogo
+      data: {
+        originalGrade: rowNode?.node?.data?.grade,
+        grade: rowNode?.node?.data?.grade,
+        weight: rowNode?.node?.data?.weight,
+        entity: entidadeNode?.data, // Entidade
+        cycle: cicloNode?.data, // Ciclo
+        pillar: pilarNode?.data, // Pilar
+        component: componentNode?.data, // Componente
+        plan: planNode?.data, // Plano
+      },
+    });
+
+    // Fecha o diálogo após ser fechado
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log("O diálogo foi fechado");
+    });
+  }
+
+  onProductPlanHistoryClick(rowNode: any): void {
+    // Recupera os IDs necessários a partir da hierarquia do nó
+    const entidadeNode = this.subirAtePorNode(rowNode, "Entidade");
+    const cicloNode = this.subirAtePorNode(rowNode, "Ciclo");
+    const pilarNode = this.subirAtePorNode(rowNode, "Pilar");
+    const componenteNode = this.subirAtePorNode(rowNode, "Componente");
+    const planoNode = rowNode.node;
+
+    // Extraí os IDs de cada nível
+    const entidadeId = entidadeNode?.data?.id;
+    const cicloId = cicloNode?.data?.id;
+    const pilarId = pilarNode?.data?.id;
+    const componenteId = componenteNode?.data?.id;
+    const planoId = planoNode?.data?.id;
+
+    // Chama o serviço para buscar os históricos do plano
+    this._productPlanHistoryService
+      .getHistory(entidadeId, cicloId, pilarId, componenteId, planoId)
+      .subscribe((logs) => {
+        // Exibe os históricos de alteração em um modal ou componente
+        this.showPlanChangeHistory(rowNode, logs);
+      });
+  }
+
+  showPlanChangeHistory(rowNode: any, logs: ProductPlanHistoryDTO[]): void {
+    // Recupera os dados necessários da hierarquia do nó
+    const entidade = rowNode ? this.subirAtePorNode(rowNode, "Entidade") : null;
+    const ciclo = rowNode ? this.subirAtePorNode(rowNode, "Ciclo") : null;
+    const pilar = rowNode ? this.subirAtePorNode(rowNode, "Pilar") : null;
+    const componente = rowNode
+      ? this.subirAtePorNode(rowNode, "Componente")
+      : null;
+    const plano = rowNode?.node;
+
+    // Abre o diálogo com os detalhes do histórico
+    const dialogRef = this.dialog.open(PlanChangeHistoryComponent, {
+      width: "1000px",
+      height: "90%",
+      data: {
+        entidade: entidade || "",
+        ciclo: ciclo || "",
+        pilar: pilar || "",
+        componente: componente || "",
+        plano: plano || "",
+        peso: rowNode.node.data.weight || null,
+        pesoAnterior: rowNode.node.data.pesoAnterior || null,
+        nota: rowNode.node.data.grade || null,
+        notaAnterior: rowNode.node.data.notaAnterior || null,
+        historicoDataSource: logs,
+        metodo: rowNode.node.data.idTipoPontuacao || null,
+      },
+    });
   }
 }

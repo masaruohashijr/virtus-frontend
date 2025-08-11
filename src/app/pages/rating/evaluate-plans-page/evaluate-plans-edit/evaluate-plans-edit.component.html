@@ -81,6 +81,7 @@
             [disabled]="!canEditPillarWeight(rowData)"
             style="text-align: center; width: 50px"
           />
+          %
         </ng-container>
         <ng-container *ngIf="rowData.objectType === 'Componente'">
           <input
@@ -158,6 +159,7 @@
         </ng-container>
         <ng-container *ngIf="rowData.objectType === 'Plano'">
           <input
+            #gradeField
             type="decimal"
             class="plan-grade"
             [disabled]="true"
@@ -254,6 +256,15 @@
             <mat-icon>search</mat-icon>
           </button>
           <button
+            mat-raised-button
+            *ngIf="rowData.objectType == 'Plano'"
+            color="primary"
+            (click)="onEvaluateAutomaticScoreButtonClick(rowNode)"
+            [matTooltip]="'Retificar / Ratificar'"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
             *ngIf="rowData.objectType == 'Tipo Nota'"
             mat-raised-button
             [disabled]="!canAnalyseTier(rowData)"
@@ -329,18 +340,6 @@
             <mat-icon>description</mat-icon>
           </button>
           <button
-            *ngIf="rowData.objectType == 'Plano'"
-            mat-raised-button
-            [ngClass]="{
-              descrito: rowData.planoDescrito === true,
-              pendente: !rowData.planoDescrito
-            }"
-            [matTooltip]="'Descrição'"
-            (click)="onDescriptionButtonClick(rowNode)"
-          >
-            <mat-icon>description</mat-icon>
-          </button>
-          <button
             *ngIf="rowData.objectType == 'Tipo Nota'"
             mat-raised-button
             [ngClass]="{
@@ -393,6 +392,14 @@
             <mat-icon>history</mat-icon>
           </button>
           <button
+            *ngIf="rowData.objectType == 'Plano'"
+            mat-raised-button
+            [matTooltip]="'Histórico'"
+            (click)="onProductPlanHistoryClick(rowNode)"
+          >
+            <mat-icon>history</mat-icon>
+          </button>
+          <button
             *ngIf="rowData.objectType == 'Elemento'"
             mat-raised-button
             [matTooltip]="'Histórico'"
@@ -402,7 +409,9 @@
           </button>
         </div>
         <ng-container
-          *ngIf="rowData.objectType === 'Componente' && !rowData.periodoPermitido"
+          *ngIf="
+            rowData.objectType === 'Componente' && !rowData.periodoPermitido
+          "
         >
           <div
             *ngIf="!rowData.iniciaEm || !rowData.terminaEm"

@@ -121,33 +121,76 @@ export class EvaluatePlansService extends BaseService<EntityVirtusDTO> {
       .set("entityId", entityId)
       .set("cycleId", cycleId !== undefined ? cycleId.toString() : "0")
       .set("pillarId", pillarId !== undefined ? pillarId.toString() : "0")
-      .set("componentId", componentId !== undefined ? componentId.toString() : "0")
+      .set(
+        "componentId",
+        componentId !== undefined ? componentId.toString() : "0"
+      )
       .set("planId", planId !== undefined ? planId.toString() : "0")
-      .set("gradeTypeId", gradeTypeId !== undefined ? gradeTypeId.toString() : "0")
+      .set(
+        "gradeTypeId",
+        gradeTypeId !== undefined ? gradeTypeId.toString() : "0"
+      )
       .set("elementId", elementId !== undefined ? elementId.toString() : "0")
-      .set("itemId", itemId !== undefined ? itemId.toString() : "0")
-      ;
-
+      .set("itemId", itemId !== undefined ? itemId.toString() : "0");
     return this._httpClient.get<{ analysis: string }>(
       URL_API + this.rootEndpoint() + "/analysis",
       { params: queryParams }
     );
   }
 
-  updateAnalysis(payload: { 
-    entidadeId: any; 
-    cicloId: any; 
-    pilarId: any; 
-    componenteId: any; 
-    planoId: any; 
-    tipoNotaId: any; 
-    elementoId: any; 
-    itemId: any; 
-    analise: any }, 
-    objectType: any) {
+  updateAnalysis(
+    payload: {
+      entidadeId: any;
+      cicloId: any;
+      pilarId: any;
+      componenteId: any;
+      planoId: any;
+      tipoNotaId: any;
+      elementoId: any;
+      itemId: any;
+      analise: any;
+    },
+    objectType: any
+  ) {
     return this._httpClient.put(
       URL_API + this.rootEndpoint() + "/updateAnalysis",
-      payload,{ params: { objectType } }
+      payload,
+      { params: { objectType } }
+    );
+  }
+
+  ratifyNote(payload: {
+    entidadeId: any;
+    cicloId: any;
+    pilarId: any;
+    componenteId: any;
+    planoId: any;
+    nota: any;
+    tipoAvalicao: string;
+    motivacao: any;
+  }): Observable<any> {
+    return this._httpClient.put(
+      URL_API + this.rootEndpoint() + `/ratifyNote`,
+      payload
+    );
+  }
+
+  // Método para retificar a nota
+  rectifyNote(
+    payload: {
+      entidadeId: any;
+      cicloId: any;
+      pilarId: any;
+      componenteId: any;
+      planoId: any;
+      nota: any;
+      tipoAvalicao: string;
+      motivacao: any;
+    }
+  ): Observable<any> {
+    return this._httpClient.put(
+      URL_API + this.rootEndpoint() + `/rectifyNote`,
+      payload
     );
   }
 }
