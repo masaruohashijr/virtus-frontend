@@ -1,15 +1,12 @@
-import { UserDTO } from "../dto/user.dto";
+import type { UserId } from "../types/ids";
 
 export class BaseDTO {
   id!: number;
   createdAt!: Date;
   updatedAt!: Date;
-  author!: UserDTO;
+  authorId!: UserId;
 
   equals(other: BaseDTO): boolean {
-    if(this.id && other.id){
-      return this.id === other.id;
-    }
-    return false;
+    return !!this.id && this.id === other.id;
   }
 }

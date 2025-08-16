@@ -1,0 +1,13 @@
+export type RoleId = number;
+export type FeatureId = number;
+export type FeatureRoleId = number;
+export type UserId = number;
+export type MemberId = number;
+export type EntityVirtusId = number;
+export type CycleId = number;
+export type PlanId = number;
+export type OfficeId = number;
+export type JurisdictionId = number;
+export type WorkflowId = number;
+export type ActivityId = number;
+export type CycleEntityId = number;

@@ -1,8 +1,8 @@
 import { BaseDTO } from "../common/base.dto";
+import { WorkflowId } from "../types/ids";
 import { ActionDTO } from "./action.dto";
 import { ActivityRoleDTO } from "./activity-role.dto";
 import { FeatureActivityDTO } from "./feature-activity.dto";
-import { WorkflowDTO } from "./workflow.dto";
 
 export class ActivityDTO extends BaseDTO {
     actionId!: number | undefined;
@@ -13,7 +13,7 @@ export class ActivityDTO extends BaseDTO {
     rolesStr!: string;
     action!: ActionDTO | null | undefined;
     expirationAction!: ActionDTO | null | undefined;
-    workflow!: WorkflowDTO;
+    workflowId!: WorkflowId;
     features: FeatureActivityDTO[] = [];
     roles: ActivityRoleDTO[] = [];
 

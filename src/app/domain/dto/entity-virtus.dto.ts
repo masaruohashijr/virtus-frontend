@@ -1,4 +1,5 @@
 import { BaseDTO } from "../common/base.dto";
+import { CycleId, PlanId } from "../types/ids";
 import { CycleEntityDTO } from "./cycle-entity.dto";
 import { CycleDTO } from "./cycle.dto";
 import { PlanDTO } from "./plan.dto";
@@ -13,7 +14,7 @@ export class EntityVirtusDTO extends BaseDTO {
     esi: boolean = false;
     city!: string | undefined;
     uf!: string | undefined;
-    cyclesEntity: CycleEntityDTO[] = [];
-    plans: PlanDTO[] = []
+    cycleIds?: CycleId[] = [];
+    planIds?: PlanId[] = [];
     cycleSelected: CycleDTO | undefined | null;
 }

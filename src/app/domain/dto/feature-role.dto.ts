@@ -1,8 +1,7 @@
 import { BaseDTO } from "../common/base.dto";
-import { FeatureDTO } from "./feature.dto";
-import { RoleDTO } from "./role.dto";
+import type { FeatureId, RoleId } from "../types/ids";
 
 export class FeatureRoleDTO extends BaseDTO {
-    feature!: FeatureDTO | undefined;
-    role!: RoleDTO | undefined;    
+    featureId!: FeatureId | undefined;
+    roleId!: RoleId | undefined;
 }

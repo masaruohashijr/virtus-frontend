@@ -1,12 +1,10 @@
-import { HTTP_INTERCEPTORS } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
-import {
-  MomentDateAdapter
-} from "@angular/material-moment-adapter";
+import { MomentDateAdapter } from "@angular/material-moment-adapter";
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
-  MAT_DATE_LOCALE
+  MAT_DATE_LOCALE,
 } from "@angular/material/core";
 import { AppComponent } from "./app.component";
 import { AuthInterceptor } from "./auth/auth.interceptor";
@@ -72,7 +70,6 @@ import { EntitiesEditComponent } from "./pages/rating/entities-page/entities-edi
 import { PlansEditComponent } from "./pages/rating/entities-page/entities-edit/plans-edit/plans-edit.component";
 import { PlansListComponent } from "./pages/rating/entities-page/entities-edit/plans-list/plans-list.component";
 import { EntitiesPageComponent } from "./pages/rating/entities-page/entities-page.component";
-// Importações PrimeNG
 import { AutomaticScoresEditComponent } from "./pages/administration/automatic-scores/automatic-scores-edit/automatic-scores-edit.component";
 import { AutomaticScoresComponent } from "./pages/administration/automatic-scores/automatic-scores.component";
 import { CalculateDialogComponent } from "./pages/administration/automatic-scores/calculate-dialog/calculate-dialog.component";
@@ -106,6 +103,23 @@ import { PillarHistoryDetailsComponent } from "./pages/rating/evaluate-plans-pag
 import { PlanChangeHistoryComponent } from "./pages/rating/evaluate-plans-page/plan-change-history/plan-change-history.component";
 import { PlanHistoryDetailsComponent } from "./pages/rating/evaluate-plans-page/plan-change-history/plan-history-details/plan-history-details.component";
 import { ShowDescriptionComponent } from "./pages/rating/evaluate-plans-page/show-description/show-description.component";
+import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
+import { MatDialogModule } from "@angular/material/dialog";
+import { MatTableModule } from "@angular/material/table";
+import { MatSortModule } from "@angular/material/sort";
+import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatNativeDateModule } from "@angular/material/core";
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatCardModule } from "@angular/material/card";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatSnackBarModule } from "@angular/material/snack-bar";
 
 export const MY_DATE_FORMATS = {
   parse: {

@@ -1,6 +1,5 @@
 import { BaseDTO } from "../common/base.dto";
-import { ActivityDTO } from "./activity.dto";
-
+import type { ActivityId } from "../types/ids";
 export class WorkflowDTO extends BaseDTO {
 
     name!: string | undefined;
@@ -8,6 +7,6 @@ export class WorkflowDTO extends BaseDTO {
     entityType!: any;
     startAt!: Date | undefined;
     endAt!: Date | undefined;
-    activities: ActivityDTO[] = [];
+    activityIds: ActivityId[] = [];
 
 }

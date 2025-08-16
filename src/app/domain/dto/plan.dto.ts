@@ -1,16 +1,16 @@
-import { EntityVirtusDTO } from './entity-virtus.dto';
 import { BaseDTO } from "../common/base.dto";
+import type { EntityVirtusId } from "../types/ids";
 
 export class PlanDTO extends BaseDTO {
+  reference?: string | null;
+  name?: string | null;
+  description?: string | null;
+  cnpb?: string | null;
+  legislation?: string | null;
+  situation?: string | null;
+  guaranteeResource?: number | null;
+  modality?: string | null;
 
-    reference: string | undefined | null;
-    name: string | undefined | null
-    description: string | undefined | null;
-    cnpb: string | undefined | null;
-    legislation: string | undefined | null;
-    situation: string | undefined | null;
-    guaranteeResource: number | undefined | null;
-    modality: string | undefined | null;
-    entity: EntityVirtusDTO | undefined | null;
-
+  // Evita back-reference: relacione por ID
+  entityId?: EntityVirtusId | null;
 }
