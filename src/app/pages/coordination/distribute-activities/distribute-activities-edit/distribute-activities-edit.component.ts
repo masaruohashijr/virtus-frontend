@@ -4,7 +4,6 @@ import {
   MatDialog,
   MatDialogRef,
 } from "@angular/material/dialog";
-import { TreeNode } from "primeng/api";
 import { catchError, tap, throwError } from "rxjs";
 import { AlertDialogComponent } from "src/app/components/dialog/alert-dialog/alert-dialog.component";
 import { AuditorDTO } from "src/app/domain/dto/auditor.dto";
@@ -23,6 +22,8 @@ import {
   JustifyReschedulingComponent,
   TipoData,
 } from "./justify-rescheduling/justify-rescheduling.component";
+import { CurrentUser } from "src/app/domain/dto/current-user.dto";
+import { TreeNodeVirtus } from "src/app/pages/common/tree-model/tree-node-virtus.model";
 
 @Component({
   selector: "app-distribute-activities-edit",
@@ -34,13 +35,13 @@ export class DistributeActivitiesEditComponent
   implements OnInit
 {
   distributeActivitiesTree!: DistributeActivitiesTreeDTO;
-  treeData!: TreeNode[];
+  treeData!: TreeNodeVirtus[];
   previousAuditor: AuditorDTO = { userId: 0, name: "", roleName: "" };
   previousStartsAt: Date | undefined;
   previousEndsAt: Date | undefined;
   products: ProductComponentDTO[] = [];
   previousDatesMap = new Map<string, { startsAt: Date; endsAt: Date }>();
-  currentUser: import("c:/javaworkspace/virtus-frontend/src/app/domain/dto/current-user.dto").CurrentUser;
+  currentUser: CurrentUser;
   curUserRole: string;
 
   constructor(
@@ -81,12 +82,12 @@ export class DistributeActivitiesEditComponent
       });
   }
 
-  buildTree(data: DistributeActivitiesTreeDTO): TreeNode[] {
+  buildTree(data: DistributeActivitiesTreeDTO): TreeNodeVirtus[] {
     if (!data || !data.products || data.products.length == 0) {
       return [];
     }
 
-    const entityMap: Map<string, TreeNode> = new Map();
+    const entityMap: Map<string, TreeNodeVirtus> = new Map();
 
     data.products.forEach((item) => {
       const entityName = item.entity?.name || "Unknown Entity";
@@ -523,8 +524,8 @@ export class DistributeActivitiesEditComponent
     return parseFloat((valor || "0").replace(",", "."));
   }
 
-  subirAtePorNode(node: TreeNode, tipo: string): TreeNode | null {
-    let current: TreeNode | undefined = node.parent;
+  subirAtePorNode(node: TreeNodeVirtus, tipo: string): TreeNodeVirtus | null {
+    let current: TreeNodeVirtus | undefined = node.parent;
     while (current) {
       if (current.data.objectType === tipo) {
         return current;
