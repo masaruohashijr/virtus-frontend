@@ -12,7 +12,7 @@ export class ConfirmationDialogComponent implements OnInit {
   cancelLabel: string = 'Cancelar';
 
   constructor(
-    public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data?: { title?: string; message?: string; options?: string }
   ) {}

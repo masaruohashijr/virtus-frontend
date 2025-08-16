@@ -26,10 +26,12 @@ export class CyclesEntitiesEditComponent extends BaseCrudEditComponent<CycleEnti
     endsAt: [this.data.object.endsAt, [Validators.required]]
   });
 
-  constructor(public dialogRef: MatDialogRef<CyclesEntitiesEditComponent>,
+  constructor(
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<CyclesEntitiesEditComponent>,
     private _cyclesService: CyclesService,
     private _formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: { father: EntityVirtusDTO, object: CycleEntityDTO }) {
+    @Inject(MAT_DIALOG_DATA) public data: { father: EntityVirtusDTO, object: CycleEntityDTO }
+  ) {
     super();
     this.father = data.father;
     this.object = data.object;

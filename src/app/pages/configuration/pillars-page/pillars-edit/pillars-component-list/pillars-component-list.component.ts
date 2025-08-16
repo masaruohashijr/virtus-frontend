@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { PillarComponentDTO } from 'src/app/domain/dto/pillar-component.dto';
@@ -21,8 +21,8 @@ export class PillarsComponentListComponent implements OnInit {
   objectTableColumns: string[] = ['name', 'averageType', 'standardWeight', 'author', 'createdAt', "actions"];
 
   constructor(
-    public dialog: MatDialog,
-    public deleteDialog: MatDialog,
+    @Inject(MatDialogRef) public dialog: MatDialog,
+    @Inject(MatDialogRef) public deleteDialog: MatDialog,
     private _formBuilder: FormBuilder) { }
 
   searchForm = this._formBuilder.group({

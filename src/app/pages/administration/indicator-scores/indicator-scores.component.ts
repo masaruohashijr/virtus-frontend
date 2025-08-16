@@ -1,5 +1,5 @@
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { Component, OnInit } from "@angular/core";
+import { Component, Inject, OnInit } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { PageEvent } from "@angular/material/paginator";
@@ -40,8 +40,8 @@ export class IndicatorScoresComponent implements OnInit {
   constructor(
     private _formBuilder: FormBuilder,
     private _service: IndicatorScoresService,
-    private _dialog: MatDialog,
-    private _snackBar: MatSnackBar
+    @Inject(MatDialog) private _dialog: MatDialog,
+    @Inject(MatSnackBar) private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {

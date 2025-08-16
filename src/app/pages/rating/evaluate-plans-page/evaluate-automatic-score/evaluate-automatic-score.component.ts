@@ -28,8 +28,8 @@ export class EvaluateAutomaticScoreComponent implements OnInit {
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _service: EvaluatePlansService,
-    private dialog: MatDialog,
-    private dialogRef: MatDialogRef<EvaluateAutomaticScoreComponent>
+    @Inject(MatDialogRef) private dialog: MatDialog,
+    @Inject(MatDialogRef) private dialogRef: MatDialogRef<EvaluateAutomaticScoreComponent>
   ) {}
 
   ngOnInit(): void {

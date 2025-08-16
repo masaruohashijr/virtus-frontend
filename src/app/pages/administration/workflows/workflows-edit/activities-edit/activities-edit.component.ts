@@ -47,12 +47,14 @@ export class ActivitiesEditComponent extends BaseCrudEditComponent<ActivityDTO> 
     expirationAction: [this.data.object.expirationAction]
   });
 
-  constructor(public dialogRef: MatDialogRef<ActivitiesEditComponent>,
+  constructor(
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<ActivitiesEditComponent>,
     private _featureService: FeaturesService,
     private _actionService: ActionsService,
     private _roleService: RolesService,
     private _formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: { father: WorkflowDTO, object: ActivityDTO }) {
+    @Inject(MAT_DIALOG_DATA) public data: { father: WorkflowDTO, object: ActivityDTO }
+  ) {
     super();
     this.father = data.father;
     this.object = data.object;

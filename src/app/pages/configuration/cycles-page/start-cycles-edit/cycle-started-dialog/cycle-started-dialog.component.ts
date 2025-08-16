@@ -7,7 +7,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 })
 export class CycleStartedDialogComponent {
   constructor(
-    public dialogRef: MatDialogRef<CycleStartedDialogComponent>,
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<CycleStartedDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: { title: string; message: string }
   ) {}

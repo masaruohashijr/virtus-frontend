@@ -20,10 +20,12 @@ export class EntitiesEditComponent implements OnInit {
 
   mainForm!: FormGroup;
 
-  constructor(public dialogRef: MatDialogRef<EntitiesEditComponent>,
+  constructor(
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<EntitiesEditComponent>,
     private _formBuilder: FormBuilder,
     private service: EntityVirtusService,
-    @Inject(MAT_DIALOG_DATA) public data: { object: EntityVirtusDTO, readOnly: boolean }) { }
+    @Inject(MAT_DIALOG_DATA) public data: { object: EntityVirtusDTO, readOnly: boolean }
+  ) { }
 
   ngOnInit(): void {
     console.log(this.data)

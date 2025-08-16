@@ -31,7 +31,7 @@ export class PlansEditComponent
   });
 
   constructor(
-    public dialogRef: MatDialogRef<PlansEditComponent>,
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<PlansEditComponent>,
     private _formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA)
     public data: { father: EntityVirtusDTO; object: PlanDTO }

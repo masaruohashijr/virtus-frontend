@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { EntityVirtusDTO } from 'src/app/domain/dto/entity-virtus.dto';
 import { BaseService } from '../common/base.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 })
 export class EntityVirtusService extends BaseService<EntityVirtusDTO> {
 
-  constructor(private _httpClient: HttpClient) {
+  constructor(@Inject(HttpClient) private _httpClient: HttpClient) {
     super();
   }
 

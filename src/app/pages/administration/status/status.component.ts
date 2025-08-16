@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { PageResponseDTO } from 'src/app/domain/dto/response/page-response.dto';
@@ -23,8 +23,8 @@ export class StatusPageComponent implements OnInit {
   objectTableColumns: string[] = ['id', 'name', 'stereotype', 'author', 'createdAt', "actions"];
 
   constructor(
-    public dialog: MatDialog,
-    public deleteDialog: MatDialog,
+    @Inject(MatDialogRef) public dialog: MatDialog,
+    @Inject(MatDialogRef) public deleteDialog: MatDialog,
     private _service: StatusService,
     private _formBuilder: FormBuilder) { }
 

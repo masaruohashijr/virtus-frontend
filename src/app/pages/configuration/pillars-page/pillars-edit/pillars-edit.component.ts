@@ -20,11 +20,13 @@ export class PillarsEditComponent extends BaseCrudEditComponent<PillarDTO> imple
     reference: [this.object.reference],
   });
 
-  constructor(public dialogRef: MatDialogRef<PillarsEditComponent>,
+  constructor(
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<PillarsEditComponent>,
     private _formBuilder: FormBuilder,
     private service: PillarsService,
-    private errorDialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public object: PillarDTO) {
+    @Inject(MatDialogRef) private errorDialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public object: PillarDTO
+  ) {
     super();
   }
 

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { BaseService } from '../common/base.service';
 import { GradeTypeDTO } from 'src/app/domain/dto/type-of-note.dto';
 
@@ -8,7 +8,7 @@ import { GradeTypeDTO } from 'src/app/domain/dto/type-of-note.dto';
 })
 export class GradeTypeService extends BaseService<GradeTypeDTO> {
 
-  constructor(private _httpClient: HttpClient) {
+  constructor(@Inject(HttpClient) private _httpClient: HttpClient) {
     super();
   }
 

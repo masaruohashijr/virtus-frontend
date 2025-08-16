@@ -30,7 +30,7 @@ export class MembersEditComponent
   });
 
   constructor(
-    public dialogRef: MatDialogRef<MembersEditComponent>,
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<MembersEditComponent>,
     private _entityService: UsersService,
     private _formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA)

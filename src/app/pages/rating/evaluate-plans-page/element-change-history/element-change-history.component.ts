@@ -51,7 +51,7 @@ export class ElementChangeHistoryComponent implements OnInit {
     private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA)
     public data: ElementChangeHistoryData & { historico: ProductElementHistoryDTO[] },
-    private dialog: MatDialog
+    @Inject(MatDialog) private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {

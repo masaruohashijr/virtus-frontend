@@ -24,11 +24,13 @@ export class OfficesMembersEditComponent extends BaseCrudEditComponent<OfficeDTO
     boss: [this.object.boss]
   });
 
-  constructor(public dialogRef: MatDialogRef<OfficesMembersEditComponent>,
+  constructor(
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<OfficesMembersEditComponent>,
     private _service: OfficesService,
     private _usersService: UsersService,
     private _formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public object: OfficeDTO) {
+    @Inject(MAT_DIALOG_DATA) public object: OfficeDTO
+  ) {
     super();
   }
 

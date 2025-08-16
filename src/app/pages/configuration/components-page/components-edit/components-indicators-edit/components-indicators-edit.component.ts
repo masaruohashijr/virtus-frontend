@@ -22,7 +22,7 @@ export class ComponentsIndicatorsEditComponent implements OnInit {
   });
 
   constructor(
-    public dialogRef: MatDialogRef<ComponentsIndicatorsEditComponent>,
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<ComponentsIndicatorsEditComponent>,
     private _indicatorService: IndicatorsService,
     private _formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA)

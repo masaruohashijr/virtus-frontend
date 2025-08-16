@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { FeatureDTO } from 'src/app/domain/dto/feature.dto';
 import { BaseService } from '../common/base.service';
 import { HttpClient } from '@angular/common/http';
@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class FeaturesService extends BaseService<FeatureDTO>{
 
-  constructor(private _httpClient: HttpClient) {
+  constructor(@Inject(HttpClient) private _httpClient: HttpClient) {
     super();
   }
 

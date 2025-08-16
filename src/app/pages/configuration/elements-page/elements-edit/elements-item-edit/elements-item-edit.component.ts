@@ -21,7 +21,7 @@ export class ElementsItemEditComponent implements OnInit {
   });
 
   constructor(
-    public dialogRef: MatDialogRef<ElementsItemEditComponent>,
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<ElementsItemEditComponent>,
     private _formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA)
     public data: { father: ElementDTO; object: ElementItemDTO }

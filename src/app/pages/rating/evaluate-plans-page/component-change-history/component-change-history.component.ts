@@ -60,7 +60,7 @@ export class ComponentChangeHistoryComponent {
     public data: ComponentChangeHistoryData & {
       historico: ProductComponentHistoryDTO[];
     },
-    private dialog: MatDialog
+    @Inject(MatDialog) private dialog: MatDialog
   ) {
     this.componentChangeHistoryForm = this.formBuilder.group({
       entity: [this.data.entidade.data.name],

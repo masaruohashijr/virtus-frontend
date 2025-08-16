@@ -59,12 +59,12 @@ export class StartCyclesEditComponent
   });
 
   constructor(
-    public dialogRef: MatDialogRef<StartCyclesEditComponent>,
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<StartCyclesEditComponent>,
     private _service: CyclesService,
     private _entityService: EntityVirtusService,
     private _usersService: UsersService,
     private _formBuilder: FormBuilder,
-    private dialog: MatDialog,
+    @Inject(MatDialog) private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: { object: StartCycleDTO }
   ) {
     super();

@@ -24,11 +24,13 @@ export class UserUpdatePassEditComponent implements OnInit {
     repeatedPassword: ['', [Validators.required]]
   });
 
-  constructor(public dialogRef: MatDialogRef<UserUpdatePassEditComponent>,
+  constructor(
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<UserUpdatePassEditComponent>,
     private _service: UsersService,
     private _formBuilder: FormBuilder,
-    private errorDialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public object: UserDTO) {
+    @Inject(MatDialog) private errorDialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public object: UserDTO
+  ) {
   }
 
   ngOnInit(): void {

@@ -28,7 +28,7 @@ export class CyclesPillarsEditComponent
   });
 
   constructor(
-    public dialogRef: MatDialogRef<CyclesPillarsEditComponent>,
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<CyclesPillarsEditComponent>,
     private _pillarService: PillarsService,
     private _formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA)

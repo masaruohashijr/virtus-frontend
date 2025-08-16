@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
@@ -27,9 +27,9 @@ export class AssingTeamsPageComponent implements OnInit {
   cyclesByEntity = new Map();
 
   constructor(
-    public dialog: MatDialog,
-    public errorDialog: MatDialog,
-    public deleteDialog: MatDialog,
+    @Inject(MatDialog) public dialog: MatDialog,
+    @Inject(MatDialog) public errorDialog: MatDialog,
+    @Inject(MatDialog) public deleteDialog: MatDialog,
     private _service: TeamsService,
     private _cycleService: CyclesService,
     private _formBuilder: FormBuilder) { }

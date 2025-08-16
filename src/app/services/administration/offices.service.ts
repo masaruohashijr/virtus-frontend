@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { OfficeDTO } from 'src/app/domain/dto/office.dto';
 import { BaseService } from '../common/base.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -13,7 +13,7 @@ import { MemberDTO } from 'src/app/domain/dto/member.dto';
 })
 export class OfficesService extends BaseService<OfficeDTO>{
 
-  constructor(private _httpClient: HttpClient) {
+  constructor(@Inject(HttpClient) private _httpClient: HttpClient) {
     super();
   }
 

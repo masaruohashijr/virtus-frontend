@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { PageEvent } from '@angular/material/paginator';
 import { PageResponseDTO } from 'src/app/domain/dto/response/page-response.dto';
@@ -23,8 +23,7 @@ export class GradeTypePageComponent implements OnInit {
   objectTableColumns: string[] = ['id', 'name', 'description', 'reference', 'letter', 'letterColor', "actions"];
 
   constructor(
-    public dialog: MatDialog,
-    public deleteDialog: MatDialog,
+    @Inject(MatDialog) public dialog: MatDialog,
     private _typeOfNoteService: GradeTypeService,
     private _formBuilder: FormBuilder) { }
 
@@ -83,10 +82,9 @@ export class GradeTypePageComponent implements OnInit {
   }
 
   deleteObject(object: GradeTypeDTO) {
-    const dialogRef = this.deleteDialog.open(ConfirmationDialogComponent, {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '270px',
     });
-
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this._typeOfNoteService.delete(object.id).pipe(

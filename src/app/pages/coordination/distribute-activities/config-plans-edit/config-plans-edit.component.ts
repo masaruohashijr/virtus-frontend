@@ -35,11 +35,11 @@ export class ConfigPlansComponent implements OnInit {
   plansChanged = false;
 
   constructor(
-    private errorDialog: MatDialog,
+    @Inject(MatDialog) private errorDialog: MatDialog,
     private formBuilder: FormBuilder,
     private _service: DistributeActivitiesService,
-    public dialogRef: MatDialogRef<ProductComponentDTO>,
-    public dialog: MatDialog,
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<ConfigPlansComponent>,
+    @Inject(MatDialog) public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: ProductComponentDTO
   ) {
     console.log(typeof data);

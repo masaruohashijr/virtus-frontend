@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { BaseService } from '../common/base.service';
 import { RoleDTO } from 'src/app/domain/dto/role.dto';
 import { HttpClient } from '@angular/common/http';
@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class RolesService extends BaseService<RoleDTO>{
 
-  constructor(private _httpClient: HttpClient) {
+  constructor(@Inject(HttpClient) private _httpClient: HttpClient) {
     super();
   }
 

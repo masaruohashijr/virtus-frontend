@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { URL_API } from "src/app/common/service-constants";
 import { EntityVirtusDTO } from "src/app/domain/dto/entity-virtus.dto";
 import { EvaluatePlansTreeNode } from "src/app/domain/dto/eveluate-plans-tree-node";
@@ -10,7 +10,7 @@ import { Observable } from "rxjs/internal/Observable";
   providedIn: "root",
 })
 export class EvaluatePlansService extends BaseService<EntityVirtusDTO> {
-  constructor(private _httpClient: HttpClient) {
+  constructor(@Inject(HttpClient) private _httpClient: HttpClient) {
     super();
   }
 

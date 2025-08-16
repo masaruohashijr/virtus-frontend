@@ -51,7 +51,7 @@ export class AutomaticScoresEditComponent implements OnInit, AfterViewInit {
     private scoreService: AutomaticScoresService,
     private cdr: ChangeDetectorRef,
     private ngZone: NgZone,
-    public dialogRef: MatDialogRef<AutomaticScoresEditComponent>,
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<AutomaticScoresEditComponent>,
     @Inject(MAT_DIALOG_DATA) public object: AutomaticScoreDTO
   ) {}
   ngAfterViewInit(): void {}

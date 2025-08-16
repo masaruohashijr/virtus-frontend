@@ -1,37 +1,13 @@
-import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
+import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { NgModule } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {
-  MatMomentDateModule,
-  MomentDateAdapter,
+  MomentDateAdapter
 } from "@angular/material-moment-adapter";
-import { MatAutocompleteModule } from "@angular/material/autocomplete";
-import { MatButtonModule } from "@angular/material/button";
-import { MatCardModule } from "@angular/material/card";
-import { MatCheckboxModule } from "@angular/material/checkbox";
-import { MatChipsModule } from "@angular/material/chips";
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
-  MAT_DATE_LOCALE,
-  MatNativeDateModule,
+  MAT_DATE_LOCALE
 } from "@angular/material/core";
-import { MatDatepickerModule } from "@angular/material/datepicker";
-import { MatDialogActions, MatDialogModule } from "@angular/material/dialog";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatIconModule } from "@angular/material/icon";
-import { MatInputModule } from "@angular/material/input";
-import { MatMenuModule } from "@angular/material/menu";
-import { MatPaginatorModule } from "@angular/material/paginator";
-import { MatSelectModule } from "@angular/material/select";
-import { MatTableModule } from "@angular/material/table";
-import { MatTabsModule } from "@angular/material/tabs";
-import { MatToolbarModule } from "@angular/material/toolbar";
-import { MatTreeModule } from "@angular/material/tree";
-import { BrowserModule } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { AuthInterceptor } from "./auth/auth.interceptor";
 import { AuthService } from "./auth/auth.service";
@@ -71,7 +47,6 @@ import { ComponentsPageComponent } from "./pages/configuration/components-page/c
 import { CyclesEditComponent } from "./pages/configuration/cycles-page/cycles-edit/cycles-edit.component";
 import { CyclesPillarsEditComponent } from "./pages/configuration/cycles-page/cycles-edit/cycles-pillars-edit/cycles-pillars-edit.component";
 import { CyclesPillarsListComponent } from "./pages/configuration/cycles-page/cycles-edit/cycles-pillars-list/cycles-pillars-list.component";
-import { CyclesPageComponent } from "./pages/configuration/cycles-page/cycles-page.component";
 import { StartCyclesEditComponent } from "./pages/configuration/cycles-page/start-cycles-edit/start-cycles-edit.component";
 import { ElementsEditComponent } from "./pages/configuration/elements-page/elements-edit/elements-edit.component";
 import { ElementsItemEditComponent } from "./pages/configuration/elements-page/elements-edit/elements-item-edit/elements-item-edit.component";
@@ -98,23 +73,20 @@ import { PlansEditComponent } from "./pages/rating/entities-page/entities-edit/p
 import { PlansListComponent } from "./pages/rating/entities-page/entities-edit/plans-list/plans-list.component";
 import { EntitiesPageComponent } from "./pages/rating/entities-page/entities-page.component";
 // Importações PrimeNG
-import { MatTooltipModule } from "@angular/material/tooltip";
-import { SharedModule } from "primeng/api";
-import { ButtonModule } from "primeng/button"; // Se precisar de botões do PrimeNG
-import { TreeTableModule } from "primeng/treetable";
-import { AutomaticScoresEditComponent } from './pages/administration/automatic-scores/automatic-scores-edit/automatic-scores-edit.component';
+import { AutomaticScoresEditComponent } from "./pages/administration/automatic-scores/automatic-scores-edit/automatic-scores-edit.component";
 import { AutomaticScoresComponent } from "./pages/administration/automatic-scores/automatic-scores.component";
+import { CalculateDialogComponent } from "./pages/administration/automatic-scores/calculate-dialog/calculate-dialog.component";
 import { IndicatorScoresEditComponent } from "./pages/administration/indicator-scores/indicator-scores-edit/indicator-scores-edit.component";
 import { IndicatorScoresComponent } from "./pages/administration/indicator-scores/indicator-scores.component";
 import { SyncDialogComponent } from "./pages/administration/indicator-scores/sync-dialog/sync-dialog.component";
 import { PlainMessageDialogComponent } from "./pages/administration/plain-message/plain-message-dialog.component";
-import { ComponentsIndicatorsEditComponent } from './pages/configuration/components-page/components-edit/components-indicators-edit/components-indicators-edit.component';
-import { ComponentsIndicatorsListComponent } from './pages/configuration/components-page/components-edit/components-indicators-list/components-indicators-list.component';
-import { ConfirmRemoveCycleEntityDialogComponent } from './pages/configuration/cycles-page/remove-cycles-edit/confirm-remove-cycle-entity-dialog/confirm-remove-cycle-entity-dialog.component';
-import { CycleRemovedDialogComponent } from './pages/configuration/cycles-page/remove-cycles-edit/cycle-removed-dialog/cycle-removed-dialog.component';
-import { RemoveCyclesEditComponent } from './pages/configuration/cycles-page/remove-cycles-edit/remove-cycles-edit.component';
-import { CycleStartedDialogComponent } from './pages/configuration/cycles-page/start-cycles-edit/cycle-started-dialog/cycle-started-dialog.component';
-import { IndicatorsEditComponent } from './pages/configuration/indicators-page/indicators-edit/indicators-edit.component';
+import { ComponentsIndicatorsEditComponent } from "./pages/configuration/components-page/components-edit/components-indicators-edit/components-indicators-edit.component";
+import { ComponentsIndicatorsListComponent } from "./pages/configuration/components-page/components-edit/components-indicators-list/components-indicators-list.component";
+import { ConfirmRemoveCycleEntityDialogComponent } from "./pages/configuration/cycles-page/remove-cycles-edit/confirm-remove-cycle-entity-dialog/confirm-remove-cycle-entity-dialog.component";
+import { CycleRemovedDialogComponent } from "./pages/configuration/cycles-page/remove-cycles-edit/cycle-removed-dialog/cycle-removed-dialog.component";
+import { RemoveCyclesEditComponent } from "./pages/configuration/cycles-page/remove-cycles-edit/remove-cycles-edit.component";
+import { CycleStartedDialogComponent } from "./pages/configuration/cycles-page/start-cycles-edit/cycle-started-dialog/cycle-started-dialog.component";
+import { IndicatorsEditComponent } from "./pages/configuration/indicators-page/indicators-edit/indicators-edit.component";
 import { IndicatorsPageComponent } from "./pages/configuration/indicators-page/indicators-page.component";
 import { ConfigPlansComponent } from "./pages/coordination/distribute-activities/config-plans-edit/config-plans-edit.component";
 import { JustifyAuditorReplacementComponent } from "./pages/coordination/distribute-activities/distribute-activities-edit/justify-auditor-replacement/justify-auditor-replacement.component";
@@ -124,19 +96,17 @@ import { ComponentChangeHistoryComponent } from "./pages/rating/evaluate-plans-p
 import { ComponentHistoryDetailsComponent } from "./pages/rating/evaluate-plans-page/component-change-history/component-history-details/component-history-details.component";
 import { ElementChangeHistoryComponent } from "./pages/rating/evaluate-plans-page/element-change-history/element-change-history.component";
 import { ElementHistoryDetailsComponent } from "./pages/rating/evaluate-plans-page/element-change-history/element-history-details/element-history-details.component";
-import { EvaluatePlansEditComponent } from "./pages/rating/evaluate-plans-page/evaluate-plans-edit/evaluate-plans-edit.component";
+import { EvaluateAutomaticScoreComponent } from "./pages/rating/evaluate-plans-page/evaluate-automatic-score/evaluate-automatic-score.component";
 import { EvaluatePlansPageComponent } from "./pages/rating/evaluate-plans-page/evaluate-plans-page.component";
 import { JustifyPillarWeightComponent } from "./pages/rating/evaluate-plans-page/justify-pillar-weight/justify-pillar-weight.component";
 import { MotivarNotaComponent } from "./pages/rating/evaluate-plans-page/motivar-nota/motivar-nota.component";
 import { MotivarPesoComponent } from "./pages/rating/evaluate-plans-page/motivar-peso/motivar-peso.component";
 import { PillarChangeHistoryComponent } from "./pages/rating/evaluate-plans-page/pillar-change-history/pillar-change-history.component";
 import { PillarHistoryDetailsComponent } from "./pages/rating/evaluate-plans-page/pillar-change-history/pillar-history-details/pillar-history-details.component";
+import { PlanChangeHistoryComponent } from "./pages/rating/evaluate-plans-page/plan-change-history/plan-change-history.component";
+import { PlanHistoryDetailsComponent } from "./pages/rating/evaluate-plans-page/plan-change-history/plan-history-details/plan-history-details.component";
 import { ShowDescriptionComponent } from "./pages/rating/evaluate-plans-page/show-description/show-description.component";
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { CalculateDialogComponent } from './pages/administration/automatic-scores/calculate-dialog/calculate-dialog.component';
-import { EvaluateAutomaticScoreComponent } from './pages/rating/evaluate-plans-page/evaluate-automatic-score/evaluate-automatic-score.component';
-import { PlanChangeHistoryComponent } from './pages/rating/evaluate-plans-page/plan-change-history/plan-change-history.component';
-import { PlanHistoryDetailsComponent } from './pages/rating/evaluate-plans-page/plan-change-history/plan-history-details/plan-history-details.component';
+
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: "DD/MM/YYYY",
@@ -172,9 +142,7 @@ export const MY_DATE_FORMATS = {
     PillarsComponentListComponent,
     PillarsComponentEditComponent,
     CyclesEditComponent,
-    CyclesPillarsListComponent,
     CyclesPillarsEditComponent,
-    CyclesPageComponent,
     FeaturesComponent,
     UsersComponent,
     OfficesComponent,
@@ -215,7 +183,6 @@ export const MY_DATE_FORMATS = {
     DistributeActivitiesEditComponent,
     ConfigPlansComponent,
     EvaluatePlansPageComponent,
-    EvaluatePlansEditComponent,
     MotivarNotaComponent,
     MotivarPesoComponent,
     PlainMessageDialogComponent,
@@ -246,44 +213,9 @@ export const MY_DATE_FORMATS = {
     CalculateDialogComponent,
     EvaluateAutomaticScoreComponent,
     PlanChangeHistoryComponent,
-    PlanHistoryDetailsComponent,      
-  ],
-  imports: [
-    TreeTableModule,
-    ButtonModule,
-    SharedModule,
-    HttpClientModule,
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatButtonModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatMenuModule,
-    MatDialogModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatFormFieldModule,
-    MatCheckboxModule,
-    MatSelectModule,
-    MatInputModule,
-    MatChipsModule,
-    MatAutocompleteModule,
-    MatDatepickerModule,
-    MatDividerModule,
-    ReactiveFormsModule,
-    FormsModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatTabsModule,
-    MatCardModule,
-    MatTreeModule,
-    MatTooltipModule,
-    MatMomentDateModule,
-    MatSnackBarModule,
+    PlanHistoryDetailsComponent,
   ],
   providers: [
-    MatDialogActions,
     AuthService,
     {
       provide: HTTP_INTERCEPTORS,

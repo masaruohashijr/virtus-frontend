@@ -41,13 +41,13 @@ export class RemoveCyclesEditComponent implements OnInit {
   removedEntities: EntityVirtusDTO[] = [];
 
   constructor(
-    private dialogRef: MatDialogRef<RemoveCyclesEditComponent>,
+    @Inject(MatDialogRef) private dialogRef: MatDialogRef<RemoveCyclesEditComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { object: StartCycleDTO },
     private _entityService: EntityVirtusService,
     private _usersService: UsersService,
     private _formBuilder: FormBuilder,
     private _service: CyclesService,
-    private dialog: MatDialog
+    @Inject(MatDialog) private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {

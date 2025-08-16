@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { UserDTO } from "src/app/domain/dto/user.dto";
 import { BaseService } from "../common/base.service";
 import { HttpClient, HttpParams } from "@angular/common/http";
@@ -14,7 +14,7 @@ import { CurrentUser } from "src/app/domain/dto/current-user.dto";
 export class UsersService extends BaseService<UserDTO> {
   currentUser!: CurrentUser;
 
-  constructor(private _httpClient: HttpClient) {
+  constructor(@Inject(HttpClient) private _httpClient: HttpClient) {
     super();
   }
 

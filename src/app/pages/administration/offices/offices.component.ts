@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { catchError, debounceTime, distinctUntilChanged, tap, throwError } from 'rxjs';
@@ -28,8 +28,8 @@ export class OfficesComponent implements OnInit {
   objectTableColumns: string[] = ['id', 'abbreviation', 'name', 'boss', "actions"];
 
   constructor(
-    public dialog: MatDialog,
-    public deleteDialog: MatDialog,
+    @Inject(MatDialogRef) public dialog: MatDialog,
+    @Inject(MatDialogRef) public deleteDialog: MatDialog,
     private _service: OfficesService,
     private _formBuilder: FormBuilder) { }
 

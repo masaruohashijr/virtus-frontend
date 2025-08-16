@@ -18,10 +18,12 @@ export class FeaturesEditComponent implements OnInit {
     description: [this.object.description]
   });
 
-  constructor(public dialogRef: MatDialogRef<FeaturesEditComponent>,
+  constructor(
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<FeaturesEditComponent>,
     private _formBuilder: FormBuilder,
     private service: FeaturesService,
-    @Inject(MAT_DIALOG_DATA) public object: FeatureDTO) { }
+    @Inject(MAT_DIALOG_DATA) public object: FeatureDTO
+  ) { }
 
   ngOnInit(): void {
   }

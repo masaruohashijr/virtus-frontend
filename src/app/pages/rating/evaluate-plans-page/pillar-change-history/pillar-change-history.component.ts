@@ -46,7 +46,7 @@ export class PillarChangeHistoryComponent {
     private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA)
     public data: PillarChangeHistoryData,
-    private dialog: MatDialog
+    @Inject(MatDialog) private dialog: MatDialog
   ) {
     this.pillarChangeHistoryForm = this.formBuilder.group({
       entity: [this.data.entidade.data.name],

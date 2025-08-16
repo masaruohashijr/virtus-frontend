@@ -26,7 +26,7 @@ export class OfficesEditComponent extends BaseCrudEditComponent<OfficeDTO> imple
   }>;
 
   constructor(
-    public dialogRef: MatDialogRef<OfficesEditComponent>,
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<OfficesEditComponent>,
     private _service: OfficesService,
     private _usersService: UsersService,
     private _formBuilder: FormBuilder,

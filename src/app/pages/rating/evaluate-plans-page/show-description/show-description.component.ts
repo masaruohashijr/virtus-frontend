@@ -24,9 +24,7 @@ export class ShowDescriptionComponent implements OnInit {
   grade: any;
   constructor(
     private formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: ShowDescriptionComponent,
-    private http: HttpClient
-  ) {}
+    @Inject(MAT_DIALOG_DATA) public data: ShowDescriptionComponent  ) {}
 
   ngOnInit(): void {
     this.showDescriptionForm = this.formBuilder.group({

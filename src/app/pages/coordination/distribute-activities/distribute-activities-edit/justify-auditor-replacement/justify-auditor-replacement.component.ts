@@ -59,8 +59,8 @@ export class JustifyAuditorReplacementComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private dialog: MatDialog,
-    private dialogRef: MatDialogRef<JustifyAuditorReplacementComponent>,
+    @Inject(MatDialog) private dialog: MatDialog,
+    @Inject(MatDialogRef) private dialogRef: MatDialogRef<JustifyAuditorReplacementComponent>,
     @Inject(MAT_DIALOG_DATA) public data: JustifyAuditorReplacementComponent,
     private _service: DistributeActivitiesService
   ) {}

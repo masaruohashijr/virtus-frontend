@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { BaseService } from "../common/base.service";
 import { JurisdictionDTO } from "src/app/domain/dto/jurisdiction.dto";
 import { HttpClient, HttpParams } from "@angular/common/http";
@@ -14,7 +14,7 @@ import { ProductPlanDTO } from "src/app/domain/dto/product-plan.dto";
   providedIn: "root",
 })
 export class DistributeActivitiesService extends BaseService<DistributeActivitiesDTO> {
-  constructor(private _httpClient: HttpClient) {
+  constructor(@Inject(HttpClient) private _httpClient: HttpClient) {
     super();
   }
 

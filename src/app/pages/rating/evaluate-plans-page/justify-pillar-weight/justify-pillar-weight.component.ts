@@ -71,8 +71,8 @@ export class JustifyPillarWeightComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: JustifyPillarWeightData,
     private _service: EvaluatePlansService,
-    private dialog: MatDialog,
-    private dialogRef: MatDialogRef<JustifyPillarWeightData>
+    @Inject(MatDialog) private dialog: MatDialog,
+    @Inject(MatDialogRef) private dialogRef: MatDialogRef<JustifyPillarWeightData>
   ) {}
 
   ngOnInit(): void {

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { catchError, debounceTime, distinctUntilChanged, tap, throwError } from 'rxjs';
@@ -27,8 +27,8 @@ export class CyclesPageComponent implements OnInit {
   objectTableColumns: string[] = ['id', 'name', 'author', 'createdAt', "actions"];
 
   constructor(
-    public dialog: MatDialog,
-    public deleteDialog: MatDialog,
+    @Inject(MatDialog) public dialog: MatDialog,
+    @Inject(MatDialog) public deleteDialog: MatDialog,
     private _service: CyclesService,
     public _userService: UsersService,
     private _formBuilder: FormBuilder) { }
@@ -124,7 +124,7 @@ export class CyclesPageComponent implements OnInit {
         data: {object: startCycle},
       });
 
-      dialogRef.afterClosed().subscribe(result => {
+      dialogRef.afterClosed().subscribe((result: any) => {
         this.loadContent(this.filterControl?.value);
       });
     });
@@ -135,7 +135,7 @@ export class CyclesPageComponent implements OnInit {
       width: '270px',
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
         this._service.delete(object.id).pipe(
           tap(resp => {

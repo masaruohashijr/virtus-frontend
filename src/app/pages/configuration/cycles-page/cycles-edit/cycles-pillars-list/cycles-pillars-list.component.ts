@@ -1,15 +1,34 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { ConfirmationDialogComponent } from 'src/app/components/dialog/confirmation-dialog/confirmation-dialog.component';
 import { CyclePillarDTO } from 'src/app/domain/dto/cycle-pillar.dto';
 import { CycleDTO } from 'src/app/domain/dto/cycle.dto';
 import { CyclesPillarsEditComponent } from '../cycles-pillars-edit/cycles-pillars-edit.component';
-import { ConfirmationDialogComponent } from 'src/app/components/dialog/confirmation-dialog/confirmation-dialog.component';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-cycles-pillars-list',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
+    MatPaginatorModule,
+    MatSortModule,
+  ],
   templateUrl: './cycles-pillars-list.component.html',
   styleUrls: ['./cycles-pillars-list.component.css']
 })
@@ -21,8 +40,8 @@ export class CyclesPillarsListComponent implements OnInit {
   objectTableColumns: string[] = ['name', 'author', 'createdAt', "actions"];
 
   constructor(
-    public dialog: MatDialog,
-    public deleteDialog: MatDialog,
+    @Inject(MatDialog) public dialog: MatDialog,
+    @Inject(MatDialog) public deleteDialog: MatDialog,
     private _formBuilder: FormBuilder) { }
 
   searchForm = this._formBuilder.group({
@@ -94,7 +113,7 @@ export class CyclesPillarsListComponent implements OnInit {
       width: '270px',
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
         this.cycle.cyclePillars = this.cycle.cyclePillars?.filter(item => item.id !== object.id);
         this.objectDataSource.data = this.cycle.cyclePillars;

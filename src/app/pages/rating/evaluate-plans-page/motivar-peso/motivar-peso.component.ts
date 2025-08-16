@@ -54,8 +54,8 @@ export class MotivarPesoComponent {
     private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: MotivarPesoComponent,
     private evaluatePlansService: EvaluatePlansService,
-    private dialog: MatDialog,
-    private dialogRef: MatDialogRef<MotivarPesoComponent>
+    @Inject(MatDialog) private dialog: MatDialog,
+    @Inject(MatDialogRef) private dialogRef: MatDialogRef<MotivarPesoComponent>
   ) {
     this.motivarPesoForm = this.formBuilder.group({
       entity: [this.data.entidade.name],

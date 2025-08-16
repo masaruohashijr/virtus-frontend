@@ -46,8 +46,8 @@ export class AnalyzeTierComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: AnalyzeTierComponent,
     private _service: EvaluatePlansService,
-    private dialog: MatDialog,
-    private dialogRef: MatDialogRef<AnalyzeTierComponent>
+    @Inject(MatDialog) private dialog: MatDialog,
+    @Inject(MatDialogRef) private dialogRef: MatDialogRef<AnalyzeTierComponent>
   ) {}
   ngOnDestroy(): void {}
 

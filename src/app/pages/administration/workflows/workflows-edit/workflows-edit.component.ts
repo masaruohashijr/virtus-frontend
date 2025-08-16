@@ -21,10 +21,12 @@ export class WorkflowsEditComponent extends BaseCrudEditComponent<WorkflowDTO> i
     entityType: [this.object.entityType?.value, [Validators.required]]
   });
 
-  constructor(public dialogRef: MatDialogRef<WorkflowsEditComponent>,
+  constructor(
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<WorkflowsEditComponent>,
     private _formBuilder: FormBuilder,
     private service: WorkflowsService,
-    @Inject(MAT_DIALOG_DATA) public object: WorkflowDTO) {
+    @Inject(MAT_DIALOG_DATA) public object: WorkflowDTO
+  ) {
     super();
   }
 

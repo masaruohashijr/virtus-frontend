@@ -26,7 +26,7 @@ export class OfficesJurisdictionsEditComponent extends BaseCrudEditComponent<Off
   }>;
 
   constructor(
-    public dialogRef: MatDialogRef<OfficesJurisdictionsEditComponent>,
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<OfficesJurisdictionsEditComponent>,
     private _service: OfficesService,
     private _usersService: UsersService,
     private _formBuilder: FormBuilder,

@@ -38,7 +38,7 @@ export class IndicatorScoresEditComponent implements OnInit {
   selectedEntityId: number | null = null;
 
   constructor(
-    public dialogRef: MatDialogRef<IndicatorScoresEditComponent>,
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<IndicatorScoresEditComponent>,
     private _formBuilder: FormBuilder,
     private service: IndicatorScoresService,
     private entityService: EntityVirtusService,

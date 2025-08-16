@@ -18,13 +18,13 @@ export class SyncDialogComponent implements OnInit {
   syncForm!: FormGroup;
   isLoading = false;
   constructor(
-    public dialogRef: MatDialogRef<SyncDialogComponent>,
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<SyncDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: { ultimaReferencia: string },
     private fb: FormBuilder,
     private _service: IndicatorScoresService,
-    private dialog: MatDialog,
-    private _snackBar: MatSnackBar
+    @Inject(MatDialog) private dialog: MatDialog,
+    @Inject(MatSnackBar) private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {

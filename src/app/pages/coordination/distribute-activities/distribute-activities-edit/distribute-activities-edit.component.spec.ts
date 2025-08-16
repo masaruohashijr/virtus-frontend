@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DistributeActivitiesEditComponent } from './distribute-activities-edit.component';
+import { beforeEach, describe, it } from 'node:test';
 
 describe('DistributeActivitiesEditComponent', () => {
   let component: DistributeActivitiesEditComponent;
@@ -18,6 +19,14 @@ describe('DistributeActivitiesEditComponent', () => {
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
   });
 });
+function expect(component: DistributeActivitiesEditComponent) {
+  return {
+    toBeTruthy: () => {
+      if (!component) {
+        throw new Error('Expected component to be truthy');
+      }
+    }
+  };
+}

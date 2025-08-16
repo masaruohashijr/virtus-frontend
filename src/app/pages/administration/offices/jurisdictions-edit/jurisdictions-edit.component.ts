@@ -26,10 +26,12 @@ export class JurisdictionsEditComponent extends BaseCrudEditComponent<Jurisdicti
     endsAt: [this.data?.object?.endsAt]
   });
 
-  constructor(public dialogRef: MatDialogRef<JurisdictionsEditComponent>,
+  constructor(
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<JurisdictionsEditComponent>,
     private _entityService: EntityVirtusService,
     private _formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: { father: OfficeDTO, object: JurisdictionDTO }) {
+    @Inject(MAT_DIALOG_DATA) public data: { father: OfficeDTO, object: JurisdictionDTO }
+  ) {
     super();
     this.father = data.father;
     this.object = data.object;

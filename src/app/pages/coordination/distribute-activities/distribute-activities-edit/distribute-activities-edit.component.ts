@@ -44,15 +44,14 @@ export class DistributeActivitiesEditComponent
   curUserRole: string;
 
   constructor(
-    public dialog: MatDialog,
-    public deleteDialog: MatDialog,
-    public dialogRef: MatDialogRef<DistributeActivitiesTreeDTO>,
+    @Inject(MatDialog) public dialog: MatDialog,
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<DistributeActivitiesTreeDTO>,
     @Inject(MAT_DIALOG_DATA)
     public distributeActivities: DistributeActivitiesDTO,
     private _service: DistributeActivitiesService,
     private _productComponentHistoryService: ProductComponentHistoryService,
     private _usersService: UsersService,
-    private errorDialog: MatDialog
+    @Inject(MatDialog) public errorDialog: MatDialog
   ) {
     super();
     this.currentUser = this._usersService.getCurrentUser();
@@ -74,7 +73,7 @@ export class DistributeActivitiesEditComponent
 
       if (isSupervisor && resp?.auditors?.length) {
         this.distributeActivitiesTree.auditors = resp.auditors.filter(
-          (auditor) => auditor.roleName !== 'Chefe'
+          (auditor?) => auditor && auditor.roleName !== 'Chefe'
         );
       }
         this.treeData = this.buildTree(resp);
@@ -146,6 +145,7 @@ export class DistributeActivitiesEditComponent
           objectType: "Componente",
           object: item,
         },
+        children: []
       });
     });
 

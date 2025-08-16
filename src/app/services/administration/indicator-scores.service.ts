@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { IndicatorScoreDTO } from "src/app/domain/dto/indicator-score.dto";
 import { BaseService } from "../common/base.service";
 import { Observable } from "rxjs";
@@ -9,7 +9,7 @@ import { URL_API } from "src/app/common/service-constants";
   providedIn: "root",
 })
 export class IndicatorScoresService extends BaseService<IndicatorScoreDTO> {
-  constructor(private _httpClient: HttpClient) {
+  constructor(@Inject(HttpClient) private _httpClient: HttpClient) {
     super();
   }
 

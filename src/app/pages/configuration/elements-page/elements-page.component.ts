@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
@@ -23,8 +23,8 @@ export class ElementsPageComponent implements OnInit {
   objectTableColumns: string[] = ['id', 'name', 'description', 'author', 'createdAt', "actions"];
 
   constructor(
-    public dialog: MatDialog,
-    public deleteDialog: MatDialog,
+    @Inject(MatDialog) public dialog: MatDialog,
+    @Inject(MatDialog) public deleteDialog: MatDialog,
     private _service: ElementsService,
     private _formBuilder: FormBuilder) { }
 

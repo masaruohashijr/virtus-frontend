@@ -28,11 +28,13 @@ export class ComponentsElementsEditComponent extends BaseCrudEditComponent<Compo
     standardWeight: [this.data.object.standardWeight]
   });
 
-  constructor(public dialogRef: MatDialogRef<ComponentsElementsEditComponent>,
+  constructor(
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<ComponentsElementsEditComponent>,
     private _gradeTypeService: GradeTypeService,
     private _elementsService: ElementsService,
     private _formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: { father: ComponentDTO, object: ComponentElementDTO }) {
+    @Inject(MAT_DIALOG_DATA) public data: { father: ComponentDTO, object: ComponentElementDTO }
+  ) {
     super();
     this.father = data.father;
     this.object = data.object;

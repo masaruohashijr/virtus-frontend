@@ -28,11 +28,13 @@ export class ActionsEditComponent extends BaseCrudEditComponent<ActionDTO> imple
 
   allStatus: StatusDTO[] = [];
 
-  constructor(public dialogRef: MatDialogRef<ActionsEditComponent>,
+  constructor(
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<ActionsEditComponent>,
     private _formBuilder: FormBuilder,
     private _service: ActionsService,
     private _statusService: StatusService,
-    @Inject(MAT_DIALOG_DATA) public object: ActionDTO) {
+    @Inject(MAT_DIALOG_DATA) public object: ActionDTO
+  ) {
     super();
   }
 

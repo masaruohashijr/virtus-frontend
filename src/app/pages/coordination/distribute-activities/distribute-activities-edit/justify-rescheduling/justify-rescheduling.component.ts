@@ -184,8 +184,8 @@ export class JustifyReschedulingComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private dialog: MatDialog,
-    private dialogRef: MatDialogRef<JustifyReschedulingData>,
+    @Inject(MatDialog) private dialog: MatDialog,
+    @Inject(MatDialogRef) private dialogRef: MatDialogRef<JustifyReschedulingComponent>,
     @Inject(MAT_DIALOG_DATA) public data: JustifyReschedulingData,
     private _service: DistributeActivitiesService
   ) {}

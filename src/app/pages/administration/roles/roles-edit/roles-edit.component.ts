@@ -31,12 +31,14 @@ export class RolesEditComponent extends BaseCrudEditComponent<RoleDTO> implement
     description: [this.object.description]
   });
 
-  constructor(public dialogRef: MatDialogRef<RolesEditComponent>,
+  constructor(
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<RolesEditComponent>,
     private _service: RolesService,
     private _featureService: FeaturesService,
     private _formBuilder: FormBuilder,
-    private errorDialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public object: RoleDTO) {
+    @Inject(MatDialog) private errorDialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public object: RoleDTO
+  ) {
     super();
   }
 

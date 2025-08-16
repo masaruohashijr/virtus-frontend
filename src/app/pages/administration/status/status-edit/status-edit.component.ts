@@ -20,10 +20,12 @@ export class StatusEditComponent implements OnInit {
     stereotype: [this.object.stereotype]
   });
 
-  constructor(public dialogRef: MatDialogRef<StatusEditComponent>,
+  constructor(
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<StatusEditComponent>,
     private _formBuilder: FormBuilder,
     private service: StatusService,
-    @Inject(MAT_DIALOG_DATA) public object: StatusDTO) { }
+    @Inject(MAT_DIALOG_DATA) public object: StatusDTO
+  ) { }
 
   ngOnInit(): void {
   }

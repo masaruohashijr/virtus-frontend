@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from "@angular/core";
-import { MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 
 @Component({
   selector: "app-component-history-details",
@@ -9,8 +9,10 @@ export class ComponentHistoryDetailsComponent implements OnInit {
   tipoAlteracaoLabel: string = "";
   valorAnterior: string = "";
   valorAtual: string = "";
-
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MatDialogRef) private dialogRef: MatDialogRef<ComponentHistoryDetailsComponent>
+  ) {}
 
   ngOnInit(): void {
     const tipo = this.data.tipoAlteracao;
@@ -45,5 +47,9 @@ export class ComponentHistoryDetailsComponent implements OnInit {
         this.valorAnterior = "—";
         this.valorAtual = "—";
     }
+  }
+  onClose(): void {
+    // equivalente a [mat-dialog-close]=""  → fecha retornando string vazia
+    this.dialogRef.close("");
   }
 }

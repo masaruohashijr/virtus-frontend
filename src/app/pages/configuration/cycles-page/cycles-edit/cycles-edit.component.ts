@@ -29,10 +29,10 @@ export class CyclesEditComponent
   });
 
   constructor(
-    public dialogRef: MatDialogRef<PillarsEditComponent>,
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<PillarsEditComponent>,
     private _formBuilder: FormBuilder,
     private service: CyclesService,
-    private errorDialog: MatDialog,
+    @Inject(MatDialogRef) private errorDialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public object: CycleDTO
   ) {
     super();

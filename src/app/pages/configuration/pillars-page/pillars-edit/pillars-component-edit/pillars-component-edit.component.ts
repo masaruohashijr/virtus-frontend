@@ -26,10 +26,12 @@ export class PillarsComponentEditComponent extends BaseCrudEditComponent<PillarC
     probeFile: [this.data.object.probeFile,]
   });
 
-  constructor(public dialogRef: MatDialogRef<PillarsComponentEditComponent>,
+  constructor(
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<PillarsComponentEditComponent>,
     private _componenteService: ComponentsService,
     private _formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: { father: PillarDTO, object: PillarComponentDTO }) {
+    @Inject(MAT_DIALOG_DATA) public data: { father: PillarDTO, object: PillarComponentDTO }
+  ) {
     super();
     this.father = data.father;
     this.object = data.object;

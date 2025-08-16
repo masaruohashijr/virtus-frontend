@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { AutomaticScoreDTO } from "src/app/domain/dto/automatic-score.dto";
 import { BaseService } from "../common/base.service";
@@ -10,7 +10,7 @@ import { Observable } from "rxjs";
 })
 export class AutomaticScoresService extends BaseService<AutomaticScoreDTO> {
 
-  constructor(private _httpClient: HttpClient) {
+  constructor(@Inject(HttpClient) private _httpClient: HttpClient) {
     super();
   }
 

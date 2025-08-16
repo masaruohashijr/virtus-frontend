@@ -44,7 +44,7 @@ export class PlanChangeHistoryComponent {
     private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA)
     public data: PlanChangeHistoryData,
-    private dialog: MatDialog
+    @Inject(MatDialogRef) private dialog: MatDialog
   ) {
     this.planChangeHistoryForm = this.formBuilder.group({
       entity: [this.data.entidade.data.name],

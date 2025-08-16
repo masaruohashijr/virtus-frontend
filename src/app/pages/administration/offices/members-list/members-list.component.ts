@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Inject, Input, OnInit } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { MatTableDataSource } from "@angular/material/table";
@@ -27,8 +27,8 @@ export class MembersListComponent implements OnInit {
   ];
 
   constructor(
-    public dialog: MatDialog,
-    public deleteDialog: MatDialog,
+    @Inject(MatDialog) public dialog: MatDialog,
+    @Inject(MatDialog) public deleteDialog: MatDialog,
     private _formBuilder: FormBuilder,
     private _officeService: OfficesService
   ) {}

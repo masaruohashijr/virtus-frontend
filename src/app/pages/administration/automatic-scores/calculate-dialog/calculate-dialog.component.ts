@@ -16,13 +16,13 @@ export class CalculateDialogComponent implements OnInit {
   isLoading = false;
 
   constructor(
-    public dialogRef: MatDialogRef<CalculateDialogComponent>,
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<CalculateDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: { ultimaReferencia: string },
     private fb: FormBuilder,
     private _service: AutomaticScoresService,
-    private dialog: MatDialog,
-    private _snackBar: MatSnackBar
+    @Inject(MatDialog) private dialog: MatDialog,
+    @Inject(MatSnackBar) private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import {
@@ -38,7 +38,7 @@ export class NavTopComponent implements OnInit {
 
   constructor(
     private _userService: UsersService,
-    public dialog: MatDialog
+    @Inject(MatDialog) public dialog: MatDialog
   ) {}
 
   entitiesRoute = ENTITIES_ROUTE;

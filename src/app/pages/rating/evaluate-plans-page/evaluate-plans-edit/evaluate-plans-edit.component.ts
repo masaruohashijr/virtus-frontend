@@ -1,18 +1,21 @@
+import { CommonModule } from "@angular/common";
 import {
   Component,
   ElementRef,
-  HostListener,
+  Inject,
   Input,
   OnInit,
   ViewChild,
 } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
-import { MatDialog } from "@angular/material/dialog";
+import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatDialog, MatDialogModule } from "@angular/material/dialog";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from "@angular/material/input";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { TreeNode } from "primeng/api";
-import { ProductPillarHistoryService } from "src/app/services/coordination/product-pillar-history.service";
-import { JustifyPillarWeightComponent } from "../justify-pillar-weight/justify-pillar-weight.component";
-import { AnalyzeTierComponent } from "./../analyze-tier/analyze-tier.component";
-
+import { TreeTableModule } from "primeng/treetable";
 import { AuditorDTO } from "src/app/domain/dto/auditor.dto";
 import { CurrentUser } from "src/app/domain/dto/current-user.dto";
 import { EntityVirtusDTO } from "src/app/domain/dto/entity-virtus.dto";
@@ -21,31 +24,46 @@ import { ProductComponentHistoryDTO } from "src/app/domain/dto/product-component
 import { ProductComponentDTO } from "src/app/domain/dto/product-component.dto";
 import { ProductElementHistoryDTO } from "src/app/domain/dto/product-element-history.dto";
 import { ProductPillarHistoryDTO } from "src/app/domain/dto/product-pillar-history.dto";
+import { ProductPlanHistoryDTO } from "src/app/domain/dto/product-plan-history.dto";
 import { UserDTO } from "src/app/domain/dto/user.dto";
 import { UsersService } from "src/app/services/administration/users.service";
 import { ProductComponentHistoryService } from "src/app/services/coordination/product-component-history.service";
 import { ProductElementHistoryService } from "src/app/services/coordination/product-element-history.service";
+import { ProductPillarHistoryService } from "src/app/services/coordination/product-pillar-history.service";
+import { ProductPlanHistoryService } from "src/app/services/coordination/product-plan-history.service";
 import { EvaluatePlansService } from "src/app/services/rating/evaluate-plans.service";
 import { PlainMessageDialogComponent } from "../../../administration/plain-message/plain-message-dialog.component";
 import { ComponentChangeHistoryComponent } from "../component-change-history/component-change-history.component";
 import { ElementChangeHistoryComponent } from "../element-change-history/element-change-history.component";
+import { EvaluateAutomaticScoreComponent } from "../evaluate-automatic-score/evaluate-automatic-score.component";
+import { JustifyPillarWeightComponent } from "../justify-pillar-weight/justify-pillar-weight.component";
+import { PlanChangeHistoryComponent } from "../plan-change-history/plan-change-history.component";
 import { ShowDescriptionComponent } from "../show-description/show-description.component";
+import { AnalyzeTierComponent } from "./../analyze-tier/analyze-tier.component";
 import {
   MotivarNotaComponent,
   MotivarNotaData,
 } from "./../motivar-nota/motivar-nota.component";
 import { MotivarPesoComponent } from "./../motivar-peso/motivar-peso.component";
 import { PillarChangeHistoryComponent } from "./../pillar-change-history/pillar-change-history.component";
-import { EvaluateAutomaticScoreComponent } from "../evaluate-automatic-score/evaluate-automatic-score.component";
-import { ProductPlanHistoryService } from "src/app/services/coordination/product-plan-history.service";
-import { ProductPlanHistoryDTO } from "src/app/domain/dto/product-plan-history.dto";
-import { PlanChangeHistoryComponent } from "../plan-change-history/plan-change-history.component";
-
 @Component({
-  selector: "app-evaluate-plans-edit",
-  templateUrl: "./evaluate-plans-edit.component.html",
-  styleUrls: ["./evaluate-plans-edit.component.css"],
+  selector: 'app-evaluate-plans-edit',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,            // para [(ngModel)]
+    ReactiveFormsModule,    // para [formGroup]
+    MatFormFieldModule,     // <mat-form-field>
+    MatInputModule,         // matInput
+    MatIconModule,          // <mat-icon>
+    MatTooltipModule,       // [matTooltip]
+    MatButtonModule,        // mat-button (se usar)
+    TreeTableModule,        // PrimeNG TreeTable, se usado no template
+  ],
+  templateUrl: './evaluate-plans-edit.component.html',
+  styleUrls: ['./evaluate-plans-edit.component.css'],
 })
+
 export class EvaluatePlansEditComponent implements OnInit {
   @ViewChild("gradeField", { static: true }) gradeField!: ElementRef; // Garantir que seja ElementRef
 
@@ -78,9 +96,9 @@ export class EvaluatePlansEditComponent implements OnInit {
     private _productComponentHistoryService: ProductComponentHistoryService,
     private _productPlanHistoryService: ProductPlanHistoryService,
     private _productElementHistoryService: ProductElementHistoryService,
-    private _usersService: UsersService,
-    private dialog: MatDialog,
-    private _formBuilder: FormBuilder
+    @Inject(MatDialog) private dialog: MatDialog,
+    private _formBuilder: FormBuilder,
+    private _usersService: UsersService
   ) {}
   dadosCarregando: boolean = true;
   currentUser: CurrentUser = this._usersService.getCurrentUser();

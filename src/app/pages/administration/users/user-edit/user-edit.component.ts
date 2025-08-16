@@ -38,11 +38,11 @@ export class UserEditComponent
   });
 
   constructor(
-    public dialogRef: MatDialogRef<UserEditComponent>,
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<UserEditComponent>,
     private _service: UsersService,
     private _rolesService: RolesService,
     private _formBuilder: FormBuilder,
-    private errorDialog: MatDialog,
+    @Inject(MatDialog) private errorDialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public object: UserDTO
   ) {
     super();

@@ -27,12 +27,14 @@ export class TeamMembersEditComponent extends BaseCrudEditComponent<TeamMemberDT
     member: [this.data.object.member, [Validators.required]]
   });
 
-  constructor(public dialogRef: MatDialogRef<TeamMembersEditComponent>,
+  constructor(
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<TeamMembersEditComponent>,
     private userService: UsersService,
     private teamService: TeamsService,
-    private errorDialog: MatDialog,
+    @Inject(MatDialog) private errorDialog: MatDialog,
     private _formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: { father: TeamDTO, object: TeamMemberDTO }) {
+    @Inject(MAT_DIALOG_DATA) public data: { father: TeamDTO, object: TeamMemberDTO }
+  ) {
     super();
     this.father = data.father;
     this.object = data.object;

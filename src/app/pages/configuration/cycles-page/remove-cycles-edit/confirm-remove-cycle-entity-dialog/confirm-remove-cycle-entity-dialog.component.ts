@@ -8,7 +8,7 @@ import { EntityVirtusDTO } from 'src/app/domain/dto/entity-virtus.dto';
 })
 export class ConfirmRemoveCycleEntityDialogComponent {
   constructor(
-    public dialogRef: MatDialogRef<ConfirmRemoveCycleEntityDialogComponent>,
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<ConfirmRemoveCycleEntityDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { entity: EntityVirtusDTO }
   ) {}
 

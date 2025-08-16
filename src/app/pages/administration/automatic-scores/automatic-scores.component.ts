@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Inject, OnInit } from "@angular/core";
 import { FormBuilder, FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { PageEvent } from "@angular/material/paginator";
@@ -42,7 +42,7 @@ export class AutomaticScoresComponent implements OnInit {
   constructor(
     private _formBuilder: FormBuilder,
     private _service: AutomaticScoresService,
-    private _dialog: MatDialog,
+    @Inject(MatDialog) private _dialog: MatDialog,
     private _componentsService: ComponentsService
   ) {}
 

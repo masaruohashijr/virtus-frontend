@@ -1,5 +1,5 @@
 import { EvaluatePlansEditComponent } from './evaluate-plans-edit/evaluate-plans-edit.component';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
@@ -28,8 +28,8 @@ export class EvaluatePlansPageComponent implements OnInit {
   selectedObject: any;
 
   constructor(
-    public dialog: MatDialog,
-    public deleteDialog: MatDialog,
+    @Inject(MatDialog) public dialog: MatDialog,
+    @Inject(MatDialog) public deleteDialog: MatDialog,
     private _service: EvaluatePlansService,
     private _formBuilder: FormBuilder) { }
 

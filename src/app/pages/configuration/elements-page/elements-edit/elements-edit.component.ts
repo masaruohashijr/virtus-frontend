@@ -24,7 +24,7 @@ export class ElementsEditComponent implements OnInit {
   errorMessage: string = "";
 
   constructor(
-    public dialogRef: MatDialogRef<ElementsEditComponent>,
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<ElementsEditComponent>,
     private _formBuilder: FormBuilder,
     private service: ElementsService,
     @Inject(MAT_DIALOG_DATA) public object: ElementDTO

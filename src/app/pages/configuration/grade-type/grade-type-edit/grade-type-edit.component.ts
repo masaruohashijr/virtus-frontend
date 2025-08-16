@@ -22,7 +22,7 @@ export class GradeTypeEditComponent implements OnInit {
   });
 
   constructor(
-    public dialogRef: MatDialogRef<GradeTypeEditComponent>,
+    @Inject(MatDialogRef) public dialogRef: MatDialogRef<GradeTypeEditComponent>,
     private _formBuilder: FormBuilder,
     private _gradeTypeService: GradeTypeService,
     @Inject(MAT_DIALOG_DATA) public object: GradeTypeDTO

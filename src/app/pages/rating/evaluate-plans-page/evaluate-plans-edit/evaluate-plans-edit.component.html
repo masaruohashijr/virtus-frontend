@@ -73,11 +73,15 @@
       <td class="weight-column">
         <ng-container *ngIf="rowData.objectType === 'Pilar'">
           <input
-            type="decimal"
+            type="number"
+            step="1"
+            min="1"
+            max="100"
             class="pillar-weight"
+            [value]="rowData.weight"
+            (input)="rowData.weight = $any($event.target).valueAsNumber"
             (blur)="onPillarWeightBlur($event, rowNode, rowData)"
             (change)="highlightChange($event)"
-            [ngModel]="rowData.weight"
             [disabled]="!canEditPillarWeight(rowData)"
             style="text-align: center; width: 50px"
           />
@@ -87,7 +91,8 @@
           <input
             type="decimal"
             class="component-weight"
-            [ngModel]="rowData.weight"
+            [value]="rowData.weight"
+            (input)="rowData.weight = $any($event.target).valueAsNumber"
             [disabled]="true"
             style="text-align: center; width: 50px"
           />
@@ -96,7 +101,8 @@
           <input
             type="text"
             class="plan-weight"
-            [ngModel]="rowData.weight"
+            [value]="rowData.weight"
+            (input)="rowData.weight = $any($event.target).valueAsNumber"
             [disabled]="true"
             style="text-align: center; width: 50px"
           />
@@ -106,7 +112,8 @@
           <input
             type="text"
             class="grade-type-weight"
-            [ngModel]="rowData.weight"
+            [value]="rowData.weight"
+            (input)="rowData.weight = $any($event.target).valueAsNumber"
             [disabled]="true"
             style="text-align: center; width: 50px"
           />

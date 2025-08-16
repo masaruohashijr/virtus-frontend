@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
 import { UsersService } from '../services/administration/users.service';
@@ -11,7 +11,7 @@ export class AuthService {
     private _authenticated: boolean = false;
 
     constructor(
-        private _httpClient: HttpClient,
+        @Inject(HttpClient) private _httpClient: HttpClient,
         private _userService: UsersService
     ) {
     }
