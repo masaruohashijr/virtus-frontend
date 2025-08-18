@@ -7,15 +7,12 @@ import {
   OnInit,
   ViewChild,
 } from "@angular/core";
-import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatButtonModule } from "@angular/material/button";
-import { MatDialog, MatDialogModule } from "@angular/material/dialog";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatIconModule } from "@angular/material/icon";
-import { MatInputModule } from "@angular/material/input";
-import { MatTooltipModule } from "@angular/material/tooltip";
-import { TreeNode } from "primeng/api";
-import { TreeTableModule } from "primeng/treetable";
+import { FormBuilder } from "@angular/forms";
+import { MatDialog } from "@angular/material/dialog";
+import { ProductPillarHistoryService } from "src/app/services/coordination/product-pillar-history.service";
+import { JustifyPillarWeightComponent } from "../justify-pillar-weight/justify-pillar-weight.component";
+import { AnalyzeTierComponent } from "./../analyze-tier/analyze-tier.component";
+
 import { AuditorDTO } from "src/app/domain/dto/auditor.dto";
 import { CurrentUser } from "src/app/domain/dto/current-user.dto";
 import { EntityVirtusDTO } from "src/app/domain/dto/entity-virtus.dto";
@@ -24,41 +21,32 @@ import { ProductComponentHistoryDTO } from "src/app/domain/dto/product-component
 import { ProductComponentDTO } from "src/app/domain/dto/product-component.dto";
 import { ProductElementHistoryDTO } from "src/app/domain/dto/product-element-history.dto";
 import { ProductPillarHistoryDTO } from "src/app/domain/dto/product-pillar-history.dto";
-import { ProductPlanHistoryDTO } from "src/app/domain/dto/product-plan-history.dto";
 import { UserDTO } from "src/app/domain/dto/user.dto";
 import { UsersService } from "src/app/services/administration/users.service";
 import { ProductComponentHistoryService } from "src/app/services/coordination/product-component-history.service";
 import { ProductElementHistoryService } from "src/app/services/coordination/product-element-history.service";
-import { ProductPillarHistoryService } from "src/app/services/coordination/product-pillar-history.service";
-import { ProductPlanHistoryService } from "src/app/services/coordination/product-plan-history.service";
 import { EvaluatePlansService } from "src/app/services/rating/evaluate-plans.service";
 import { PlainMessageDialogComponent } from "../../../administration/plain-message/plain-message-dialog.component";
 import { ComponentChangeHistoryComponent } from "../component-change-history/component-change-history.component";
 import { ElementChangeHistoryComponent } from "../element-change-history/element-change-history.component";
-import { EvaluateAutomaticScoreComponent } from "../evaluate-automatic-score/evaluate-automatic-score.component";
-import { JustifyPillarWeightComponent } from "../justify-pillar-weight/justify-pillar-weight.component";
-import { PlanChangeHistoryComponent } from "../plan-change-history/plan-change-history.component";
 import { ShowDescriptionComponent } from "../show-description/show-description.component";
-import { AnalyzeTierComponent } from "./../analyze-tier/analyze-tier.component";
 import {
   MotivarNotaComponent,
   MotivarNotaData,
 } from "./../motivar-nota/motivar-nota.component";
 import { MotivarPesoComponent } from "./../motivar-peso/motivar-peso.component";
 import { PillarChangeHistoryComponent } from "./../pillar-change-history/pillar-change-history.component";
+import { EvaluateAutomaticScoreComponent } from "../evaluate-automatic-score/evaluate-automatic-score.component";
+import { ProductPlanHistoryService } from "src/app/services/coordination/product-plan-history.service";
+import { ProductPlanHistoryDTO } from "src/app/domain/dto/product-plan-history.dto";
+import { PlanChangeHistoryComponent } from "../plan-change-history/plan-change-history.component";
+import { TreeNodeVirtus } from "src/app/pages/common/tree-model/tree-node-virtus.model";
+
 @Component({
   selector: 'app-evaluate-plans-edit',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,            // para [(ngModel)]
-    ReactiveFormsModule,    // para [formGroup]
-    MatFormFieldModule,     // <mat-form-field>
-    MatInputModule,         // matInput
-    MatIconModule,          // <mat-icon>
-    MatTooltipModule,       // [matTooltip]
-    MatButtonModule,        // mat-button (se usar)
-    TreeTableModule,        // PrimeNG TreeTable, se usado no template
   ],
   templateUrl: './evaluate-plans-edit.component.html',
   styleUrls: ['./evaluate-plans-edit.component.css'],
@@ -68,8 +56,8 @@ export class EvaluatePlansEditComponent implements OnInit {
   @ViewChild("gradeField", { static: true }) gradeField!: ElementRef; // Garantir que seja ElementRef
 
   @Input() object!: EntityVirtusDTO;
-  treeData: TreeNode[] = [];
-  treeDataOriginal: TreeNode[] = [];
+  treeData: TreeNodeVirtus[] = [];
+  treeDataOriginal: TreeNodeVirtus[] = [];
   allUsers: UserDTO[] = [];
   modalMotivarNotaVisivel: boolean = false;
   pilarPesoAnteriorMap = new Map<number, number>();
@@ -86,7 +74,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     novaNota: null,
     texto: "",
   };
-  notaPendente: { rowNode: TreeNode; novaNota: number } | null = null;
+  notaPendente: { rowNode: TreeNodeVirtus; novaNota: number } | null = null;
   cicloNota: any;
   elementoPeso: any;
 
@@ -125,7 +113,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     });
   }
 
-  private applyFilter(nodes: TreeNode[], term: string): TreeNode[] {
+  private applyFilter(nodes: TreeNodeVirtus[], term: string): TreeNodeVirtus[] {
     return nodes
       .map((node) => {
         const nome = (node.data?.name || "").toLowerCase();
@@ -148,12 +136,12 @@ export class EvaluatePlansEditComponent implements OnInit {
             ...node,
             children: filhosFiltrados ?? [],
             expanded: true,
-          } as TreeNode;
+          } as TreeNodeVirtus;
         }
 
         return null;
       })
-      .filter((n): n is TreeNode => n !== null);
+      .filter((n): n is TreeNodeVirtus => n !== null);
   }
 
   openMotivacaoNota(rowData: any, novaNota: number): void {
@@ -188,11 +176,11 @@ export class EvaluatePlansEditComponent implements OnInit {
 
   transformToTreeTableFormat(
     nodes: EvaluatePlansTreeNode[],
-    parent: TreeNode | null = null
-  ): TreeNode[] {
+    parent: TreeNodeVirtus | null = null
+  ): TreeNodeVirtus[] {
     return nodes.map((node) => {
       {
-        const treeNode: TreeNode = {
+        const treeNode: TreeNodeVirtus = {
           data: {
             id: node.id,
             name: node.name,
@@ -245,7 +233,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     this.collapseRecursive(this.treeData);
   }
 
-  private collapseRecursive(nodes: TreeNode[] | undefined) {
+  private collapseRecursive(nodes: TreeNodeVirtus[] | undefined) {
     if (!nodes) return;
     for (const node of nodes) {
       node.expanded = false;
@@ -283,7 +271,7 @@ export class EvaluatePlansEditComponent implements OnInit {
   }
 
   private justifyGrade(
-    rowNode: TreeNode | undefined,
+    rowNode: TreeNodeVirtus | undefined,
     notaAnterior: number,
     novaNota: number
   ): void {
@@ -323,7 +311,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     });
   }
 
-  private justifyPillarWeight(rowNode: TreeNode, event: Event): void {
+  private justifyPillarWeight(rowNode: TreeNodeVirtus, event: Event): void {
     const novoPeso = (event.target as HTMLInputElement).value;
     const entidade = this.subirAtePorNode(rowNode, "Entidade");
     const ciclo = this.subirAtePorNode(rowNode, "Ciclo");
@@ -352,8 +340,8 @@ export class EvaluatePlansEditComponent implements OnInit {
     });
   }
 
-  private subirAtePorNode(node: TreeNode, tipo: string): TreeNode | null {
-    let current: TreeNode | undefined = node.parent;
+  private subirAtePorNode(node: TreeNodeVirtus, tipo: string): TreeNodeVirtus | null {
+    let current: TreeNodeVirtus | undefined = node.parent;
     while (current) {
       if (current.data.objectType === tipo) {
         return current;
@@ -372,7 +360,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     this.expandirRecursivo(this.treeData);
   }
 
-  private expandirRecursivo(nodes: TreeNode[]): void {
+  private expandirRecursivo(nodes: TreeNodeVirtus[]): void {
     for (const node of nodes) {
       node.expanded = true;
       if (node.children && node.children.length > 0) {
@@ -391,7 +379,7 @@ export class EvaluatePlansEditComponent implements OnInit {
 
   public onPillarWeightBlur(
     event: Event,
-    rowNode: TreeNode,
+    rowNode: TreeNodeVirtus,
     rowData: any
   ): void {
     const input = event.target as HTMLInputElement;
@@ -467,7 +455,7 @@ export class EvaluatePlansEditComponent implements OnInit {
   }
 
   private justifyWeight(
-    rowNode: TreeNode | undefined,
+    rowNode: TreeNodeVirtus | undefined,
     pesoAnterior: number,
     novoPeso: number
   ): void {
@@ -501,7 +489,7 @@ export class EvaluatePlansEditComponent implements OnInit {
     });
   }
 
-  private somarPesos(treeNodes: TreeNode[]): number {
+  private somarPesos(treeNodes: TreeNodeVirtus[]): number {
     let soma = 0;
 
     for (const node of treeNodes) {
@@ -526,7 +514,7 @@ export class EvaluatePlansEditComponent implements OnInit {
 
   public onGradeChange(
     novaNota: number,
-    rowNode: TreeNode,
+    rowNode: TreeNodeVirtus,
     rowData: any
   ): void {
     const notaAnterior = Number(rowData.grade);
@@ -546,7 +534,7 @@ export class EvaluatePlansEditComponent implements OnInit {
 
   public onWeightChange(
     novoPeso: number,
-    rowNode: TreeNode,
+    rowNode: TreeNodeVirtus,
     rowData: any
   ): void {
     const pesoAnterior = Number(rowData.weight);
